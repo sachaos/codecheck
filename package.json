@@ -1,0 +1,27 @@
+{
+  "name": "codecheck",
+  "version": "0.0.1",
+  "description": "codecheck CLI",
+  "main": "src/cli.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/code-check/codecheck.git"
+  },
+  "keywords": [
+    "codecheck",
+    "test",
+    "git"
+  ],
+  "author": "Givery.inc",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/code-check/codecheck/issues"
+  },
+  "bin": {
+    "codecheck": "./bin/codecheck"
+  },
+  "homepage": "https://github.com/code-check/codecheck#readme"
+}
