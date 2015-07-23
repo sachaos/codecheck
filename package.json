@@ -23,5 +23,9 @@
   "bin": {
     "codecheck": "./bin/codecheck"
   },
-  "homepage": "https://github.com/code-check/codecheck#readme"
+  "homepage": "https://github.com/code-check/codecheck#readme",
+  "dependencies": {
+    "readline-sync": "^1.2.19",
+    "request": "^2.60.0"
+  }
 }
