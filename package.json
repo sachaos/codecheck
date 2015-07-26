@@ -25,6 +25,8 @@
   },
   "homepage": "https://github.com/code-check/codecheck#readme",
   "dependencies": {
+    "bluebird": "^2.9.34",
+    "lodash": "^3.10.0",
     "readline-sync": "^1.2.19",
     "request": "^2.60.0"
   },
