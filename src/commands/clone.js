@@ -27,19 +27,19 @@ CloneCommand.prototype.run = function(args, options) {
 
   var self = this;
   var id = args[0];
-  new SigninCommand(this.api).run(null, options).then(function() {
+  var ret = new SigninCommand(this.api).run(null, options).then(function() {
     if (options.exam) {
       self.test(id);
     } else {
       self.test(id);
     }
+    return this;
   });
 };
 
 CloneCommand.prototype.test = function(challengeId) {
   var api = this.api;
-  api.getChallenge(challengeId).then(function(data) {
-    var response = data[0];
+  api.getChallenge(challengeId).then(function(response) {
     console.log("getChallenge", challengeId, response.statusCode);
     console.log(response.body);
   });

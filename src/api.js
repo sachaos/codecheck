@@ -1,11 +1,27 @@
 "use strict";
 
 var Promise = require("bluebird");
-var request = Promise.promisify(require("request").defaults({jar: true}));
+var request = require("request").defaults({jar: true});
 
 function API(host) {
   this.baseUrl = (host.indexOf("localhost") === 0 ? "http://" : "https://") + host;
 }
+
+API.prototype.execute = function(options) {
+  return new Promise(function(resolve, reject) {
+    request(options, function(err, response) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      if (response.statusCode >= 200 && response.statusCode < 300 && response.body.code === 200) {
+        resolve(response);
+      } else {
+        reject(response);
+      }
+    });
+  });
+};
 
 API.prototype.signin = function(username, password) {
   var options = {
@@ -17,7 +33,7 @@ API.prototype.signin = function(username, password) {
     },
     json: true
   };
-  return request(options);
+  return this.execute(options);
 };
 
 API.prototype.getChallenge = function(id) {
@@ -26,7 +42,7 @@ API.prototype.getChallenge = function(id) {
     method: "GET",
     json: true
   };
-  return request(options);
+  return this.execute(options);
 };
 
 module.exports = API;
