@@ -1,3 +1,5 @@
+"use strict";
+
 function isCommand(str) {
   var commands = [
     "clone",
@@ -7,6 +9,7 @@ function isCommand(str) {
   ];
   return commands.indexOf(str) !== -1;
 }
+
 function convertShortOption(str) {
   var options = {
     "-e": "exam",

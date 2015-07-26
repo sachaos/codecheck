@@ -16,7 +16,7 @@
   "loopfunc": true,
   "strict": true,
   "indent": 2,
-  "browser": true,
+  "browser": false,
   "asi" : false,
   "devel": true,
   "node": true,

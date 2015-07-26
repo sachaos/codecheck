@@ -1,3 +1,5 @@
+"use strict";
+
 var packageJson   = require("../package.json");
 var CommandParser = require("./commandParser");
 var CloneCommand  = require("./commands/clone");
@@ -18,7 +20,6 @@ function start() {
   console.log("codecheck version " + packageJson.version);
   try {
     var args = CommandParser.parse(process.argv.slice(2));
-    var api = new API(args.options.host || DEFAULT_HOST);
 
     var command = createCommand(args);
     if (!command) {
@@ -33,4 +34,4 @@ function start() {
 
 module.exports = {
   start: start
-}
+};
