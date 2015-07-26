@@ -14,7 +14,7 @@ function convertShortOption(str) {
   var options = {
     "-e": "exam",
     "-p": "password",
-    "-u": "username",
+    "-u": "user",
     "-h": "host"
   };
   return options[str];

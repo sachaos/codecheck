@@ -25,10 +25,21 @@ function start() {
     if (!command) {
       throw "Unknown command: " + args.command;
     } else {
-      command.run(args.args, args.options);
+      try {
+        command.run(args.args, args.options);
+      } catch (e) {
+        console.log(e);
+        if (e.stack) {
+          console.log(e.stack);
+        }
+        command.usage();
+      }
     }
   } catch (e) {
     console.log(e);
+    if (e.stack) {
+      console.log(e.stack);
+    }
   }
 }
 
