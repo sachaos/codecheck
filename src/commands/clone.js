@@ -76,12 +76,12 @@ CloneCommand.prototype.doCloneChallenge = function(dirname, files) {
   var self = this;
   Object.keys(files).sort().forEach(function(filename) {
     var url = files[filename];
-    var fullname = dirname + "/" + filename;
-    mkdirp(getParentDirectory(fullname), function(err) {
+    var fullpath = dirname + "/" + filename;
+    mkdirp(getParentDirectory(fullpath), function(err) {
       if (err) {
-        console.err("Can not create directory: " + getParentDirectory(fullname));
+        console.err("Can not create directory: " + getParentDirectory(fullpath));
       } else {
-        self.download(fullname, url);
+        self.download(fullpath, url);
       }
     });
   });
