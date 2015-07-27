@@ -36,9 +36,9 @@ API.prototype.signin = function(username, password) {
   return this.execute(options);
 };
 
-API.prototype.getChallenge = function(id) {
+API.prototype.resultFiles = function(id) {
   var options = {
-    url: this.baseUrl + "/api/challenges/" + id,
+    url: this.baseUrl + "/api/cli/results/" + id + "/files",
     method: "GET",
     json: true
   };
