@@ -80,7 +80,7 @@ describe("CloneCommand", function() {
       done();
     });
   });
-  it("should succee with valid resultId", function(done) {
+  it("should succeed with valid resultId", function(done) {
     var command = new CloneCommand(api);
     command.run([resultId], {
       user: "shunjikonishi",
