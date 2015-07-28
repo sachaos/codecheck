@@ -33,7 +33,7 @@ ChallengeCloneCommand.prototype.cloneChallenge = function(resultId, resolve) {
         } else {
           var tasks = [];
           tasks.push(self.doCloneChallenge(dirname, response.body.result.files));
-          tasks.push(self.saveSettings(dirname, resultId, username));
+          tasks.push(self.saveSettings(dirname, response.body.result.challengeId, resultId, username));
           Promise.all(tasks).then(function() {
             resolve(new CommandResult(true));
           });
@@ -46,8 +46,9 @@ ChallengeCloneCommand.prototype.cloneChallenge = function(resultId, resolve) {
   );
 };
 
-ChallengeCloneCommand.prototype.saveSettings = function(dirname, resultId, username) {
+ChallengeCloneCommand.prototype.saveSettings = function(dirname, challengeId, resultId, username) {
   var settings = {
+    "challengeId": challengeId,
     "resultId": resultId,
     "username": username,
     "lastUpdated": moment().format()

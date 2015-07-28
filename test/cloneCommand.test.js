@@ -14,10 +14,11 @@ describe("CloneCommand", function() {
   this.timeout(5000);
 
   var api = new API(config.host);
-  var resultId;
+  var resultId, challengeId;
 
   before(function(done) {
     initData(function(data) {
+      challengeId = data.challenges[0].id;
       resultId = data.challenge_results[0].id;
       done();
     });
@@ -92,6 +93,7 @@ describe("CloneCommand", function() {
       assert.ok(fs.existsSync(basePath + "test/test3.js"));
 
       var settings = JSON.parse(fs.readFileSync(basePath + ".codecheck"));
+      assert.ok(settings.challengeId, challengeId);
       assert.ok(settings.resultId, resultId);
       assert.ok(settings.username, "shunjikonishi");
       done();
