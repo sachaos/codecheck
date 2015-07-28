@@ -82,9 +82,9 @@ describe("Clone challenge", function() {
       assert.ok(fs.existsSync(basePath + "test/test3.js"));
 
       var settings = JSON.parse(fs.readFileSync(basePath + ".codecheck"));
-      assert.ok(settings.challengeId, challengeId);
-      assert.ok(settings.resultId, resultId);
-      assert.ok(settings.username, "shunjikonishi");
+      assert.equal(settings.challengeId, challengeId);
+      assert.equal(settings.resultId, resultId);
+      assert.equal(settings.username, "shunjikonishi");
       done();
     });
   });
@@ -139,7 +139,7 @@ describe("Clone exam", function() {
       assert.ok(fs.existsSync(resultPath + "test/test3.js"));
 
       var settings = JSON.parse(fs.readFileSync(basePath + ".codecheck"));
-      assert.ok(settings.examId, examId);
+      assert.equal(settings.examId, examId);
       done();
     });
   });
