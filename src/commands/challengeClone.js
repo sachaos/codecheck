@@ -28,16 +28,16 @@ ChallengeCloneCommand.prototype.cloneChallenge = function(resultId, resolve) {
       var username = response.body.result.username; 
       var dirname = username + "-" + resultId;
       mkdirp(dirname, function(err) {
-        var tasks = [];
         if (err) {
-          console.error("Can not create directory: " + dirname);
+          resolve(new CommandResult(false, "Can not create directory: " + dirname));
         } else {
+          var tasks = [];
           tasks.push(self.doCloneChallenge(dirname, response.body.result.files));
           tasks.push(self.saveSettings(dirname, resultId, username));
+          Promise.all(tasks).then(function() {
+            resolve(new CommandResult(true));
+          });
         }
-        Promise.all(tasks).then(function() {
-          resolve(new CommandResult(true));
-        });
       });
     }, 
     function() {
