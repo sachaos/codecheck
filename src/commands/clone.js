@@ -4,8 +4,8 @@ var SigninCommand = require("./signin");
 var Promise       = require("bluebird");
 var CommandResult = require("../commandResult");
 
-var ChallengeCloneCommand = require("./challengeClone");
-var ExamCloneCommand      = require("./examClone");
+var CloneChallengeCommand = require("./cloneChallenge");
+var CloneExamCommand      = require("./cloneExam");
 
 function CloneCommand(api) {
   this.api = api;
@@ -35,9 +35,9 @@ CloneCommand.prototype.run = function(args, options) {
     new SigninCommand(self.api).run(null, options).then(
       function() {
         if (options.exam) {
-          new ExamCloneCommand(self.api).run(args, options).then(resolve);
+          new CloneExamCommand(self.api).run(args, options).then(resolve);
         } else {
-          new ChallengeCloneCommand(self.api).run(args, options).then(resolve);
+          new CloneChallengeCommand(self.api).run(args, options).then(resolve);
         }
       }, 
       function() {

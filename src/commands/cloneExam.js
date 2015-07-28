@@ -7,13 +7,13 @@ var moment        = require("moment");
 var Promise       = require("bluebird");
 var CommandResult = require("../commandResult");
 
-var ChallengeCloneCommand = require("./challengeClone");
+var CloneChallengeCommand = require("./cloneChallenge");
 
-function ExamCloneCommand(api) {
+function CloneExamCommand(api) {
   this.api = api;
 }
 
-ExamCloneCommand.prototype.run = function(args, options) {
+CloneExamCommand.prototype.run = function(args, options) {
   var self = this;
   var id = args[0];
   var since = 0;
@@ -27,7 +27,7 @@ ExamCloneCommand.prototype.run = function(args, options) {
 };
 
 
-ExamCloneCommand.prototype.cloneExam = function(examId, since, resolve) {
+CloneExamCommand.prototype.cloneExam = function(examId, since, resolve) {
   var self = this;
   var api = this.api;
   api.examResults(examId, since).then(
@@ -54,7 +54,7 @@ ExamCloneCommand.prototype.cloneExam = function(examId, since, resolve) {
   );
 };
 
-ExamCloneCommand.prototype.saveSettings = function(dirname, examId) {
+CloneExamCommand.prototype.saveSettings = function(dirname, examId) {
   var settings = {
     "examId": examId,
     "lastUpdated": moment().format()
@@ -65,12 +65,12 @@ ExamCloneCommand.prototype.saveSettings = function(dirname, examId) {
   });
 };
 
-ExamCloneCommand.prototype.doCloneExam = function(parentDir, challengeIds, resultIds) {
+CloneExamCommand.prototype.doCloneExam = function(parentDir, challengeIds, resultIds) {
   function getChallengeIndex(challengeId) {
     return challengeIds.indexOf(challengeId) + 1;
   }
   var self = this;
-  var challengeClone = new ChallengeCloneCommand(this.api);
+  var cloneChallenge = new CloneChallengeCommand(this.api);
   var tasks = resultIds.map(function(resultId) {
     return new Promise(function(resolve) {
       self.api.resultFiles(resultId).then(function(response) {
@@ -83,8 +83,8 @@ ExamCloneCommand.prototype.doCloneExam = function(parentDir, challengeIds, resul
             resolve(new CommandResult(false, "Can not create directory: " + dirname));
           } else {
             var tasks = [];
-            tasks.push(challengeClone.doCloneChallenge(dirname, response.body.result.files));
-            tasks.push(challengeClone.saveSettings(dirname, challengeId, resultId, username));
+            tasks.push(cloneChallenge.doCloneChallenge(dirname, response.body.result.files));
+            tasks.push(cloneChallenge.saveSettings(dirname, challengeId, resultId, username));
             Promise.all(tasks).then(function() {
               resolve(new CommandResult(true));
             });
@@ -96,4 +96,4 @@ ExamCloneCommand.prototype.doCloneExam = function(parentDir, challengeIds, resul
   return Promise.all(tasks);
 };
 
-module.exports = ExamCloneCommand;
+module.exports = CloneExamCommand;

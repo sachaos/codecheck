@@ -7,11 +7,11 @@ var moment        = require("moment");
 var Promise       = require("bluebird");
 var CommandResult = require("../commandResult");
 
-function ChallengeCloneCommand(api) {
+function CloneChallengeCommand(api) {
   this.api = api;
 }
 
-ChallengeCloneCommand.prototype.run = function(args) {
+CloneChallengeCommand.prototype.run = function(args) {
   var self = this;
   var id = args[0];
 
@@ -20,7 +20,7 @@ ChallengeCloneCommand.prototype.run = function(args) {
   });
 };
 
-ChallengeCloneCommand.prototype.cloneChallenge = function(resultId, resolve) {
+CloneChallengeCommand.prototype.cloneChallenge = function(resultId, resolve) {
   var self = this;
   var api = this.api;
   api.resultFiles(resultId).then(
@@ -46,7 +46,7 @@ ChallengeCloneCommand.prototype.cloneChallenge = function(resultId, resolve) {
   );
 };
 
-ChallengeCloneCommand.prototype.saveSettings = function(dirname, challengeId, resultId, username) {
+CloneChallengeCommand.prototype.saveSettings = function(dirname, challengeId, resultId, username) {
   var settings = {
     "challengeId": challengeId,
     "resultId": resultId,
@@ -59,7 +59,7 @@ ChallengeCloneCommand.prototype.saveSettings = function(dirname, challengeId, re
   });
 };
 
-ChallengeCloneCommand.prototype.doCloneChallenge = function(dirname, files) {
+CloneChallengeCommand.prototype.doCloneChallenge = function(dirname, files) {
   function getParentDirectory(filename) {
     var array = filename.split("/");
     array.pop();
@@ -86,7 +86,7 @@ ChallengeCloneCommand.prototype.doCloneChallenge = function(dirname, files) {
   });
 };
 
-ChallengeCloneCommand.prototype.download = function(filename, url, resolve) {
+CloneChallengeCommand.prototype.download = function(filename, url, resolve) {
   var result = null;
   request(url)
     .on('response', function(response) {
@@ -109,4 +109,4 @@ ChallengeCloneCommand.prototype.download = function(filename, url, resolve) {
     .pipe(fs.createWriteStream(filename));
 };
 
-module.exports = ChallengeCloneCommand;
+module.exports = CloneChallengeCommand;
