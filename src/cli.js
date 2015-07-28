@@ -26,7 +26,11 @@ function start() {
       throw "Unknown command: " + args.command;
     } else {
       try {
-        command.run(args.args, args.options);
+        command.run(args.args, args.options).then(function(result) {
+          if (result.message) {
+            console.log(result.message);
+          }
+        });
       } catch (e) {
         console.log(e);
         if (e.stack) {

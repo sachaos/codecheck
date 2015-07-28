@@ -1,7 +1,6 @@
 "use strict";
 
 var readlineSync = require('readline-sync');
-var Promise = require("bluebird");
   
 function SigninCommand(api) {
   this.api = api;
@@ -19,11 +18,7 @@ SigninCommand.prototype.run = function(args, options) {
       hideEchoBack: true
     });
   }
-  return new Promise(function(resolve) {
-    api.signin(username, password).then(resolve, function() {
-      console.error("Fail signin");
-    });
-  });
+  return api.signin(username, password);
 };
 
 module.exports = SigninCommand;
