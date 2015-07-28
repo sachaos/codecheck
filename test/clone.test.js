@@ -10,7 +10,7 @@ var fs     = require("fs");
 var API          = require("../src/api");
 var CloneCommand = require("../src/commands/clone");
 
-describe("CloneCommand", function() {
+describe("Clone challenge", function() {
   this.timeout(5000);
 
   var api = new API(config.host);
@@ -50,17 +50,6 @@ describe("CloneCommand", function() {
       done();
     }
   });
-  // it("should fail with exam option", function(done) {
-  //   var command = new CloneCommand(api);
-  //   command.run([1], {
-  //     user: "shunjikonishi",
-  //     password: "password",
-  //     exam: true
-  //   }).then(function(result) {
-  //     assert.equal(result.succeed, false);
-  //     done();
-  //   });
-  // });
   it("should fail with invalid password", function(done) {
     var command = new CloneCommand(api);
     command.run([1], {
@@ -96,6 +85,61 @@ describe("CloneCommand", function() {
       assert.ok(settings.challengeId, challengeId);
       assert.ok(settings.resultId, resultId);
       assert.ok(settings.username, "shunjikonishi");
+      done();
+    });
+  });
+});
+
+describe("Clone exam", function() {
+  this.timeout(5000);
+
+  var api = new API(config.host);
+  var examId, resultId, challengeId;
+
+  before(function(done) {
+    initData(function(data) {
+      examId = data.exams[0].id;
+      challengeId = data.challenges[0].id;
+      resultId = data.challenge_results[0].id;
+      done();
+    });
+  });
+
+  beforeEach(function(done) {
+    rimraf("exam-" + examId, done);
+  });
+
+  after(function(done) {
+    rimraf("exam-" + examId, done);
+  });
+
+  it("should fail with invalid examId", function(done) {
+    var command = new CloneCommand(api);
+    command.run([examId + 9999], {
+      user: "shunjikonishi",
+      password: "password",
+      exam: true
+    }).then(function(result) {
+      assert.equal(result.succeed, false);
+      done();
+    });
+  });
+
+  it("should succeed with valid examId", function(done) {
+    var command = new CloneCommand(api);
+    command.run([examId], {
+      user: "shunjikonishi",
+      password: "password",
+      exam: true
+    }).then(function(result) {
+      assert.equal(result.succeed, true);
+      var basePath = "exam-" + examId + "/";
+      var resultPath = basePath + "shunjikonishi/challenge1-" + resultId + "/";
+      assert.ok(fs.existsSync(resultPath + "README.md"));
+      assert.ok(fs.existsSync(resultPath + "test/test3.js"));
+
+      var settings = JSON.parse(fs.readFileSync(basePath + ".codecheck"));
+      assert.ok(settings.examId, examId);
       done();
     });
   });
