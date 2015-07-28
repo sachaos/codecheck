@@ -49,17 +49,17 @@ describe("CloneCommand", function() {
       done();
     }
   });
-  it("should fail with exam option", function(done) {
-    var command = new CloneCommand(api);
-    command.run([1], {
-      user: "shunjikonishi",
-      password: "password",
-      exam: true
-    }).then(function(result) {
-      assert.equal(result.succeed, false);
-      done();
-    });
-  });
+  // it("should fail with exam option", function(done) {
+  //   var command = new CloneCommand(api);
+  //   command.run([1], {
+  //     user: "shunjikonishi",
+  //     password: "password",
+  //     exam: true
+  //   }).then(function(result) {
+  //     assert.equal(result.succeed, false);
+  //     done();
+  //   });
+  // });
   it("should fail with invalid password", function(done) {
     var command = new CloneCommand(api);
     command.run([1], {
@@ -90,6 +90,10 @@ describe("CloneCommand", function() {
       var basePath = "shunjikonishi-" + resultId + "/";
       assert.ok(fs.existsSync(basePath + "README.md"));
       assert.ok(fs.existsSync(basePath + "test/test3.js"));
+
+      var settings = JSON.parse(fs.readFileSync(basePath + ".codecheck"));
+      assert.ok(settings.resultId, resultId);
+      assert.ok(settings.username, "shunjikonishi");
       done();
     });
   });

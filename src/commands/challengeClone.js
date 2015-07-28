@@ -48,7 +48,7 @@ ChallengeCloneCommand.prototype.cloneChallenge = function(resultId, resolve) {
 
 ChallengeCloneCommand.prototype.saveSettings = function(dirname, resultId, username) {
   var settings = {
-    "id": resultId,
+    "resultId": resultId,
     "username": username,
     "lastUpdated": moment().format()
   };
