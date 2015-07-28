@@ -3,6 +3,7 @@
 var packageJson   = require("../package.json");
 var CommandParser = require("./commandParser");
 var CloneCommand  = require("./commands/clone");
+var PullCommand   = require("./commands/pull");
 var API           = require("./api");
 
 var DEFAULT_HOST  = "localhost:9000";
@@ -12,6 +13,8 @@ function createCommand(args) {
   switch (args.command) {
     case "clone":
       return new CloneCommand(api);
+    case "pull":
+      return new PullCommand(api);
   }
   return null;
 }

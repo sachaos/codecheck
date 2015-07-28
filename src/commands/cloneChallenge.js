@@ -55,7 +55,11 @@ CloneChallengeCommand.prototype.saveSettings = function(dirname, challengeId, re
   };
   var data = JSON.stringify(settings, null, "  ");
   return new Promise(function(resolve) {
-    fs.writeFile(dirname + "/.codecheck", data, resolve);
+    var filename = ".codecheck";
+    if (dirname) {
+      filename = dirname + "/" + filename;
+    }
+    fs.writeFile(filename, data, resolve);
   });
 };
 
@@ -70,7 +74,10 @@ CloneChallengeCommand.prototype.doCloneChallenge = function(dirname, files) {
     var tasks = [];
     Object.keys(files).sort().forEach(function(filename) {
       var url = files[filename];
-      var fullpath = dirname + "/" + filename;
+      var fullpath = filename;
+      if (dirname) {
+        fullpath = dirname + "/" + fullpath;
+      }
       tasks.push(new Promise(function(resolve) {
         mkdirp(getParentDirectory(fullpath), function(err) {
           if (err) {

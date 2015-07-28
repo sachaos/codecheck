@@ -59,9 +59,13 @@ CloneExamCommand.prototype.saveSettings = function(dirname, examId) {
     "examId": examId,
     "lastUpdated": moment().format()
   };
+  var filename = ".codecheck";
+  if (dirname) {
+    filename = dirname + "/" + filename;
+  }
   var data = JSON.stringify(settings, null, "  ");
   return new Promise(function(resolve) {
-    fs.writeFile(dirname + "/.codecheck", data, resolve);
+    fs.writeFile(filename, data, resolve);
   });
 };
 
@@ -77,7 +81,10 @@ CloneExamCommand.prototype.doCloneExam = function(parentDir, challengeIds, resul
         var username = response.body.result.username; 
         var challengeId = response.body.result.challengeId;
         var challengeIndex = getChallengeIndex(challengeId);
-        var dirname = parentDir + "/" + username + "/challenge" + challengeIndex + "-" + resultId;
+        var dirname = username + "/challenge" + challengeIndex + "-" + resultId;
+        if (parentDir) {
+          dirname = parentDir + "/" + dirname;
+        }
         mkdirp(dirname, function(err) {
           if (err) {
             resolve(new CommandResult(false, "Can not create directory: " + dirname));
