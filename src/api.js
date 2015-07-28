@@ -45,4 +45,16 @@ API.prototype.resultFiles = function(id) {
   return this.execute(options);
 };
 
+API.prototype.examResults = function(id, since) {
+  var options = {
+    url: this.baseUrl + "/api/cli/exams/" + id + "/results",
+    method: "GET",
+    json: true,
+    qs: {
+      since: since || 0
+    }
+  };
+  return this.execute(options);
+};
+
 module.exports = API;
