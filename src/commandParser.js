@@ -1,5 +1,7 @@
 "use strict";
 
+var TestUtils = require("./tests/testUtils");
+
 function isCommand(str) {
   var commands = [
     "clone",
@@ -56,12 +58,18 @@ function parse(args) {
     return ret;
   }
   var command = args[0];
-  if (isCommand(command)) {
+  if (TestUtils.isTestFramework(command)) {
+    command = "run";
+  } else if (isCommand(command)) {
     args = args.slice(1);
   } else {
     command = "run";
   }
   ret.command = command;
+  if (command === "run") {
+    ret.args = args;
+    return ret;
+  }
   parseOptions(ret, args);
   return ret;
 }
