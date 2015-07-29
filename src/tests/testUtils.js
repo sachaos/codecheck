@@ -2,9 +2,11 @@
 
 var TestRunner      = require("./testRunner");
 var MochaTestRunner = require("./mochaTestRunner");
+var ScalaTestRunner = require("./scalaTestRunner");
 
 var frameworks = [
-  "mocha"
+  "mocha",
+  "scalatest"
 ];
 
 function availableFrameworks() {
@@ -19,6 +21,8 @@ function createTestRunner(name, args, cwd) {
   switch (name) {
     case "mocha":
       return new MochaTestRunner(args, cwd);
+    case "scalatest":
+      return new ScalaTestRunner(args, cwd);
     default:
       return new TestRunner(name, args, cwd);
   }
