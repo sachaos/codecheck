@@ -31,9 +31,4 @@ function MochaTestRunner(args, cwd) {
 
 MochaTestRunner.prototype = new TestRunner();
 
-var runner = new MochaTestRunner();
-runner.consoleOut(true);
-runner.run();
-
-
 module.exports = MochaTestRunner;
