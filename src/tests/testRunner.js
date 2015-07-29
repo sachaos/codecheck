@@ -76,8 +76,8 @@ TestRunner.prototype.run = function() {
     stderrBuf.add(data);
   });
   p.on('close', function(code) {
-    stdoutBuf.end();
-    stderrBuf.end();
+    stdoutBuf.close();
+    stderrBuf.close();
 
     self.executed = true;
     self.exitCode = code;
