@@ -13,10 +13,14 @@ function CloneCommand(api) {
 
 CloneCommand.prototype.usage = function() {
   console.log("Usage: clone");
-  console.log("  codecheck clone <ChallengeId>|<ExamId>");
+  console.log("  codecheck clone <ResultId>|<ExamId>");
+  console.log("Arguments:");
+  console.log("  ResultId: Challenge result id to download.");
+  console.log("  ExamId  : Exam id to download. Specify with --exam option.");
   console.log("Options:");
   console.log("  -u, --user    : username");
   console.log("  -p, --password: password");
+  console.log("  --exam        : Clone exam");
 };
 
 CloneCommand.prototype.checkArgs = function(args) {
