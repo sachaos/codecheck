@@ -33,9 +33,12 @@ RunCommand.prototype.prepare = function(args, resolve) {
   }
   var dir = null;
   if (args.length > 0) {
-    var stat = fs.statSync(args[0]);
-    if (stat && stat.isDirectory()) {
-      dir = args.shift();
+    try {
+      var stat = fs.statSync(args[0]);
+      if (stat && stat.isDirectory()) {
+        dir = args.shift();
+      }
+    } catch (e) {
     }
   }
   if (!name) {
