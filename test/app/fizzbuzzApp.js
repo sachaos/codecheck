@@ -1,5 +1,6 @@
 "use strict";
 
+var readline = require("../../src/codecheck").readline();
 
 function fizzbuzz(n) {
   if (n % 15 === 0) {
@@ -13,18 +14,7 @@ function fizzbuzz(n) {
   }
 }
 
-process.stdin.on("data", function(data) {
-  var array = data.toString().split("\n").filter(function(v) { return v.length > 0;});
-  for (var i=0; i<array.length; i++) {
-    console.log(fizzbuzz(array[i]));
-  }
+readline.onData(function(data) {
+  console.log(fizzbuzz(data));
 });
 
-/*
-var input = readlineSync.question();
-while (input !== null) {
-console.log("app2", input);
-  console.log(fizzbuzz(input));
-  input = readlineSync.question();
-}
-*/
