@@ -81,6 +81,7 @@ TestRunner.prototype.run = function() {
 
     self.executed = true;
     self.exitCode = code;
+    self.childProcess = null;
 
     emitter.emit("end", code);
     if (self._consoleOut) {
