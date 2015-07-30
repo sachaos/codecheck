@@ -1,9 +1,17 @@
 # codecheck
-codecheck CLI
+Run several kind of test framework by one command.
 
-## How to run command with development environment
+
+## Getting started
 
 ```
-npm install . -g
-codecheck
+npm install codecheck -g
+codecheck mocha
+codecheck scalatest
 ```
+
+## Supported framework
+- JavaScript
+  - mocha
+- Scala
+  - ScalaTest
