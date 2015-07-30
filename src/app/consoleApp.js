@@ -40,7 +40,6 @@ ConsoleApp.prototype.doClose = function(code) {
 };
 
 ConsoleApp.prototype.doRun = function(process) {
-console.log("doRun");
   process.stdin.setEncoding("utf-8");
   var values = this.input();
   while (values.length) {
@@ -57,7 +56,6 @@ ConsoleApp.prototype.runAndVerify = function(additionalArgs, done) {
   }
   var errors = [];
   var values = this.expected();
-console.log("verify", values);
   this.onStdout(function(data) {
     if (values.length === 0) {
       errors.push("Expected vlaue is nothing, but output is " + data);
@@ -71,17 +69,16 @@ console.log("verify", values);
   this.onEnd(function(code) {
     while (values.length) {
       var value = values.shift();
-      errors.push("Expected value is " + value + ", but no outpu");
+      errors.push("Expected value is " + value + ", but no output");
     }
     if (code !== 0) {
-      errors.push("Exit code is not 0: " + code);
+      errors.push("Expected exit code is 0, but exit code is " + code);
     }
     var result = new CommandResult(errors.length === 0);
     if (errors.length) {
       result = result.withErrors(errors);
     }
     if (done) {
-console.log("Done", result);
       done(result);
     }
   });
