@@ -1,7 +1,8 @@
 "use strict";
 
-var yaml = require('js-yaml');
-var fs   = require('fs');
+var yaml   = require('js-yaml');
+var fs     = require('fs');
+var WebApp = require("./app/webApp");
 
 function CodecheckYaml(data) {
   this.data = data;
@@ -37,6 +38,22 @@ CodecheckYaml.prototype.getWebAppConsole = function() {
   return this.hasWebApp() ? this.data.web.console || false : false;
 };
 
+CodecheckYaml.prototype.getWebAppDirectory = function() {
+  return this.hasWebApp() ? this.data.web.dir || null : null;
+};
+
+CodecheckYaml.prototype.createWebApp = function() {
+  var args = this.getWebAppCommand().split(" ");
+  var cmd = args.shift();
+  var port = this.getWebAppPort();
+  var dir = this.getWebAppDirectory();
+  var consoleOut = this.getWebAppConsole();
+
+  var app = new WebApp(port, cmd, args, dir);
+  app.consoleOut(consoleOut);
+  return app;
+};
+
 CodecheckYaml.prototype.getAsArray = function(key) {
   if (this.data && this.data[key]) {
     var value = this.data[key];
@@ -51,6 +68,11 @@ CodecheckYaml.prototype.getBuildCommands = function() {
 
 CodecheckYaml.prototype.getTestCommands = function() {
   return this.getAsArray("test");
+};
+
+CodecheckYaml.prototype.getTestCommand = function() {
+  var array = this.getAsArray("test");
+  return array && array.length ? array[0] : null;
 };
 
 module.exports = CodecheckYaml;

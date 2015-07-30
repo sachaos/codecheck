@@ -98,7 +98,6 @@ AbstractApp.prototype.run = function(additionalArgs) {
 
 AbstractApp.prototype.kill = function(signal) {
   if (this._childProcess) {
-    signal = signal || "SIGTERM";
     this._childProcess.kill(signal);
   }
 };

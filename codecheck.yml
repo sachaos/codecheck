@@ -1,0 +1,9 @@
+build:
+  - npm install
+web:
+  command: sbt run -Dconfig.file=conf/test.conf
+  port: 9000
+  console: true
+  dir: ../code-main
+test:
+  - mocha

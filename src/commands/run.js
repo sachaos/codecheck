@@ -4,6 +4,8 @@ var Promise       = require("bluebird");
 var CommandResult = require("../commandResult");
 var fs            = require("fs");
 var TestUtils     = require("../tests/testUtils");
+var ConsoleApp    = require("../app/consoleApp");
+var CodecheckYaml = require("../codecheckYaml");
 
 function RunCommand() {
 }
@@ -58,20 +60,114 @@ RunCommand.prototype.prepare = function(args, resolve) {
     } catch (e) {
     }
   }
+  var config = this.getConfig(dir);
+  if (!name) {
+    name = config.getTestCommand();
+    if (name) {
+      var configArgs = name.split(" ");
+      name = configArgs.shift();
+      args = configArgs.concat(args);
+    }
+  }
   if (!name) {
     resolve(new CommandResult(false, "Could not decide test framework"));
     return;
   }
-  this.doRun(name, args, dir, resolve);
+  this.doRun(name, args, dir, config, resolve);
 };
 
-RunCommand.prototype.doRun = function(name, args, dir, resolve) {
-  var runner = TestUtils.createTestRunner(name, args, dir);
-  runner.consoleOut(true);
-  runner.onEnd(function(code) {
-    resolve(new CommandResult(true).withExitCode(code));
+RunCommand.prototype.getConfig = function(dir) {
+  var config = new CodecheckYaml();
+  var filename = "codecheck.yml";
+  if (dir) {
+    filename = dir + "/" + filename;
+  }
+  if (fs.existsSync(filename)) {
+    config.load(filename);
+  }
+  return config;
+};
+
+RunCommand.prototype.doBuild = function(config, dir, callback) {
+  function build() {
+    var next = commands.shift();
+    if (next) {
+      var start = new Date().getTime();
+      console.log("Start build: " + next);
+      var args = next.split(" ");
+      var cmd = args.shift();
+      var app = new ConsoleApp(cmd, args, dir);
+      app.onEnd(function(code) {
+        if (code !== 0) {
+          callback(new CommandResult(false, "Fail build: " + next).withExitCode(code));
+        } else {
+          console.log("Finish build: " + next + " (" + (new Date().getTime() - start) + "ms)");
+          build();
+        }
+      });
+      app.run();
+    } else {
+      callback();
+    }
+  }
+  var commands = config.getBuildCommands() || [];
+  build();
+};
+
+RunCommand.prototype.doWebApp = function(webapp, callback) {
+  var start = new Date().getTime();
+  console.log("Start webapp: " + webapp.getCommandLine());
+  webapp.ready(function() {
+    console.log("Ready webapp: " + webapp.getCommandLine() + " (" + (new Date().getTime() - start) + "ms)");
+    callback();
   });
-  runner.run();
+  webapp.run();
+webapp.childProcess.on("error", function(e) { 
+  console.log("WebApp error!", e);
+});
+webapp.childProcess.on("exit", function(e) { 
+  console.log("WebApp exit!", e);
+});
+webapp.childProcess.on("disconnect", function(e) { 
+  console.log("WebApp disconnect!", e);
+});
+webapp.childProcess.on("message", function(e) { 
+  console.log("WebApp message!", e);
+});
+console.log("WebApp register events!");
+};
+
+RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
+  function afterWebApp(result) {
+    if (result) {
+      resolve(result);
+    } else {
+      var runner = TestUtils.createTestRunner(name, args, dir);
+      runner.consoleOut(true);
+      runner.onEnd(function(code) {
+        if (webapp) {
+          webapp.kill();
+        }
+        resolve(new CommandResult(true).withExitCode(code));
+      });
+      runner.run();
+    }
+  }
+  function afterBuild(result) {
+    if (result) {
+      resolve(result);
+    } else {
+      if (config.hasWebApp()) {
+        webapp = config.createWebApp();
+        self.doWebApp(webapp, afterWebApp);
+      } else {
+        afterWebApp();
+      }
+    }
+  }
+  var self = this;
+  var webapp = null;
+  this.doBuild(config, dir, afterBuild);
 };
 
 module.exports = RunCommand;
