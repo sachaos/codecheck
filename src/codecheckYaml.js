@@ -54,8 +54,10 @@ CodecheckYaml.prototype.createWebApp = function() {
   var dir = this.getWebAppDirectory();
   var consoleOut = this.getWebAppConsole();
   var testUrl = this.getWebAppTestUrl();
+  var env = this.getEnvironment();
 
   var app = new WebApp(port, cmd, dir);
+  app.setEnvironment(env);
   app.consoleOut(consoleOut);
   app.testUrl(testUrl);
   return app;
@@ -88,6 +90,10 @@ CodecheckYaml.prototype.getTimeout = function() {
     ret = this.data.config.timeout;
   }
   return ret;
+};
+
+CodecheckYaml.prototype.getEnvironment = function() {
+  return this.data ? this.data.environment : null;
 };
 
 module.exports = CodecheckYaml;

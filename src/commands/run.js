@@ -95,6 +95,7 @@ RunCommand.prototype.doBuild = function(config, dir, callback) {
       var start = new Date().getTime();
       console.log("Start build: " + next);
       var app = new ConsoleApp(next, dir);
+      app.setEnvironment(config.getEnvironment());
       app.onEnd(function(code) {
         if (code !== 0) {
           callback(new CommandResult(false, "Fail build: " + next).withExitCode(code));
@@ -128,6 +129,7 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
       resolve(result);
     } else {
       var runner = TestUtils.createTestRunner(name, args, dir);
+      runner.setEnvironment(config.getEnvironment());
       runner.consoleOut(true);
       runner.onEnd(function(code) {
         if (webapp) {

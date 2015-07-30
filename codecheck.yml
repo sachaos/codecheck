@@ -5,6 +5,9 @@ web:
   port: 9000
   console: true
   dir: ../code-main
+environment:
+  APP_COMMAND: node fizzbuzzApp.js
+  APP_DIRECTORY: test/app
 test:
   - mocha
 config:

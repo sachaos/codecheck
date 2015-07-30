@@ -1,11 +1,13 @@
 "use strict";
 
-var spawn        = require("child_process").spawn;
+var _                = require("lodash");
+var spawn            = require("child_process").spawn;
 var LineEventEmitter = require("../utils/lineEventEmitter");
 
 function AbstractApp(cmd, cwd) {
   this.setCommand(cmd);
   this.cwd = cwd;
+  this.env = null;
 
   this.exitCode = null;
   this.executed = false;
@@ -20,6 +22,10 @@ AbstractApp.prototype.setCommand = function(cmd) {
     this.cmd = array.shift();
     this.args = array;
   }
+};
+
+AbstractApp.prototype.setEnvironment = function(env) {
+  this.env = env;
 };
 
 AbstractApp.prototype.normalizeArgs = function(args) {
@@ -60,8 +66,9 @@ AbstractApp.prototype.getExitCode = function() {
 AbstractApp.prototype.run = function(additionalArgs) {
   var self = this;
   var args = this.args.concat(this.normalizeArgs(additionalArgs));
+  var env = _.extend({}, process.env, this.env);
   var options = {
-    env: process.env
+    env: env
   };
   if (this.cwd) {
     options.cwd = this.cwd;
