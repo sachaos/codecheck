@@ -90,9 +90,16 @@ AbstractApp.prototype.run = function(additionalArgs) {
       self.doClose(code);
     }
   });
-  this.childProcess = p;
+  self.childProcess = p;
   if (self.doRun) {
     self.doRun(p);
+  }
+};
+
+AbstractApp.prototype.kill = function(signal) {
+  if (this._childProcess) {
+    signal = signal || "SIGTERM";
+    this._childProcess.kill(signal);
   }
 };
 
