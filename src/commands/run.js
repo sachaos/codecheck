@@ -94,9 +94,7 @@ RunCommand.prototype.doBuild = function(config, dir, callback) {
     if (next) {
       var start = new Date().getTime();
       console.log("Start build: " + next);
-      var args = next.split(" ");
-      var cmd = args.shift();
-      var app = new ConsoleApp(cmd, args, dir);
+      var app = new ConsoleApp(next, dir);
       app.onEnd(function(code) {
         if (code !== 0) {
           callback(new CommandResult(false, "Fail build: " + next).withExitCode(code));

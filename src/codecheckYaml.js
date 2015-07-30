@@ -46,17 +46,16 @@ CodecheckYaml.prototype.getWebAppDirectory = function() {
 
 CodecheckYaml.prototype.getWebAppTestUrl = function() {
   return this.hasWebApp() ? this.data.web.testUrl || null : null;
-}
+};
 
 CodecheckYaml.prototype.createWebApp = function() {
-  var args = this.getWebAppCommand().split(" ");
-  var cmd = args.shift();
+  var cmd = this.getWebAppCommand();
   var port = this.getWebAppPort();
   var dir = this.getWebAppDirectory();
   var consoleOut = this.getWebAppConsole();
-  var testUrl = this.getWebAppTestUrl()
+  var testUrl = this.getWebAppTestUrl();
 
-  var app = new WebApp(port, cmd, args, dir);
+  var app = new WebApp(port, cmd, dir);
   app.consoleOut(consoleOut);
   app.testUrl(testUrl);
   return app;

@@ -3,9 +3,8 @@
 var spawn        = require("child_process").spawn;
 var LineEventEmitter = require("../utils/lineEventEmitter");
 
-function AbstractApp(cmd, args, cwd) {
-  this.cmd = cmd;
-  this.args = this.normalizeArgs(args);
+function AbstractApp(cmd, cwd) {
+  this.setCommand(cmd);
   this.cwd = cwd;
 
   this.exitCode = null;
@@ -14,6 +13,14 @@ function AbstractApp(cmd, args, cwd) {
 
   this._consoleOut = false;
 }
+
+AbstractApp.prototype.setCommand = function(cmd) {
+  if (cmd) {
+    var array = cmd.split(" ");
+    this.cmd = array.shift();
+    this.args = array;
+  }
+};
 
 AbstractApp.prototype.normalizeArgs = function(args) {
   var ret = [];

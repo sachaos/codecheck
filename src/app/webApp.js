@@ -4,10 +4,9 @@ var AbstractApp      = require("./abstractApp");
 var EventEmitter     = require('events').EventEmitter;
 var request          = require("request");
 
-function WebApp(port, cmd, args, cwd) {
+function WebApp(port, cmd, cwd) {
   this.port = port;
-  this.cmd = cmd;
-  this.args = this.normalizeArgs(args);
+  this.setCommand(cmd);
   this.cwd = cwd;
 
   this._testUrl = null;

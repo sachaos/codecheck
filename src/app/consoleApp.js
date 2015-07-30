@@ -4,9 +4,8 @@ var AbstractApp      = require("./abstractApp");
 var CommandResult    = require("../commandResult");
 var EventEmitter     = require('events').EventEmitter;
 
-function ConsoleApp(cmd, args, cwd) {
-  this.cmd = cmd;
-  this.args = this.normalizeArgs(args);
+function ConsoleApp(cmd, cwd) {
+  this.setCommand(cmd);
   this.cwd = cwd;
 
   this._input = [];
