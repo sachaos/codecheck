@@ -9,6 +9,7 @@ function AbstractApp(cmd, args, cwd) {
   this.cwd = cwd;
 
   this.exitCode = null;
+  this.executed = false;
   this.childProcess = null;
 
   this._consoleOut = false;
@@ -39,6 +40,10 @@ AbstractApp.prototype.consoleOut = function() {
     this._consoleOut = arguments[0];
     return this;
   }
+};
+
+AbstractApp.prototype.isExecuted = function() {
+  return this.executed;
 };
 
 AbstractApp.prototype.getExitCode = function() {
