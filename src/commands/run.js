@@ -122,19 +122,6 @@ RunCommand.prototype.doWebApp = function(webapp, callback) {
     callback();
   });
   webapp.run();
-webapp.childProcess.on("error", function(e) { 
-  console.log("WebApp error!", e);
-});
-webapp.childProcess.on("exit", function(e) { 
-  console.log("WebApp exit!", e);
-});
-webapp.childProcess.on("disconnect", function(e) { 
-  console.log("WebApp disconnect!", e);
-});
-webapp.childProcess.on("message", function(e) { 
-  console.log("WebApp message!", e);
-});
-console.log("WebApp register events!");
 };
 
 RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
