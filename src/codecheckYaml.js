@@ -4,6 +4,8 @@ var yaml   = require('js-yaml');
 var fs     = require('fs');
 var WebApp = require("./app/webApp");
 
+var DEFAULT_TIMEOUT = 60 * 10;
+
 function CodecheckYaml(data) {
   this.data = data;
 }
@@ -42,15 +44,21 @@ CodecheckYaml.prototype.getWebAppDirectory = function() {
   return this.hasWebApp() ? this.data.web.dir || null : null;
 };
 
+CodecheckYaml.prototype.getWebAppTestUrl = function() {
+  return this.hasWebApp() ? this.data.web.testUrl || null : null;
+}
+
 CodecheckYaml.prototype.createWebApp = function() {
   var args = this.getWebAppCommand().split(" ");
   var cmd = args.shift();
   var port = this.getWebAppPort();
   var dir = this.getWebAppDirectory();
   var consoleOut = this.getWebAppConsole();
+  var testUrl = this.getWebAppTestUrl()
 
   var app = new WebApp(port, cmd, args, dir);
   app.consoleOut(consoleOut);
+  app.testUrl(testUrl);
   return app;
 };
 
@@ -73,6 +81,14 @@ CodecheckYaml.prototype.getTestCommands = function() {
 CodecheckYaml.prototype.getTestCommand = function() {
   var array = this.getAsArray("test");
   return array && array.length ? array[0] : null;
+};
+
+CodecheckYaml.prototype.getTimeout = function() {
+  var ret = DEFAULT_TIMEOUT;
+  if (this.data && this.data.config && this.data.config.timeout) {
+    ret = this.data.config.timeout;
+  }
+  return ret;
 };
 
 module.exports = CodecheckYaml;

@@ -7,3 +7,5 @@ web:
   dir: ../code-main
 test:
   - mocha
+config:
+  timeout: 600

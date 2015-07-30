@@ -154,6 +154,9 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
   }
   var self = this;
   var webapp = null;
+  setTimeout(function() {
+    resolve(new CommandResult(false, "Timeout").withExitCode(1));
+  }, config.getTimeout() * 1000);
   this.doBuild(config, dir, afterBuild);
 };
 
