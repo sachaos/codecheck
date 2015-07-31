@@ -24,7 +24,8 @@ function createTestRunner(name, args, cwd) {
     case "scalatest":
       return new ScalaTestRunner(args, cwd);
     default:
-      return new TestRunner(name, args, cwd);
+      var cmd = [name].concat(args).join(" ");
+      return new TestRunner(cmd, cwd);
   }
 }
 
