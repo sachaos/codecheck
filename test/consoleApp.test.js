@@ -3,10 +3,15 @@
 var assert       = require("chai").assert;
 var ConsoleApp   = require("../src/app/consoleApp");
 
+var CMD = process.env.APP_COMMAND;
+var DIR = process.env.APP_DIRECTORY;
+
+console.log(CMD, DIR);
+
 describe("FizzBuzzApp", function() {
 
   it("succeed with normal case", function(done) {
-    var app = new ConsoleApp("node", ["test/app/fizzbuzzApp.js"]);
+    var app = new ConsoleApp(CMD, DIR);
     app.input("1", "2", "3", "4", "5");
     app.expected("1", "2", "Fizz", "4", "Buzz");
     app.runAndVerify(function(result) {
@@ -16,7 +21,7 @@ describe("FizzBuzzApp", function() {
   });
 
   it("fail with wrong expected", function(done) {
-    var app = new ConsoleApp("node", ["test/app/fizzbuzzApp.js"]);
+    var app = new ConsoleApp(CMD, DIR);
     app.consoleOut(true);
     app.input("1", "2", "3", "4", "5");
     app.expected("1", "2", "3", "4", "Buzz");
@@ -28,7 +33,7 @@ describe("FizzBuzzApp", function() {
   });
 
   it("fail with not enough expected", function(done) {
-    var app = new ConsoleApp("node", ["test/app/fizzbuzzApp.js"]);
+    var app = new ConsoleApp(CMD, DIR);
     app.consoleOut(true);
     app.input("1", "2", "3", "4", "5");
     app.expected("1", "2", "Fizz", "4");
@@ -40,7 +45,7 @@ describe("FizzBuzzApp", function() {
   });
 
   it("fail with excess expected", function(done) {
-    var app = new ConsoleApp("node", ["test/app/fizzbuzzApp.js"]);
+    var app = new ConsoleApp(CMD, DIR);
     app.consoleOut(true);
     app.input("1", "2", "3", "4", "5");
     app.expected("1", "2", "Fizz", "4", "Buzz", "Fizz");

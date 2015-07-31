@@ -3,9 +3,8 @@
 var EventEmitter = require('events').EventEmitter;
 var AbstractApp  = require("../app/abstractApp");
 
-function TestRunner(cmd, args, cwd) {
-  this.cmd = cmd;
-  this.args = args;
+function TestRunner(cmd, cwd) {
+  this.setCommand(cmd);
   this.cwd = cwd;
 
   this.successCount = 0;
