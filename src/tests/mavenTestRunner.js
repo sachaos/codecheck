@@ -23,7 +23,6 @@ function MavenTestRunner(args, cwd) {
         values[i] = parseInt(array[n + 1]);
       }
     }
-console.log("onStdOut: ", data, values);
     if (values.every(function(v) { return v !== -1;})) {
       self.failureCount = values[1] + values[2];
       self.successCount = values[0] - self.failureCount;
