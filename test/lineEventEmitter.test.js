@@ -95,5 +95,25 @@ describe("LineEventEmitter", function() {
     line.add(new Buffer("test4"));
     line.close();
   });
+
+  it("succeed with linefeed series", function(done) {
+    var count = 0;
+    var emitter = new EventEmitter();
+    var line = new LineEventEmitter(emitter, "data");
+    emitter.on("data", function(data) {
+      count++;
+      switch (count) {
+        case 1: assert.equal(data, "test1"); break;
+        case 2: assert.equal(data, ""); break;
+        case 3: assert.equal(data, "test2"); break;
+        case 4: assert.equal(data, ""); break;
+        case 5: assert.equal(data, "test3test4"); done();
+      }
+    });
+    line.add(new Buffer("test1\n\n"));
+    line.add(new Buffer("test2\n\ntest3"));
+    line.add(new Buffer("test4"));
+    line.close();
+  });
 });
 
