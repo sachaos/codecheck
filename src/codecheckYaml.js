@@ -68,7 +68,7 @@ CodecheckYaml.prototype.getAsArray = function(key) {
     var value = this.data[key];
     return Array.isArray(value) ? value : [value];
   }
-  return null;
+  return [];
 };
 
 CodecheckYaml.prototype.getBuildCommands = function() {
