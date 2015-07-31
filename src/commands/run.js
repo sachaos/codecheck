@@ -109,7 +109,7 @@ RunCommand.prototype.doBuild = function(config, dir, callback) {
       callback();
     }
   }
-  var commands = config.getBuildCommands() || [];
+  var commands = config.getBuildCommands();
   build();
 };
 

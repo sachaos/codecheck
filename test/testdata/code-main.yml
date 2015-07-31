@@ -4,6 +4,4 @@ web:
   command: sbt run -Dconfig.file=conf/test.conf
   port: 9000
   console: true
-test:
-  - scalatest
-  - mocha specs --recursive
+test: mocha specs --recursive

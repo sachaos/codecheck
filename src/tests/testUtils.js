@@ -2,11 +2,14 @@
 
 var TestRunner      = require("./testRunner");
 var MochaTestRunner = require("./mochaTestRunner");
-var ScalaTestRunner = require("./scalaTestRunner");
+var SbtTestRunner   = require("./sbtTestRunner");
+var MavenTestRunner = require("./mavenTestRunner");
 
 var frameworks = [
   "mocha",
-  "scalatest"
+  "sbt",
+  "mvn",
+  "maven"
 ];
 
 function availableFrameworks() {
@@ -21,10 +24,14 @@ function createTestRunner(name, args, cwd) {
   switch (name) {
     case "mocha":
       return new MochaTestRunner(args, cwd);
-    case "scalatest":
-      return new ScalaTestRunner(args, cwd);
+    case "sbt":
+      return new SbtTestRunner(args, cwd);
+    case "maven":
+    case "mvn":
+      return new MavenTestRunner(args, cwd);
     default:
-      return new TestRunner(name, args, cwd);
+      var cmd = [name].concat(args).join(" ");
+      return new TestRunner(cmd, cwd);
   }
 }
 

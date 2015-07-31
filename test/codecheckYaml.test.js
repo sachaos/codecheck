@@ -16,9 +16,8 @@ describe("CodecheckYaml", function() {
     assert.ok(config.getBuildCommands().length, 1);
     assert.ok(config.getBuildCommands()[0].indexOf("npm install") === 0);
 
-    assert.ok(config.getTestCommands().length, 2);
-    assert.ok(config.getTestCommands()[0].indexOf("scalatest") === 0);
-    assert.ok(config.getTestCommands()[1].indexOf("mocha") === 0);
+    assert.ok(config.getTestCommands().length, 1);
+    assert.ok(config.getTestCommands()[0].indexOf("mocha") === 0);
 
   });
 });

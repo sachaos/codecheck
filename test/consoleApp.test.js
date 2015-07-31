@@ -8,6 +8,13 @@ var DIR = process.env.APP_DIRECTORY;
 
 console.log(CMD, DIR);
 
+describe("Env vars", function() {
+  it("can read", function() {
+    assert(CMD);
+    assert(DIR);
+  });
+});
+
 describe("FizzBuzzApp", function() {
 
   it("succeed with normal case", function(done) {
