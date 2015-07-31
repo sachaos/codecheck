@@ -1,12 +1,13 @@
 "use strict";
 
-var spawn        = require("child_process").spawn;
+var _                = require("lodash");
+var spawn            = require("child_process").spawn;
 var LineEventEmitter = require("../utils/lineEventEmitter");
 
-function AbstractApp(cmd, args, cwd) {
-  this.cmd = cmd;
-  this.args = this.normalizeArgs(args);
+function AbstractApp(cmd, cwd) {
+  this.setCommand(cmd);
   this.cwd = cwd;
+  this.env = null;
 
   this.exitCode = null;
   this.executed = false;
@@ -14,6 +15,18 @@ function AbstractApp(cmd, args, cwd) {
 
   this._consoleOut = false;
 }
+
+AbstractApp.prototype.setCommand = function(cmd) {
+  if (cmd) {
+    var array = cmd.split(" ");
+    this.cmd = array.shift();
+    this.args = array;
+  }
+};
+
+AbstractApp.prototype.setEnvironment = function(env) {
+  this.env = env;
+};
 
 AbstractApp.prototype.normalizeArgs = function(args) {
   var ret = [];
@@ -53,8 +66,9 @@ AbstractApp.prototype.getExitCode = function() {
 AbstractApp.prototype.run = function(additionalArgs) {
   var self = this;
   var args = this.args.concat(this.normalizeArgs(additionalArgs));
+  var env = _.extend({}, process.env, this.env);
   var options = {
-    env: process.env
+    env: env
   };
   if (this.cwd) {
     options.cwd = this.cwd;
@@ -90,9 +104,15 @@ AbstractApp.prototype.run = function(additionalArgs) {
       self.doClose(code);
     }
   });
-  this.childProcess = p;
+  self.childProcess = p;
   if (self.doRun) {
     self.doRun(p);
+  }
+};
+
+AbstractApp.prototype.kill = function(signal) {
+  if (this._childProcess) {
+    this._childProcess.kill(signal);
   }
 };
 
