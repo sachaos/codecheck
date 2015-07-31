@@ -2,7 +2,7 @@
   "name": "codecheck",
   "version": "0.0.1",
   "description": "codecheck CLI",
-  "main": "src/cli.js",
+  "main": "src/codecheck.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -26,6 +26,7 @@
   "homepage": "https://github.com/code-check/codecheck#readme",
   "dependencies": {
     "bluebird": "^2.9.34",
+    "js-yaml": "^3.3.1",
     "lodash": "^3.10.0",
     "mkdirp": "^0.5.1",
     "moment": "^2.10.5",

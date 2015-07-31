@@ -1,0 +1,14 @@
+build:
+  - npm install
+web:
+  command: sbt run -Dconfig.file=conf/test.conf
+  port: 9000
+  console: true
+  dir: ../code-main
+environment:
+  APP_COMMAND: node fizzbuzzApp.js
+  APP_DIRECTORY: test/app
+test:
+  - mocha
+config:
+  timeout: 600
