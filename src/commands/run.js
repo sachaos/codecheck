@@ -69,6 +69,9 @@ RunCommand.prototype.prepare = function(args, resolve) {
       args = configArgs.concat(args);
     }
   }
+  if (!name && args.length > 0) {
+    name = args.shift();
+  }
   if (!name) {
     resolve(new CommandResult(false, "Could not decide test framework"));
     return;
