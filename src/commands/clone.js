@@ -11,6 +11,10 @@ function CloneCommand(api) {
   this.api = api;
 }
 
+CloneCommand.prototype.shortHelp = function() {
+  return "Clone challenge result or exam from code-check.io";
+};
+
 CloneCommand.prototype.usage = function() {
   console.log("Usage: clone");
   console.log("  codecheck clone <ResultId>|<ExamId>");

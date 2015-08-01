@@ -13,6 +13,10 @@ function PullCommand(api) {
   this.api = api;
 }
 
+PullCommand.prototype.shortHelp = function() {
+  return "Pull current challenge result or exam from code-check.io";
+};
+
 PullCommand.prototype.usage = function() {
   console.log("Usage: pull");
   console.log("  codecheck pull");

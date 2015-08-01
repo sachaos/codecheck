@@ -10,6 +10,10 @@ var CodecheckYaml = require("../codecheckYaml");
 function RunCommand() {
 }
 
+RunCommand.prototype.shortHelp = function() {
+  return "Run test";
+};
+
 RunCommand.prototype.usage = function() {
   console.log("Usage: run");
   console.log("  codecheck run [TestFramework] [Directory] [Options]*");
