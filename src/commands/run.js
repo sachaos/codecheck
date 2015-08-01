@@ -1,7 +1,7 @@
 "use strict";
 
 var Promise       = require("bluebird");
-var CommandResult = require("../commandResult");
+var CommandResult = require("../cli/commandResult");
 var fs            = require("fs");
 var TestUtils     = require("../tests/testUtils");
 var ConsoleApp    = require("../app/consoleApp");

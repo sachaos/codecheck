@@ -2,7 +2,7 @@
 
 var SigninCommand = require("./signin");
 var Promise       = require("bluebird");
-var CommandResult = require("../commandResult");
+var CommandResult = require("../cli/commandResult");
 
 var CloneChallengeCommand = require("./cloneChallenge");
 var CloneExamCommand      = require("./cloneExam");

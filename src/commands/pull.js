@@ -2,7 +2,7 @@
 
 var SigninCommand = require("./signin");
 var Promise       = require("bluebird");
-var CommandResult = require("../commandResult");
+var CommandResult = require("../cli/commandResult");
 var moment        = require("moment");
 var fs            = require("fs");
 

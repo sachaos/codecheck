@@ -1,6 +1,6 @@
 "use strict";
 
-var TestUtils = require("./tests/testUtils");
+var TestUtils = require("../tests/testUtils");
 
 function isCommand(str) {
   var commands = [

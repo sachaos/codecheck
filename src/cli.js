@@ -1,7 +1,7 @@
 "use strict";
 
 var packageJson   = require("../package.json");
-var CommandParser = require("./commandParser");
+var CommandParser = require("./cli/commandParser");
 var CloneCommand  = require("./commands/clone");
 var PullCommand   = require("./commands/pull");
 var RunCommand    = require("./commands/run");
@@ -51,6 +51,7 @@ function start() {
     if (e.stack) {
       console.log(e.stack);
     }
+    process.exit(1);
   }
 }
 

@@ -1,7 +1,7 @@
 "use strict";
 
 var AbstractApp      = require("./abstractApp");
-var CommandResult    = require("../commandResult");
+var CommandResult    = require("../cli/commandResult");
 var EventEmitter     = require('events').EventEmitter;
 
 function ConsoleApp(cmd, cwd) {
