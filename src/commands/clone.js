@@ -1,11 +1,11 @@
 "use strict";
 
-var SigninCommand = require("./signin");
+var SigninCommand = require("./internal/signin");
 var Promise       = require("bluebird");
 var CommandResult = require("../cli/commandResult");
 
-var CloneChallengeCommand = require("./cloneChallenge");
-var CloneExamCommand      = require("./cloneExam");
+var CloneChallengeCommand = require("./internal/cloneChallenge");
+var CloneExamCommand      = require("./internal/cloneExam");
 
 function CloneCommand(api) {
   this.api = api;

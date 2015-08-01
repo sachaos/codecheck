@@ -5,7 +5,7 @@ var mkdirp        = require("mkdirp");
 var request       = require("request");
 var moment        = require("moment");
 var Promise       = require("bluebird");
-var CommandResult = require("../cli/commandResult");
+var CommandResult = require("../../cli/commandResult");
 
 function CloneChallengeCommand(api) {
   this.api = api;
