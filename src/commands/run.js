@@ -1,7 +1,7 @@
 "use strict";
 
 var Promise       = require("bluebird");
-var CommandResult = require("../commandResult");
+var CommandResult = require("../cli/commandResult");
 var fs            = require("fs");
 var TestUtils     = require("../tests/testUtils");
 var ConsoleApp    = require("../app/consoleApp");
@@ -9,6 +9,10 @@ var CodecheckYaml = require("../codecheckYaml");
 
 function RunCommand() {
 }
+
+RunCommand.prototype.shortHelp = function() {
+  return "Run test";
+};
 
 RunCommand.prototype.usage = function() {
   console.log("Usage: run");
@@ -68,6 +72,9 @@ RunCommand.prototype.prepare = function(args, resolve) {
       name = configArgs.shift();
       args = configArgs.concat(args);
     }
+  }
+  if (!name && args.length > 0) {
+    name = args.shift();
   }
   if (!name) {
     resolve(new CommandResult(false, "Could not decide test framework"));

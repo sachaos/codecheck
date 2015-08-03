@@ -1,25 +1,22 @@
 "use strict";
 
-var packageJson   = require("../package.json");
-var CommandParser = require("./commandParser");
-var CloneCommand  = require("./commands/clone");
-var PullCommand   = require("./commands/pull");
-var RunCommand    = require("./commands/run");
-var API           = require("./api");
+var packageJson       = require("../package.json");
+var CommandParser     = require("./cli/commandParser");
+var CommandRepository = require("./cli/commandRepository");
+var API               = require("./api");
 
 var DEFAULT_HOST  = "localhost:9000";
 
 function createCommand(args) {
-  var api = new API(args.options.host || DEFAULT_HOST);
-  switch (args.command) {
-    case "clone":
-      return new CloneCommand(api);
-    case "pull":
-      return new PullCommand(api);
-    case "run":
-      return new RunCommand();
+  var Command = CommandRepository.getCommand(args.command);
+  if (Command === null) {
+    return null;
   }
-  return null;
+  var api = null;
+  if (CommandRepository.isAPI(args.command)) {
+    api = new API(args.options.host || DEFAULT_HOST);
+  }
+  return new Command(api);
 }
 
 function start() {
@@ -51,6 +48,7 @@ function start() {
     if (e.stack) {
       console.log(e.stack);
     }
+    process.exit(1);
   }
 }
 

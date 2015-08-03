@@ -1,17 +1,21 @@
 "use strict";
 
-var SigninCommand = require("./signin");
+var SigninCommand = require("./internal/signin");
 var Promise       = require("bluebird");
-var CommandResult = require("../commandResult");
+var CommandResult = require("../cli/commandResult");
 var moment        = require("moment");
 var fs            = require("fs");
 
-var CloneChallengeCommand = require("./cloneChallenge");
-var CloneExamCommand      = require("./cloneExam");
+var CloneChallengeCommand = require("./internal/cloneChallenge");
+var CloneExamCommand      = require("./internal/cloneExam");
 
 function PullCommand(api) {
   this.api = api;
 }
+
+PullCommand.prototype.shortHelp = function() {
+  return "Pull current challenge result or exam from code-check.io";
+};
 
 PullCommand.prototype.usage = function() {
   console.log("Usage: pull");

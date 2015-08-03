@@ -1,16 +1,7 @@
 "use strict";
 
-var TestUtils = require("./tests/testUtils");
-
-function isCommand(str) {
-  var commands = [
-    "clone",
-    "pull",
-    "run",
-    "help"
-  ];
-  return commands.indexOf(str) !== -1;
-}
+var TestUtils = require("../tests/testUtils");
+var CommandRepository = require("./commandRepository");
 
 function convertShortOption(str) {
   var options = {
@@ -60,7 +51,7 @@ function parse(args) {
   var command = args[0];
   if (TestUtils.isTestFramework(command)) {
     command = "run";
-  } else if (isCommand(command)) {
+  } else if (CommandRepository.isCommand(command)) {
     args = args.slice(1);
   } else {
     command = "run";

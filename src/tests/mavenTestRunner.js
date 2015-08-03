@@ -14,18 +14,11 @@ function MavenTestRunner(args, cwd) {
     return args[0] === "test";
   }
   function onStdout(data) {
-    var keys = ["run:", "Failures:", "Errors:"];
-    var values = [-1, -1, -1];
-    var array = data.split(" ");
-    for (var i=0; i<keys.length; i++) {
-      var n = array.indexOf(keys[i]);
-      if (n !== -1 && n + 1 < array.length) {
-        values[i] = parseInt(array[n + 1]);
-      }
-    }
-    if (values.every(function(v) { return v !== -1;})) {
-      self.failureCount = values[1] + values[2];
-      self.successCount = values[0] - self.failureCount;
+    var regex = /.* run: (\d+),.* Failures: (\d+),.* Errors: (\d+),.*/;
+    var match = data.match(regex);
+    if (match) {
+      self.failureCount = parseInt(match[2]) + parseInt(match[3]);
+      self.successCount = parseInt(match[1]) - self.failureCount;
     }
   }
 
