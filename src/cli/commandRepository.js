@@ -4,10 +4,12 @@ var _             = require("lodash");
 var CloneCommand  = require("../commands/clone");
 var PullCommand   = require("../commands/pull");
 var RunCommand    = require("../commands/run");
+var ScoreCommand  = require("../commands/score");
 var HelpCommand   = require("../commands/help");
 
 var repo = {
   run: RunCommand,
+  score: ScoreCommand,
   clone: CloneCommand,
   pull: PullCommand,
   help: HelpCommand
