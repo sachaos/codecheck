@@ -24,8 +24,11 @@ HelpCommand.prototype.usage = function() {
   console.log("Available commands:");
   self.getCommandRepository().getCommandNames().forEach(function(name) {
     var Command = self.getCommandRepository().getCommand(name);
-    var shortHelp = new Command().shortHelp();
-    console.log("  " + name + ": " + shortHelp);
+    var cmd = new Command();
+    if (!cmd.internalOnly) {
+      var shortHelp = cmd.shortHelp();
+      console.log("  " + name + ": " + shortHelp);
+    }
   });
 };
 
