@@ -1,7 +1,11 @@
 "use strict";
 
 var Promise       = require("bluebird");
+var mkdirp        = require("mkdirp");
 var CommandResult = require("../cli/commandResult");
+
+var RunCommand               = require("./run");
+var CloneChallengeCommand    = require("./internal/cloneChallenge");
 
 function ScoreCommand(api) {
   this.api = api;
@@ -12,7 +16,8 @@ ScoreCommand.prototype.shortHelp = function() {
 };
 
 ScoreCommand.prototype.usage = function() {
-  console.log("Internal use only");
+  console.log("Usage: score");
+  console.log("  codecheck score <JSON>");
 };
 
 ScoreCommand.prototype.internalOnly = true;
@@ -23,17 +28,33 @@ ScoreCommand.prototype.checkArgs = function(args) {
     json = JSON.parse(args);
   }
   if (!json) {
-    throw "score command takes json argumentpull command doesn't take arguments.";
+    throw "score command takes json argument.";
   }
   return json;
 };
 
 ScoreCommand.prototype.run = function(args) {
+  var self = this;
   var json = this.checkArgs(args);
-  console.log("Score", json);
 
   return new Promise(function(resolve){
-    resolve(new CommandResult(true));
+    var dirname = "codecheck";
+    mkdirp(dirname, function(err) {
+      if (err) {
+        resolve(new CommandResult(false, "Can not create directory: " + dirname));
+      } else {
+        self.doScore(dirname, json, resolve);
+      }
+    });
+  });
+};
+
+ScoreCommand.prototype.doScore = function(dirname, json, resolve) {
+  var self = this;
+  new CloneChallengeCommand(self.api).doCloneChallenge(dirname, json.files).then(function() {
+    new RunCommand().run([dirname]).then(function(result) {
+      resolve(result);
+    });
   });
 };
 
