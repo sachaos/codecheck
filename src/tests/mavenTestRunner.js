@@ -23,6 +23,7 @@ function MavenTestRunner(args, cwd) {
   }
 
   var self = this;
+  this.init();
   if (!args) {
     args = [];
   }

@@ -2,6 +2,7 @@
 
 var _                = require("lodash");
 var spawn            = require("child_process").spawn;
+var EventEmitter     = require('events').EventEmitter;
 var LineEventEmitter = require("../utils/lineEventEmitter");
 
 function AbstractApp(cmd, cwd) {
@@ -15,6 +16,10 @@ function AbstractApp(cmd, cwd) {
 
   this._consoleOut = false;
 }
+
+AbstractApp.prototype.init = function() {
+  this.emitter = new EventEmitter();
+};
 
 AbstractApp.prototype.setCommand = function(cmd) {
   if (cmd) {

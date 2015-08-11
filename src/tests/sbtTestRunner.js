@@ -40,6 +40,7 @@ function SbtTestRunner(args, cwd) {
   }
 
   var self = this;
+  this.init();
   if (!args) {
     args = [];
   }

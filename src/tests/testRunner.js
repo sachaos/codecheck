@@ -1,16 +1,14 @@
 "use strict";
 
-var EventEmitter = require('events').EventEmitter;
 var AbstractApp  = require("../app/abstractApp");
 
 function TestRunner(cmd, cwd) {
+  this.init();
   this.setCommand(cmd);
   this.cwd = cwd;
 
   this.successCount = 0;
   this.failureCount = 0;
-
-  this.emitter = new EventEmitter();
 }
 
 TestRunner.prototype = new AbstractApp();
@@ -30,9 +28,9 @@ TestRunner.prototype.getExecuteCount = function() {
 TestRunner.prototype.doClose = function(code) {
   if (this._consoleOut) {
     process.stdout.write("codecheck: Finish with code " + code + "\n");
-    process.stdout.write("  tests  : " + this.getExecuteCount() + "\n");
-    process.stdout.write("  success: " + this.getSuccessCount() + "\n");
-    process.stdout.write("  failure: " + this.getFailureCount() + "\n");
+    process.stdout.write("codecheck: tests  : " + this.getExecuteCount() + "\n");
+    process.stdout.write("codecheck: success: " + this.getSuccessCount() + "\n");
+    process.stdout.write("codecheck: failure: " + this.getFailureCount() + "\n");
   }
 };
 

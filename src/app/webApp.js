@@ -1,10 +1,10 @@
 "use strict";
 
 var AbstractApp      = require("./abstractApp");
-var EventEmitter     = require('events').EventEmitter;
 var request          = require("request");
 
 function WebApp(port, cmd, cwd) {
+  this.init();
   this.port = port;
   this.setCommand(cmd);
   this.cwd = cwd;
@@ -12,8 +12,6 @@ function WebApp(port, cmd, cwd) {
   this._testUrl = null;
   this._testPath = "/";
   this._readyCheckInterval = 2000;
-
-  this.emitter = new EventEmitter();
 }
 
 WebApp.prototype = new AbstractApp();

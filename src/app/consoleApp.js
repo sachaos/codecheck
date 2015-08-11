@@ -2,16 +2,14 @@
 
 var AbstractApp      = require("./abstractApp");
 var CommandResult    = require("../cli/commandResult");
-var EventEmitter     = require('events').EventEmitter;
 
 function ConsoleApp(cmd, cwd) {
+  this.init();
   this.setCommand(cmd);
   this.cwd = cwd;
 
   this._input = [];
   this._expected = [];
-
-  this.emitter = new EventEmitter();
 }
 
 ConsoleApp.prototype = new AbstractApp();
