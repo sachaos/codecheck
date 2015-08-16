@@ -3,15 +3,16 @@
 var _                = require("lodash");
 var util             = require("util");
 
-function MarkdownTest(answers) {
-  function normalizeArray(array) {
-    for (var i=0; i<array.length; i++) {
-      var v = array[i];
-      if (!util.isArray(v)) {
-        array[i] = [v];
-      }
+function normalizeArray(array) {
+  for (var i=0; i<array.length; i++) {
+    var v = array[i];
+    if (!util.isArray(v)) {
+      array[i] = [v];
     }
   }
+}
+
+function MarkdownTest(answers) {
   function isCheckbox(str) {
     if (str.indexOf("- [ ]") === 0) {
       return true;
@@ -32,6 +33,7 @@ function MarkdownTest(answers) {
     var index = 0;
     var lines = text.split("\n");
     lines.forEach(function(str) {
+      str = str.trim();
       if (isCheckbox(str)) {
         inQuestion = true;
         if (isChecked(str)) {

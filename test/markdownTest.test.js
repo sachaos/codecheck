@@ -181,7 +181,7 @@ describe("MarkdownTest - has less answers", function() {
     assert.equal(result.wrongCount(), 0);
   });
 
-  it("result has 11 correct", function() {
+  it("result has 8 correct", function() {
     assert(result.isCorrect(0));
     assert(result.isCorrect(1));
     assert(result.isCorrect(2));
@@ -192,5 +192,35 @@ describe("MarkdownTest - has less answers", function() {
     assert(result.isCorrect(7));
 
     assert(result.isWrong(8));
+  });
+});
+
+describe("MarkdownTest - subList", function() {
+  var test, result;
+
+  before(function() {
+    test = codecheck.markdownTest([
+      0,
+      1
+    ]);
+    result = test.score(fs.readFileSync("./test/testdata/markdownTest2.md", "utf-8"));
+  });
+
+  it("test has 2 test", function() {
+    assert.equal(test.testCount(), 2);
+  });
+  it("result has 2 test", function() {
+    assert.equal(result.testCount(), 2);
+  });
+  it("result has 2 correct", function() {
+    assert.equal(result.correctCount(), 2);
+    assert.equal(result.wrongCount(), 0);
+  });
+
+  it("result has 2 correct", function() {
+    assert(result.isCorrect(0));
+    assert(result.isCorrect(1));
+
+    assert(result.isWrong(2));
   });
 });
