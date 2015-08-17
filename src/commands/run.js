@@ -85,12 +85,17 @@ RunCommand.prototype.prepare = function(args, resolve) {
 
 RunCommand.prototype.getConfig = function(dir) {
   var config = new CodecheckYaml();
-  var filename = "codecheck.yml";
+  var codecheckYml = "codecheck.yml";
+  var packageJson = "package.json";
   if (dir) {
-    filename = dir + "/" + filename;
+    codecheckYml = dir + "/" + codecheckYml;
+    packageJson = dir + "/" + packageJson;
   }
-  if (fs.existsSync(filename)) {
-    config.load(filename);
+  if (fs.existsSync(codecheckYml)) {
+    config.load(codecheckYml);
+  }
+  if (fs.existsSync(packageJson) && !config.hasBuildCommand("npm install")) {
+    config.addBuildCommand("npm install");
   }
   return config;
 };

@@ -7,12 +7,12 @@ var WebApp = require("./app/webApp");
 var DEFAULT_TIMEOUT = 60 * 10;
 
 function CodecheckYaml(data) {
-  this.data = data;
+  this.data = data || {};
 }
 
 CodecheckYaml.prototype.load = function(filename) {
   try {
-    this.data = yaml.safeLoad(fs.readFileSync(filename, 'utf-8'));
+    this.data = yaml.safeLoad(fs.readFileSync(filename, 'utf-8')) || {};
     return true;
   } catch (e) {
     console.log(e);
@@ -73,6 +73,22 @@ CodecheckYaml.prototype.getAsArray = function(key) {
 
 CodecheckYaml.prototype.getBuildCommands = function() {
   return this.getAsArray("build");
+};
+
+CodecheckYaml.prototype.hasBuildCommand = function(str) {
+  return this.getBuildCommands().indexOf(str) !== -1;
+};
+
+CodecheckYaml.prototype.addBuildCommand = function(str) {
+  if (!this.data.build) {
+    this.data.build = [];
+  }
+  var value = this.data.build;
+  if (!Array.isArray(value)) {
+    value = [value];
+    this.data.build = value;
+  }
+  value.push(str);
 };
 
 CodecheckYaml.prototype.getTestCommands = function() {
