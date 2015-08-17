@@ -1,7 +1,7 @@
 "use strict";
 
 var ReadLine     = require("./utils/readLine");
-var MarkdownTest = require("./utils/markDownTest");
+var MarkdownTest = require("./utils/markdownTest");
 
 function readline() {
   return new ReadLine();
