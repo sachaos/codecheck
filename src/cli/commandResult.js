@@ -13,8 +13,21 @@ CommandResult.prototype.withExitCode = function(code) {
 };
 
 CommandResult.prototype.withErrors = function(errors) {
+  if (!Array.isArray(errors)) {
+    errors = [errors];
+  }
   this.errors = errors;
   return this;
+};
+
+CommandResult.prototype.getMessage = function() {
+  if (this.message) {
+    return this.message;
+  }
+  if (this.errors) {
+    return this.errors.join("\n");
+  }
+  return null;
 };
 
 module.exports = CommandResult;
