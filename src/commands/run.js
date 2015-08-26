@@ -107,6 +107,7 @@ RunCommand.prototype.doBuild = function(config, dir, callback) {
       var start = new Date().getTime();
       console.log("Start build: " + next);
       var app = new ConsoleApp(next, dir);
+      app.consoleOut(true);
       app.setEnvironment(config.getEnvironment());
       app.onEnd(function(code) {
         if (code !== 0) {
@@ -158,6 +159,7 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
     } else {
       if (config.hasWebApp()) {
         webapp = config.createWebApp();
+        webapp.consoleOut(true);
         self.doWebApp(webapp, afterWebApp);
       } else {
         afterWebApp();
