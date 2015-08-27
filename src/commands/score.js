@@ -25,7 +25,11 @@ ScoreCommand.prototype.internalOnly = true;
 ScoreCommand.prototype.checkArgs = function(args) {
   var json = null;
   if (args.length === 1) {
-    json = JSON.parse(args[0]);
+    var str = args[0];
+    if (str.charAt(0) !== "{") {
+      str = new Buffer(str, "base64").toString();
+    }
+    json = JSON.parse(str);
   }
   if (!json) {
     throw "score command takes json argument.";
