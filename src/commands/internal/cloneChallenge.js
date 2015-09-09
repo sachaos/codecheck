@@ -81,7 +81,7 @@ CloneChallengeCommand.prototype.doCloneChallenge = function(dirname, files) {
       tasks.push(new Promise(function(resolve) {
         mkdirp(getParentDirectory(fullpath), function(err) {
           if (err) {
-            console.err("Can not create directory: " + getParentDirectory(fullpath));
+            console.error("Can not create directory: " + getParentDirectory(fullpath));
             resolve(err);
           } else {
             self.download(fullpath, url, resolve);
@@ -110,7 +110,7 @@ CloneChallengeCommand.prototype.download = function(filename, url, resolve) {
       }
     })
     .on("error", function(err) {
-      console.err("Fail download: " + filename + ", " + err);
+      console.error("Fail download: " + filename + ", " + err);
       resolve(err);
     })
     .pipe(fs.createWriteStream(filename));
