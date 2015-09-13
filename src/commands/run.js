@@ -158,7 +158,7 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
       resolve(result);
     } else {
       if (config.hasWebApp()) {
-        webapp = config.createWebApp();
+        webapp = config.createWebApp(dir);
         webapp.consoleOut(true);
         self.doWebApp(webapp, afterWebApp);
       } else {
