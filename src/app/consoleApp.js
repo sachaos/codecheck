@@ -32,7 +32,7 @@ ConsoleApp.prototype.expected = function() {
 
 ConsoleApp.prototype.doClose = function(code) {
   if (this._consoleOut) {
-    process.stdout.write("codecheck: Finish '" + this.getCommandLine() + "with code " + code + "\n");
+    process.stdout.write("codecheck: Finish '" + this.getCommandLine() + " with code " + code + "\n");
   }
 };
 

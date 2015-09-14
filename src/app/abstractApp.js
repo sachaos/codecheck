@@ -109,6 +109,11 @@ AbstractApp.prototype.run = function(additionalArgs) {
       self.doClose(code);
     }
   });
+  p.on("error", function(err) {
+    console.error("Error: " + self.cmd + " " + args.join(" "));
+    console.error(err);
+    throw err;
+  });
   self.childProcess = p;
   if (self.doRun) {
     self.doRun(p);
