@@ -5,7 +5,7 @@ var CommandParser     = require("./cli/commandParser");
 var CommandRepository = require("./cli/commandRepository");
 var API               = require("./api");
 
-var DEFAULT_HOST  = process.env.CODECHECK_HOST || "code-main.herokuapp.com";
+var DEFAULT_HOST  = process.env.CODECHECK_HOST || "app.code-check.io";
 
 function createCommand(args) {
   var Command = CommandRepository.getCommand(args.command);
