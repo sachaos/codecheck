@@ -6,6 +6,7 @@ var SbtTestRunner   = require("./sbtTestRunner");
 var MavenTestRunner = require("./mavenTestRunner");
 var RSpecTestRunner = require("./rspecTestRunner");
 var NoseTestRunner  = require("./noseTestRunner");
+var CabalTestRunner = require("./cabalTestRunner");
 
 var frameworks = [
   "mocha",
@@ -13,7 +14,8 @@ var frameworks = [
   "mvn",
   "maven",
   "rspec",
-  "nodestests"
+  "nodestests",
+  "cabal"
 ];
 
 function availableFrameworks() {
@@ -37,6 +39,8 @@ function createTestRunner(name, args, cwd) {
       return new RSpecTestRunner(args, cwd);
     case "nosetests":
       return new NoseTestRunner(args, cwd);
+    case "cabal":
+      return new CabalTestRunner(args, cwd);
     default:
       var cmd = [name].concat(args).join(" ");
       var runner = new TestRunner(cmd, cwd);
