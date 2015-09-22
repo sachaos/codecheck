@@ -36,7 +36,7 @@ function GoTestRunner(args, cwd) {
     gopath = process.env.GOPATH + path.delimiter + gopath;
   }
   if (cwd) {
-    gopath = path.from(gopath, cwd);
+    gopath = path.resolve(gopath, cwd);
   }
   this.env = {
     "GOPATH": gopath
