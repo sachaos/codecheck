@@ -30,7 +30,11 @@ AbstractApp.prototype.setCommand = function(cmd) {
 };
 
 AbstractApp.prototype.setEnvironment = function(env) {
-  this.env = env;
+  if (this.env) {
+    this.env = _.extend(this.env, env);
+  } else {
+    this.env = env;
+  }
 };
 
 AbstractApp.prototype.normalizeArgs = function(args) {
