@@ -6,8 +6,8 @@ var TestRunner = require("./testRunner");
 function GoTestRunner(args, cwd) {
   function initArgs() {
     var ret = args || [];
-    if (args.indexOf("-v") === -1) {
-      args.push("-v");
+    if (ret.indexOf("-v") === -1) {
+      ret.push("-v");
     }
     return ret;
   }
