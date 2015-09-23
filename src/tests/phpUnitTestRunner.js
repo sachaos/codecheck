@@ -5,8 +5,8 @@ var TestRunner = require("./testRunner");
 function PhpUnitTestRunner(args, cwd) {
   function initArgs() {
     var ret = args || [];
-    if (args.indexOf("--tap") === -1) {
-      args.unshift("--tap");
+    if (ret.indexOf("--tap") === -1) {
+      ret.unshift("--tap");
     }
     return ret;
   }
