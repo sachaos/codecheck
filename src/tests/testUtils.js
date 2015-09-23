@@ -9,6 +9,7 @@ var NoseTestRunner  = require("./noseTestRunner");
 var CabalTestRunner = require("./cabalTestRunner");
 var PhpUnitTestRunner = require("./phpUnitTestRunner");
 var GoTestRunner      = require("./goTestRunner");
+var ProveTestRunner   = require("./proveTestRunner");
 
 var frameworks = [
   "mocha",
@@ -19,7 +20,8 @@ var frameworks = [
   "nodestests",
   "cabal",
   "phpunit",
-  "go"
+  "go",
+  "prove"
 ];
 
 function availableFrameworks() {
@@ -49,6 +51,8 @@ function createTestRunner(name, args, cwd) {
       return new PhpUnitTestRunner(args, cwd);
     case "go":
       return new GoTestRunner(args, cwd);
+    case "prove":
+      return new ProveTestRunner(args, cwd);
     default:
       var cmd = [name].concat(args).join(" ");
       var runner = new TestRunner(cmd, cwd);
