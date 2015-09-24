@@ -10,6 +10,7 @@ var CabalTestRunner = require("./cabalTestRunner");
 var PhpUnitTestRunner = require("./phpUnitTestRunner");
 var GoTestRunner      = require("./goTestRunner");
 var ProveTestRunner   = require("./proveTestRunner");
+var GradleTestRunner  = require("./gradleTestRunner");
 
 var frameworks = [
   "mocha",
@@ -21,7 +22,8 @@ var frameworks = [
   "cabal",
   "phpunit",
   "go",
-  "prove"
+  "prove",
+  "gradle"
 ];
 
 function availableFrameworks() {
@@ -53,6 +55,8 @@ function createTestRunner(name, args, cwd) {
       return new GoTestRunner(args, cwd);
     case "prove":
       return new ProveTestRunner(args, cwd);
+    case "gradle":
+      return new GradleTestRunner(args, cwd);
     default:
       var cmd = [name].concat(args).join(" ");
       var runner = new TestRunner(cmd, cwd);
