@@ -11,6 +11,7 @@ var PhpUnitTestRunner = require("./phpUnitTestRunner");
 var GoTestRunner      = require("./goTestRunner");
 var ProveTestRunner   = require("./proveTestRunner");
 var GradleTestRunner  = require("./gradleTestRunner");
+var NUnitTestRunner   = require("./nunitTestRunner");
 
 var frameworks = [
   "mocha",
@@ -23,7 +24,8 @@ var frameworks = [
   "phpunit",
   "go",
   "prove",
-  "gradle"
+  "gradle",
+  "nunit-console"
 ];
 
 function availableFrameworks() {
@@ -57,6 +59,8 @@ function createTestRunner(name, args, cwd) {
       return new ProveTestRunner(args, cwd);
     case "gradle":
       return new GradleTestRunner(args, cwd);
+    case "nunit-console":
+      return new NUnitTestRunner(args, cwd);
     default:
       var cmd = [name].concat(args).join(" ");
       var runner = new TestRunner(cmd, cwd);
