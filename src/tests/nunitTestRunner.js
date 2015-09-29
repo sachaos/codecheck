@@ -13,6 +13,14 @@ function NUnitTestRunner(args, cwd) {
     if (match) {
       self.failureCount = parseInt(match[2]);
       self.successCount = parseInt(match[1]) - self.failureCount;
+      return;
+    }
+    regex = /^Tests run: (\d+), Errors: (\d+), Failures: (\d+),/;
+    match = data.match(regex);
+    if (match) {
+      self.failureCount = parseInt(match[2]) + parseInt(match[3]);
+      self.successCount = parseInt(match[1]) - self.failureCount;
+      return;
     }
   }
 
