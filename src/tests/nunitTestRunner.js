@@ -8,25 +8,6 @@ var TestRunner = require("./testRunner");
  * Tests run: 22, Failures: 0, Not run: 0, Time: 0.414 seconds
  */
 function NUnitTestRunner(args, cwd) {
-  function initArgs() {
-    var ret = args || [];
-    var monoPath = process.env.MONO_PATH;
-    if (!monoPath) {
-      return ret;
-    }
-    var added = false;
-    for (var i=0; i<ret.length; i++) {
-      if (ret[i].indexOf("-lib:") === 0) {
-        ret[i] += path.sep + monoPath;
-        added = true;
-        break;
-      }
-    }
-    if (!added) {
-      ret.unshift("-lib:" + monoPath);
-    }
-    return ret;
-  }
   function onStdout(data) {
     var regex = /^Tests run: (\d+), Failures: (\d+),/;
     var match = data.match(regex);
@@ -47,12 +28,48 @@ function NUnitTestRunner(args, cwd) {
   var self = this;
   this.init();
   this.cmd = "nunit-console";
-  this.args = initArgs();
+  this.args = args;
   this.cwd = cwd;
 
   this.onStdout(onStdout);
 }
 
 NUnitTestRunner.prototype = new TestRunner();
+
+NUnitTestRunner.prototype.configure = function(yaml) {
+  function isMonoCompile(cmd) {
+    return cmd.trim().indexOf("mcs ") === 0;
+  }
+  function addMonoPath(cmd) {
+    var ret = cmd.split(" ");
+    var added = false;
+    for (var i=0; i<ret.length; i++) {
+      if (ret[i].indexOf("-lib:") === 0) {
+        ret[i] += path.sep + monoPath;
+        added = true;
+        break;
+      }
+    }
+    if (!added) {
+      var first = ret.shift();
+      ret.unshift("-lib:" + monoPath);
+      ret.unshift(first);
+    }
+    return ret.join(" ");
+  }
+  var monoPath = process.env.MONO_PATH;
+  if (!monoPath) {
+    return;
+  }
+  var newBuild = [];
+  for (var i=0; i<yaml.getBuildCommands().length; i++) {
+    var cmd = yaml.getBuildCommands()[i];
+    if (isMonoCompile(cmd)) {
+      cmd = addMonoPath(cmd);
+    }
+    newBuild.push(cmd);
+  }
+  yaml.data.build = newBuild;
+};
 
 module.exports = NUnitTestRunner;
