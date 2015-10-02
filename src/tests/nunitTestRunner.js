@@ -1,5 +1,6 @@
 "use strict";
 
+var path       = require("path");
 var TestRunner = require("./testRunner");
 
 /**
@@ -34,5 +35,41 @@ function NUnitTestRunner(args, cwd) {
 }
 
 NUnitTestRunner.prototype = new TestRunner();
+
+NUnitTestRunner.prototype.configure = function(yaml) {
+  function isMonoCompile(cmd) {
+    return cmd.trim().indexOf("mcs ") === 0;
+  }
+  function addMonoPath(cmd) {
+    var ret = cmd.split(" ");
+    var added = false;
+    for (var i=0; i<ret.length; i++) {
+      if (ret[i].indexOf("-lib:") === 0) {
+        ret[i] += path.sep + monoPath;
+        added = true;
+        break;
+      }
+    }
+    if (!added) {
+      var first = ret.shift();
+      ret.unshift("-lib:" + monoPath);
+      ret.unshift(first);
+    }
+    return ret.join(" ");
+  }
+  var monoPath = process.env.MONO_PATH;
+  if (!monoPath) {
+    return;
+  }
+  var newBuild = [];
+  for (var i=0; i<yaml.getBuildCommands().length; i++) {
+    var cmd = yaml.getBuildCommands()[i];
+    if (isMonoCompile(cmd)) {
+      cmd = addMonoPath(cmd);
+    }
+    newBuild.push(cmd);
+  }
+  yaml.data.build = newBuild;
+};
 
 module.exports = NUnitTestRunner;

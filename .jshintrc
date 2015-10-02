@@ -8,7 +8,7 @@
   "nonew": true,
   "notypeof": false,
   "undef": true,
-  "unused": true,
+  "unused": "vars",
   "boss": true,
   "eqnull": true,
   "expr": true,

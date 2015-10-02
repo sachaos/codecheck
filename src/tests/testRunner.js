@@ -34,4 +34,8 @@ TestRunner.prototype.doClose = function(code) {
   }
 };
 
+TestRunner.prototype.configure = function(yaml) {
+};
+
+
 module.exports = TestRunner;

@@ -141,7 +141,6 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
     if (result) {
       resolve(result);
     } else {
-      var runner = TestUtils.createTestRunner(name, args, dir);
       runner.setEnvironment(config.getEnvironment());
       runner.consoleOut(true);
       runner.onEnd(function(code) {
@@ -168,6 +167,8 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
   }
   var self = this;
   var webapp = null;
+  var runner = TestUtils.createTestRunner(name, args, dir);
+  runner.configure(config);
   setTimeout(function() {
     resolve(new CommandResult(false, "Timeout").withExitCode(1));
   }, config.getTimeout() * 1000);
