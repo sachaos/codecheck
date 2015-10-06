@@ -45,7 +45,7 @@ NUnitTestRunner.prototype.configure = function(yaml) {
     var added = false;
     for (var i=0; i<ret.length; i++) {
       if (ret[i].indexOf("-lib:") === 0) {
-        ret[i] += path.sep + monoPath;
+        ret[i] += "," + monoPath;
         added = true;
         break;
       }
