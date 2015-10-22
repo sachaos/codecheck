@@ -77,8 +77,23 @@ CodecheckYaml.prototype.getBuildCommands = function() {
   return this.getAsArray("build");
 };
 
-CodecheckYaml.prototype.hasBuildCommand = function(str) {
-  return this.getBuildCommands().indexOf(str) !== -1;
+CodecheckYaml.prototype.hasBuildCommand = function(str, strict) {
+  function splitCommand(cmd) {
+    return cmd.match(/"[^"]*"|[^ ]+/g) || [];
+  }
+  var cmdArray = splitCommand(str);
+  return this.getBuildCommands().some(function(v) {
+    var cmdArray2 = splitCommand(v);
+    if (strict && cmdArray.length !== cmdArray2.length) {
+      return false;
+    }
+    for (var i=0; i<cmdArray.length; i++) {
+      if (cmdArray[i] !== cmdArray2[i]) {
+        return false;
+      }
+    }
+    return true;
+  });
 };
 
 CodecheckYaml.prototype.addBuildCommand = function(str) {
