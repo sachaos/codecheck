@@ -96,7 +96,7 @@ CodecheckYaml.prototype.hasBuildCommand = function(str, strict) {
   });
 };
 
-CodecheckYaml.prototype.addBuildCommand = function(str) {
+CodecheckYaml.prototype.addBuildCommand = function(str, insertBefore) {
   if (!this.data.build) {
     this.data.build = [];
   }
@@ -105,7 +105,11 @@ CodecheckYaml.prototype.addBuildCommand = function(str) {
     value = [value];
     this.data.build = value;
   }
-  value.push(str);
+  if (insertBefore && value.indexOf(insertBefore) !== -1) {
+    value.splice(value.indexOf(insertBefore), 0, str);
+  } else {
+    value.push(str);
+  }
 };
 
 CodecheckYaml.prototype.getTestCommands = function() {

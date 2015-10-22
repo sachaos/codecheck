@@ -35,4 +35,48 @@ describe("CodecheckYaml", function() {
     assert.ok(config.hasBuildCommand("npm  install  --production", true), "allow multiple space when strict mode");
     assert.notOk(config.hasBuildCommand("npm install --hoge", true), "not match when strict mode");
   });
+
+});
+
+describe("addBuildCommand", function() {
+
+  it("add to last", function() {
+    var config = new CodecheckYaml();
+    assert.ok(config.load("test/testdata/buildtest.yml"));
+
+    config.addBuildCommand("hogehoge");
+    var commands = config.getBuildCommands();
+    assert.equal(commands.length, 4);
+    assert.equal(commands.indexOf("hogehoge"), 3);
+  });
+
+  it("add to head", function() {
+    var config = new CodecheckYaml();
+    assert.ok(config.load("test/testdata/buildtest.yml"));
+
+    config.addBuildCommand("hogehoge", config.getBuildCommands()[0]);
+    var commands = config.getBuildCommands();
+    assert.equal(commands.length, 4);
+    assert.equal(commands.indexOf("hogehoge"), 0);
+  });
+
+  it("add to middle", function() {
+    var config = new CodecheckYaml();
+    assert.ok(config.load("test/testdata/buildtest.yml"));
+
+    config.addBuildCommand("hogehoge", config.getBuildCommands()[1]);
+    var commands = config.getBuildCommands();
+    assert.equal(commands.length, 4);
+    assert.equal(commands.indexOf("hogehoge"), 1);
+  });
+
+  it("insert before undefined is equal to add to last", function() {
+    var config = new CodecheckYaml();
+    assert.ok(config.load("test/testdata/buildtest.yml"));
+
+    config.addBuildCommand("hogehoge", undefined);
+    var commands = config.getBuildCommands();
+    assert.equal(commands.length, 4);
+    assert.equal(commands.indexOf("hogehoge"), 3);
+  });
 });
