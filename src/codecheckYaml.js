@@ -77,11 +77,26 @@ CodecheckYaml.prototype.getBuildCommands = function() {
   return this.getAsArray("build");
 };
 
-CodecheckYaml.prototype.hasBuildCommand = function(str) {
-  return this.getBuildCommands().indexOf(str) !== -1;
+CodecheckYaml.prototype.hasBuildCommand = function(str, strict) {
+  function splitCommand(cmd) {
+    return cmd.match(/"[^"]*"|[^ ]+/g) || [];
+  }
+  var cmdArray = splitCommand(str);
+  return this.getBuildCommands().some(function(v) {
+    var cmdArray2 = splitCommand(v);
+    if (strict && cmdArray.length !== cmdArray2.length) {
+      return false;
+    }
+    for (var i=0; i<cmdArray.length; i++) {
+      if (cmdArray[i] !== cmdArray2[i]) {
+        return false;
+      }
+    }
+    return true;
+  });
 };
 
-CodecheckYaml.prototype.addBuildCommand = function(str) {
+CodecheckYaml.prototype.addBuildCommand = function(str, insertBefore) {
   if (!this.data.build) {
     this.data.build = [];
   }
@@ -90,7 +105,11 @@ CodecheckYaml.prototype.addBuildCommand = function(str) {
     value = [value];
     this.data.build = value;
   }
-  value.push(str);
+  if (insertBefore && value.indexOf(insertBefore) !== -1) {
+    value.splice(value.indexOf(insertBefore), 0, str);
+  } else {
+    value.push(str);
+  }
 };
 
 CodecheckYaml.prototype.getTestCommands = function() {

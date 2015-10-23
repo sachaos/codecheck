@@ -94,8 +94,8 @@ RunCommand.prototype.getConfig = function(dir) {
   if (fs.existsSync(codecheckYml)) {
     config.load(codecheckYml);
   }
-  if (fs.existsSync(packageJson) && !config.hasBuildCommand("npm install")) {
-    config.addBuildCommand("npm install");
+  if (fs.existsSync(packageJson) && !config.hasBuildCommand("npm")) {
+    config.addBuildCommand("npm install", config.getBuildCommands()[0]);
   }
   return config;
 };
