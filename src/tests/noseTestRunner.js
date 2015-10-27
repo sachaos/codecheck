@@ -22,7 +22,7 @@ function NoseTestRunner(args, cwd) {
       prev = data;
       return;
     }
-    var regex = /Ran (\d+) tests in/;
+    var regex = /Ran (\d+) tests? in/;
     var match = data.match(regex);
     if (match) {
       var allCount = parseInt(match[1]);
