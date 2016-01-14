@@ -48,11 +48,16 @@ CodecheckYaml.prototype.getWebAppTestUrl = function() {
   return this.hasWebApp() ? this.data.web.testUrl || null : null;
 };
 
+CodecheckYaml.prototype.getWebAppTestPath = function() {
+  return this.hasWebApp() ? this.data.web.testPath || '/' : '/';
+};
+
 CodecheckYaml.prototype.createWebApp = function(baseDir) {
   var cmd = this.getWebAppCommand();
   var port = this.getWebAppPort();
   var consoleOut = this.getWebAppConsole();
   var testUrl = this.getWebAppTestUrl();
+  var testPath = this.getWebAppTestPath();
   var env = this.getEnvironment();
   var dir = this.getWebAppDirectory();
   if (baseDir) {
@@ -62,6 +67,7 @@ CodecheckYaml.prototype.createWebApp = function(baseDir) {
   app.setEnvironment(env);
   app.consoleOut(consoleOut);
   app.testUrl(testUrl);
+  app.testPath(testPath);
   return app;
 };
 
