@@ -32,6 +32,11 @@ RunCommand.prototype.run = function(args) {
   });
 };
 
+RunCommand.prototype.withEnv = function(env) {
+  this.env = env;
+  return this;
+};
+
 RunCommand.prototype.prepare = function(args, resolve) {
   var name = null;
   if (args.length > 0 && TestUtils.isTestFramework(args[0])) {
@@ -109,6 +114,9 @@ RunCommand.prototype.doBuild = function(config, dir, callback) {
       var app = new ConsoleApp(next, dir);
       app.consoleOut(true);
       app.setEnvironment(config.getEnvironment());
+      if (self.env) {
+        app.setEnvironment(self.env);
+      }
       app.onEnd(function(code) {
         if (code !== 0) {
           callback(new CommandResult(false, "Fail build: " + next).withExitCode(code));
@@ -122,6 +130,7 @@ RunCommand.prototype.doBuild = function(config, dir, callback) {
       callback();
     }
   }
+  var self = this;
   var commands = config.getBuildCommands();
   build();
 };
@@ -142,6 +151,9 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
       resolve(result);
     } else {
       runner.setEnvironment(config.getEnvironment());
+      if (self.env) {
+        runner.setEnvironment(self.env);
+      }
       runner.consoleOut(true);
       runner.onEnd(function(code) {
         if (webapp) {
@@ -158,6 +170,9 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
     } else {
       if (config.hasWebApp()) {
         webapp = config.createWebApp(dir);
+        if (self.env) {
+          webapp.setEnvironment(self.env);
+        }
         webapp.consoleOut(true);
         self.doWebApp(webapp, afterWebApp);
       } else {
