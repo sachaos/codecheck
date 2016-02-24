@@ -56,7 +56,7 @@ ScoreCommand.prototype.run = function(args) {
 ScoreCommand.prototype.doScore = function(dirname, json, resolve) {
   var self = this;
   new CloneChallengeCommand(self.api).doCloneChallenge(dirname, json.files).then(function() {
-    new RunCommand().run([dirname]).then(function(result) {
+    new RunCommand().withEnv(json.envvars).run([dirname]).then(function(result) {
       resolve(result);
     });
   });

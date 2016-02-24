@@ -1,0 +1,14 @@
+{
+  "challengeId": 1,
+  "resultId": 1,
+  "token": "dummy",
+  "version": "2.0",
+  "envvars": {
+    "VAR1": "Taro"
+  },
+  "files": {
+    "app/hello.js": "https://raw.githubusercontent.com/shunjikonishi/code-check1/master/app/hello.js",
+    "test/test1.js": "https://raw.githubusercontent.com/shunjikonishi/code-check1/master/test/test1.js",
+    "challenge.json": "https://raw.githubusercontent.com/shunjikonishi/code-check1/master/challenge.json"  
+  }  
+}
