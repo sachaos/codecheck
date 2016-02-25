@@ -1,7 +1,6 @@
 "use strict";
 
 var assert = require("chai").assert;
-var fs     = require("fs");
 var rimraf = require("rimraf");
 var ScoreCommand = require("../src/commands/score");
 
@@ -17,9 +16,9 @@ describe("Score command", function() {
   });
 
   it("should succeed", function(done) {
-    var json = fs.readFileSync("./test/testdata/scoreTest.json", "utf-8");
+    var json = require("./testdata/scoreTest.json.js");
     var command = new ScoreCommand(null);
-    command.run([json]).then(function(result) {
+    command.run([JSON.stringify(json)]).then(function(result) {
       assert.equal(result.succeed, true);
       assert.equal(result.exitCode, 0);
     }).then(done, done);
