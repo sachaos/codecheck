@@ -4,7 +4,8 @@
   "token": "dummy",
   "version": "2.0",
   "envvars": {
-    "VAR1": "Taro"
+    "VAR1": "Taro",
+    "var1": "dummy"
   },
   "files": {
     "app/hello.js": "https://raw.githubusercontent.com/shunjikonishi/code-check1/master/app/hello.js",
