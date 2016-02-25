@@ -54,7 +54,7 @@ RunCommand.prototype.checkEnvvars = function(envvars, config) {
     }
     console.log("codecheck warning: envvar is not defnied - " + key);
   });
-}
+};
 
 RunCommand.prototype.prepare = function(args, resolve) {
   var name = null;
