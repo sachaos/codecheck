@@ -10,6 +10,9 @@
   "files": {
     "app/hello.js": "https://raw.githubusercontent.com/shunjikonishi/code-check1/master/app/hello.js",
     "test/test1.js": "https://raw.githubusercontent.com/shunjikonishi/code-check1/master/test/test1.js",
-    "challenge.json": "https://raw.githubusercontent.com/shunjikonishi/code-check1/master/challenge.json"  
+    "challenge.json": "https://raw.githubusercontent.com/shunjikonishi/code-check1/master/challenge.json",
+
+    "test/test2.js": "data:application/javascript;base64,dmFyIGFzc2VydCA9IHJlcXVpcmUoImNoYWkiKS5hc3NlcnQ7CnZhciBmcyAgICAgPSByZXF1aXJlKCJmcyIpOwoKLy9Vc2VkIGluIHNjb3JlVGVzdC5qc29uCmRlc2NyaWJlKCJEYXRhVVJJIHRlc3QiLCBmdW5jdGlvbigpIHsKICBpdCgidmVyaWZ5IHRlc3RmaWxlIiwgZnVuY3Rpb24oKSB7CiAgICB2YXIgZGF0YSA9IGZzLnJlYWRGaWxlU3luYygiZGF0YS9kYXRhVXJpLnR4dCIsICJ1dGYtOCIpOwogICAgYXNzZXJ0LmVxdWFsKGRhdGEsICJUaGlzIHRleHQgaXMgZW5jb2RlZCB0byBEYXRhVVJJISIpOwogIH0pOwp9KTs=",
+    "data/dataUri.txt": "data:text/plain;base64,VGhpcyB0ZXh0IGlzIGVuY29kZWQgdG8gRGF0YVVSSSE="
   }  
 }

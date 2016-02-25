@@ -30,6 +30,8 @@ FileResolver.prototype.generate = function(files) {
           if (err) {
             console.error("Can not create directory: " + getParentDirectory(fullpath));
             resolve(err);
+          } else if (url.indexOf("data:") === 0) {
+            self.decodeData(fullpath, url, resolve);
           } else {
             self.download(fullpath, url, resolve);
           }
@@ -61,6 +63,22 @@ FileResolver.prototype.download = function(filename, url, resolve) {
       resolve(err);
     })
     .pipe(fs.createWriteStream(filename));
+};
+
+FileResolver.prototype.decodeData = function(filename, url, resolve) {
+  var idx = url.indexOf(",");
+  if (idx < 0) {
+    console.error("Invalid DataURI: " + filename);
+    resolve(null);
+    return;
+  }
+  var data = new Buffer(url.substring(idx + 1), "base64");
+  fs.writeFile(filename, data, function(err) {
+    if (err) {
+      console.error("Fail to write file: " + filename + ", " + err);
+    }
+    resolve(err);
+  });
 };
 
 module.exports = FileResolver;
