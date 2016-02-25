@@ -37,6 +37,25 @@ RunCommand.prototype.withEnv = function(env) {
   return this;
 };
 
+RunCommand.prototype.checkEnvvars = function(envvars, config) {
+  var self = this;
+  Object.keys(envvars).forEach(function(key) {
+    if (!envvars[key]) {
+      return;
+    }
+    if (self.env && self.env[key]) {
+      return;
+    }
+    if (config.getEnvironment() && config.getEnvironment()[key]) {
+      return;
+    }
+    if (process.env && process.env[key]) {
+      return;
+    }
+    console.log("codecheck warning: envvar is not defnied - " + key);
+  });
+};
+
 RunCommand.prototype.prepare = function(args, resolve) {
   var name = null;
   if (args.length > 0 && TestUtils.isTestFramework(args[0])) {
@@ -52,24 +71,25 @@ RunCommand.prototype.prepare = function(args, resolve) {
     } catch (e) {
     }
   }
-  if (!name) {
-    var filename = "challenge.json";
-    if (dir) {
-      filename = dir + "/" + filename;
-    }
-    try {
-      var settings = JSON.parse(fs.readFileSync(filename));
-      if (settings && settings.test) {
-        var testArgs = settings.test.split(" ");
-        name = testArgs.shift();
-        if (testArgs.length) {
-          args = testArgs.concat(args);
-        }
-      }
-    } catch (e) {
-    }
-  }
   var config = this.getConfig(dir);
+  var filename = "challenge.json";
+  if (dir) {
+    filename = dir + "/" + filename;
+  }
+  try {
+    var settings = JSON.parse(fs.readFileSync(filename));
+    if (settings && settings.test && !name) {
+      var testArgs = settings.test.split(" ");
+      name = testArgs.shift();
+      if (testArgs.length) {
+        args = testArgs.concat(args);
+      }
+    }
+    if (settings && settings.envvars) {
+      this.checkEnvvars(settings.envvars, config);
+    }
+  } catch (e) {
+  }
   if (!name) {
     name = config.getTestCommand();
     if (name) {

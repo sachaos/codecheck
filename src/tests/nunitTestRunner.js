@@ -1,6 +1,5 @@
 "use strict";
 
-var path       = require("path");
 var TestRunner = require("./testRunner");
 
 /**
