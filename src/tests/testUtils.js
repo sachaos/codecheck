@@ -49,6 +49,12 @@ function createTestRunner(name, args, cwd) {
       return new RSpecTestRunner(args, cwd);
     case "nosetests":
       return new NoseTestRunner(args, cwd);
+    case "python":
+    case "python3":
+      if (args.length >= 2 && args[0] === "-m" && args[1] === "nose") {
+        return new NoseTestRunner(args, cwd, name);
+      }
+      break;
     case "cabal":
       return new CabalTestRunner(args, cwd);
     case "phpunit":
@@ -62,13 +68,13 @@ function createTestRunner(name, args, cwd) {
     case "nunit-console":
       return new NUnitTestRunner(args, cwd);
     default:
-      var cmd = [name].concat(args).join(" ");
-      var runner = new TestRunner(cmd, cwd);
-      runner.onStdout(function(data) {
-        commonTestCounter(runner, data);
-      });
-      return runner;
   }
+  var cmd = [name].concat(args).join(" ");
+  var runner = new TestRunner(cmd, cwd);
+  runner.onStdout(function(data) {
+    commonTestCounter(runner, data);
+  });
+  return runner;
 }
 
 function commonTestCounter(runner, data) {
