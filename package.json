@@ -32,7 +32,8 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.10.5",
     "readline-sync": "^1.2.19",
-    "request": "^2.60.0"
+    "request": "^2.60.0",
+    "strip-bom": "^2.0.0"
   },
   "devDependencies": {
     "chai": "^3.2.0",

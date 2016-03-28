@@ -1,6 +1,7 @@
 "use strict";
 
 var Promise       = require("bluebird");
+var stripBom      = require("strip-bom");
 var CommandResult = require("../cli/commandResult");
 var fs            = require("fs");
 var TestUtils     = require("../tests/testUtils");
@@ -77,7 +78,7 @@ RunCommand.prototype.prepare = function(args, resolve) {
     filename = dir + "/" + filename;
   }
   try {
-    var settings = JSON.parse(fs.readFileSync(filename));
+    var settings = JSON.parse(stripBom(fs.readFileSync(filename, "utf-8")));
     if (settings && settings.test && !name) {
       var testArgs = settings.test.split(" ");
       name = testArgs.shift();
