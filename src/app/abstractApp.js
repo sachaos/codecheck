@@ -15,6 +15,10 @@ function AbstractApp(cmd, cwd) {
   this.childProcess = null;
 
   this._consoleOut = false;
+  this._storeStdout = false;
+  this._storeStderr = false;
+  this._arrayStdout = [];
+  this._arrayStderr = [];
 }
 
 AbstractApp.prototype.init = function() {
@@ -83,6 +87,9 @@ AbstractApp.prototype.run = function() {
     options.cwd = this.cwd;
   }
 
+  this._arrayStdout = [];
+  this._arrayStderr = [];
+
   var emitter = this.emitter;
   var stdoutBuf = new LineEventEmitter(emitter, "stdout");
   var stderrBuf = new LineEventEmitter(emitter, "stderr");
@@ -149,5 +156,55 @@ AbstractApp.prototype.onStdout = function(callback) {
 AbstractApp.prototype.onStderr = function(callback) {
   this.on("stderr", callback);
 };
+
+AbstractApp.prototype.storeStdout = function() {
+  function doStore(value) {
+    if (!self._arrayStdout) {
+      self._arrayStdout = [];
+    }
+    self._arrayStdout.push(value);
+  }
+  var self = this;
+  if (arguments.length === 0) {
+    return this._storeStdout;
+  }
+  if (arguments[0] === true) {
+    this._storeStdout = true;
+    this.emitter.on("stdout", doStore);
+  } else {
+    this._storeStdout = false;
+    this.emitter.off("stdout", doStore);
+  }
+  return self;
+};
+
+AbstractApp.prototype.storeStderr = function() {
+  function doStore(value) {
+    if (!self._arrayStderr) {
+      self._arrayStderr = [];
+    }
+    self._arrayStderr.push(value);
+  }
+  var self = this;
+  if (arguments.length === 0) {
+    return this._storeStderr;
+  }
+  if (arguments[0] === true) {
+    this._storeStderr = true;
+    this.emitter.on("stderr", doStore);
+  } else {
+    this._storeStderr = false;
+    this.emitter.off("stderr", doStore);
+  }
+  return self;
+};
+
+AbstractApp.prototype.stdoutAsArray = function() {
+  return [].concat(this._arrayStdout);
+}
+
+AbstractApp.prototype.stderrAsArray = function() {
+  return [].concat(this._arrayStderr);
+}
 
 module.exports = AbstractApp;
