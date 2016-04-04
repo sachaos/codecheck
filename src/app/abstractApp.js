@@ -72,9 +72,9 @@ AbstractApp.prototype.getExitCode = function() {
   return this.exitCode;
 };
 
-AbstractApp.prototype.run = function(additionalArgs) {
+AbstractApp.prototype.run = function() {
   var self = this;
-  var args = this.args.concat(this.normalizeArgs(additionalArgs));
+  var args = this.args.concat(this.normalizeArgs(arguments));
   var env = _.extend({}, process.env, this.env);
   var options = {
     env: env
