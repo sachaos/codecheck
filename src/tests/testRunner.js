@@ -34,7 +34,9 @@ TestRunner.prototype.doClose = function(code) {
   }
 };
 
+/*eslint no-unused-vars: 0*/
 TestRunner.prototype.configure = function(yaml) {
+  //Will be overrided by subclass
 };
 
 

@@ -70,6 +70,7 @@ RunCommand.prototype.prepare = function(args, resolve) {
         dir = args.shift();
       }
     } catch (e) {
+      //Do nothing
     }
   }
   var config = this.getConfig(dir);
@@ -90,6 +91,7 @@ RunCommand.prototype.prepare = function(args, resolve) {
       this.checkEnvvars(settings.envvars, config);
     }
   } catch (e) {
+    //Do nothing
   }
   if (!name) {
     name = config.getTestCommand();
