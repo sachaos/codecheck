@@ -17,7 +17,25 @@ module.exports = function (grunt) {
       },
       src: ['src/{,**/}*.js'],
       test: ['test/{,**/}*.js ']
-    }
+    },
+    eslint: {
+      src: {
+        options: {
+          envs: ["node", "es6"]
+        },
+        files: {
+          src: ['src/{,**/}*.js']
+        }
+      },
+      test: {
+        options: {
+          envs: ["node", "es6", "mocha"]
+        },
+        files: {
+          src: ['test/{,**/}*.js']
+        }
+      }
+    },
   };
 
   grunt.initConfig(config);
