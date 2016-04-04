@@ -65,7 +65,7 @@ CloneCommand.prototype.run = function(args, options) {
           if (result.succeed) {
             resolve(result);
           } else {
-            withSignIn(resolve)
+            withSignIn(resolve);
           }
         }
       );
