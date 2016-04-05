@@ -66,7 +66,7 @@ describe("FizzBuzzApp", function() {
 
 describe("FizzBuzzApp", function() {
   it("with storeOutput", function(done) {
-    var app = codecheck.consoleApp(CMD, DIR)
+    var app = codecheck.consoleApp(CMD, DIR);
     app.storeStdout(true);
     app.input("1", "2", "3", "4", "5");
     app.onEnd(function() {

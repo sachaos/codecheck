@@ -4,6 +4,7 @@ var _                = require("lodash");
 var spawn            = require("child_process").spawn;
 var EventEmitter     = require('events').EventEmitter;
 var LineEventEmitter = require("../utils/lineEventEmitter");
+var Promise          = require("bluebird");
 
 function AbstractApp(cmd, cwd) {
   this.setCommand(cmd);
@@ -107,28 +108,33 @@ AbstractApp.prototype.run = function() {
     }
     stderrBuf.add(data);
   });
-  p.on('close', function(code) {
-    stdoutBuf.close();
-    stderrBuf.close();
+  var ret = new Promise(function(resolve, reject) {
+    p.on('close', function(code) {
+      stdoutBuf.close();
+      stderrBuf.close();
 
-    self.executed = true;
-    self.exitCode = code;
-    self.childProcess = null;
+      self.executed = true;
+      self.exitCode = code;
+      self.childProcess = null;
 
-    emitter.emit("end", code);
-    if (self.doClose) {
-      self.doClose(code);
-    }
-  });
-  p.on("error", function(err) {
-    console.error("Error: " + self.cmd + " " + args.join(" "));
-    console.error(err);
-    throw err;
+      emitter.emit("end", code);
+      if (self.doClose) {
+        self.doClose(code);
+      }
+      resolve(code, self.stdoutAsArray(), self.stderrAsArray());
+    });
+    p.on("error", function(err) {
+      console.error("Error: " + self.cmd + " " + args.join(" "));
+      console.error(err);
+      reject(err);
+      throw err;
+    });
   });
   self.childProcess = p;
   if (self.doRun) {
     self.doRun(p);
   }
+  return ret;
 };
 
 AbstractApp.prototype.kill = function(signal) {
@@ -201,10 +207,10 @@ AbstractApp.prototype.storeStderr = function() {
 
 AbstractApp.prototype.stdoutAsArray = function() {
   return [].concat(this._arrayStdout);
-}
+};
 
 AbstractApp.prototype.stderrAsArray = function() {
   return [].concat(this._arrayStderr);
-}
+};
 
 module.exports = AbstractApp;
