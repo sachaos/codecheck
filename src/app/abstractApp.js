@@ -9,6 +9,11 @@ var Promise          = require("bluebird");
 function AbstractApp(cmd, cwd) {
   this.setCommand(cmd);
   this.cwd = cwd;
+  this.init();
+}
+
+AbstractApp.prototype.init = function() {
+  this.emitter = new EventEmitter();
   this.env = null;
 
   this.exitCode = null;
@@ -20,10 +25,9 @@ function AbstractApp(cmd, cwd) {
   this._storeStderr = false;
   this._arrayStdout = [];
   this._arrayStderr = [];
-}
 
-AbstractApp.prototype.init = function() {
-  this.emitter = new EventEmitter();
+  this._doStoreToStdout = this.doStoreToArray.bind(this, "_arrayStdout");
+  this._doStoreToStderr = this.doStoreToArray.bind(this, "_arrayStderr");
 };
 
 AbstractApp.prototype.setCommand = function(cmd) {
@@ -163,52 +167,38 @@ AbstractApp.prototype.onStderr = function(callback) {
   this.on("stderr", callback);
 };
 
-AbstractApp.prototype.storeStdout = function() {
-  function doStore(value) {
-    if (!self._arrayStdout) {
-      self._arrayStdout = [];
-    }
-    self._arrayStdout.push(value);
-  }
+AbstractApp.prototype.storeStdout = function(bStore) {
+  return this.doStoreFunc("stdout", bStore);
+};
+
+AbstractApp.prototype.storeStderr = function(bStore) {
+  return this.doStoreFunc("stderr", bStore);
+};
+
+AbstractApp.prototype.doStoreFunc = function(key, bStore) {
   var self = this;
-  if (arguments.length === 0) {
-    return this._storeStdout;
+  var storeKey = key === "stdout" ? "_storeStdout" : "_storeStderr";
+  var func     = key === "stdout" ? self._doStoreToStdout : self._doStoreToStderr;
+  if (typeof(bStore) === "undefined") {
+    return self[storeKey];
   }
-  var bStore = arguments[0];
-  if (bStore === this._storeStdout) {
-    return this;
+  if (bStore === self[storeKey]) {
+    return self;
   }
-  this._storeStdout = bStore;
+  self[storeKey] = bStore;
   if (bStore) {
-    this.emitter.on("stdout", doStore);
+    this.emitter.on(key, func);
   } else {
-    this.emitter.off("stdout", doStore);
+    this.emitter.removeListener(key, func);
   }
   return self;
 };
 
-AbstractApp.prototype.storeStderr = function() {
-  function doStore(value) {
-    if (!self._arrayStderr) {
-      self._arrayStderr = [];
-    }
-    self._arrayStderr.push(value);
+AbstractApp.prototype.doStoreToArray = function(arrayKey, value) {
+  if (!this[arrayKey]) {
+    this[arrayKey] = [];
   }
-  var self = this;
-  if (arguments.length === 0) {
-    return this._storeStderr;
-  }
-  var bStore = arguments[0];
-  if (bStore === this._storeSterr) {
-    return this;
-  }
-  this._storeStderr = bStore;
-  if (bStore) {
-    this.emitter.on("stderr", doStore);
-  } else {
-    this.emitter.off("stderr", doStore);
-  }
-  return self;
+  this[arrayKey].push(value);
 };
 
 AbstractApp.prototype.stdoutAsArray = function() {
