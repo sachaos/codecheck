@@ -125,13 +125,12 @@ AbstractApp.prototype.run = function() {
       if (self.doClose) {
         self.doClose(code);
       }
-      resolve(code, self.stdoutAsArray(), self.stderrAsArray());
+      resolve([code, self.stdoutAsArray(), self.stderrAsArray()]);
     });
     p.on("error", function(err) {
       console.error("Error: " + self.cmd + " " + args.join(" "));
       console.error(err);
       reject(err);
-      throw err;
     });
   });
   self.childProcess = p;
