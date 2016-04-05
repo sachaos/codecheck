@@ -174,11 +174,14 @@ AbstractApp.prototype.storeStdout = function() {
   if (arguments.length === 0) {
     return this._storeStdout;
   }
-  if (arguments[0] === true) {
-    this._storeStdout = true;
+  var bStore = arguments[0];
+  if (bStore === this._storeStdout) {
+    return this;
+  }
+  this._storeStdout = bStore;
+  if (bStore) {
     this.emitter.on("stdout", doStore);
   } else {
-    this._storeStdout = false;
     this.emitter.off("stdout", doStore);
   }
   return self;
@@ -195,11 +198,14 @@ AbstractApp.prototype.storeStderr = function() {
   if (arguments.length === 0) {
     return this._storeStderr;
   }
-  if (arguments[0] === true) {
-    this._storeStderr = true;
+  var bStore = arguments[0];
+  if (bStore === this._storeSterr) {
+    return this;
+  }
+  this._storeStderr = bStore;
+  if (bStore) {
     this.emitter.on("stderr", doStore);
   } else {
-    this._storeStderr = false;
     this.emitter.off("stderr", doStore);
   }
   return self;
