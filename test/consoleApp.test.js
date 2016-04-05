@@ -84,3 +84,47 @@ describe("PromiseTest", function() {
     });
   });
 });
+
+describe("CalcApp", function() {
+  var app = codecheck.consoleApp("node test/app/calcApp.js");
+
+  it("should success with plus", function(done) {
+    app.run(3, 5).spread(function(code, stdout) {
+      assert.equal(code, 0);
+      assert.equal(stdout[0], 8);
+      done();
+    });
+  });
+
+  it("should success with minus", function(done) {
+    app.run(3, 5, "-").spread(function(code, stdout) {
+      assert.equal(code, 0);
+      assert.equal(stdout[0], -2);
+      done();
+    });
+  });
+
+  it("should success with mul", function(done) {
+    app.run(3, 5, "*").spread(function(code, stdout) {
+      assert.equal(code, 0);
+      assert.equal(stdout[0], 15);
+      done();
+    });
+  });
+
+  it("should success with div", function(done) {
+    app.run(12, 5, "/").spread(function(code, stdout) {
+      assert.equal(code, 0);
+      assert.equal(stdout[0], 2.4);
+      done();
+    });
+  });
+
+  it("should success with mod", function(done) {
+    app.run(3, 5, "%").spread(function(code, stdout) {
+      assert.equal(code, 0);
+      assert.equal(stdout[0], 3);
+      done();
+    });
+  });
+});

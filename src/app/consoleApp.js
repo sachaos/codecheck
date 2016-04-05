@@ -30,12 +30,6 @@ ConsoleApp.prototype.expected = function() {
   return this;
 };
 
-ConsoleApp.prototype.doClose = function(code) {
-  if (this._consoleOut) {
-    process.stdout.write("codecheck: Finish '" + this.getCommandLine() + " with code " + code + "\n");
-  }
-};
-
 ConsoleApp.prototype.doRun = function(process) {
   process.stdin.setEncoding("utf-8");
   var values = this.input();
