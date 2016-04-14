@@ -35,6 +35,9 @@ AbstractApp.prototype.setCommand = function(cmd) {
     var array = cmd.split(" ");
     this.cmd = array.shift();
     this.args = array;
+  } else {
+    this.cmd = null;
+    this.args = [];
   }
 };
 

@@ -136,7 +136,7 @@ CodecheckYaml.prototype.getTimeout = function() {
 };
 
 CodecheckYaml.prototype.getEnvironment = function() {
-  return this.data ? this.data.environment : null;
+  return this.data ? this.data.env || this.data.environment : null;
 };
 
 module.exports = CodecheckYaml;
