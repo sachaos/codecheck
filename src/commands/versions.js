@@ -7,8 +7,17 @@ var ConsoleApp        = require("../app/consoleApp");
 var commands = {
   "NodeJS": "node -v",
   "Ruby": "ruby -v",
-  "Java": "javaxxx -v",
-
+  "Python": "python --version",
+  "Python3": "python3 --version",
+  "Java": "java -version",
+  "Scala": "scala -version",
+  "Groovy": "groovy -v",
+  "Go": "go version",
+  "PHP": "php -v",
+  "Haskell": "ghc --version",
+  "Perl": "perl -v",
+  "C/C++": "gcc -dumpversion",
+  "C#": "mono --version"
 }
 
 function VersionsCommand() {
