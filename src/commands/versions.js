@@ -2,10 +2,13 @@
 
 var Promise           = require("bluebird");
 var CommandResult     = require("../cli/commandResult");
+var ConsoleApp        = require("../app/consoleApp");
 
 var commands = {
-  "nodejs": "node -v",
-  "ruby": "ruby -v"
+  "NodeJS": "node -v",
+  "Ruby": "ruby -v",
+  "Java": "javaxxx -v",
+
 }
 
 function VersionsCommand() {
@@ -25,13 +28,22 @@ VersionsCommand.prototype.usage = function() {
 };
 
 VersionsCommand.prototype.run = function(args) {
-  return new Promise(function(resolve) {
-    Object.keys(commands).forEach(function(key) {
-      var command = commands[key];
-      console.log(key, command);
+  return Promise.reduce(Object.keys(commands), function(supported, name) {
+    var command = commands[name];
+    var app = new ConsoleApp(command).storeStdout(true).storeStderr(true).ignoreError(true);
+    console.log("[" + name + "]");
+    return app.run().spread(function(code, stdout, stderr) {
+      if (stdout) stdout.forEach(v => console.log(v));
+      if (stderr) stderr.forEach(v => console.log(v));
+      return supported + 1;
+    }).catch(function() {
+      console.log("Not supported");
+      return supported;
     });
-    resolve(new CommandResult(true));
-  });
+  }, 0).then(function(supported) {
+    console.log(supported + " languages are supported.");
+    return new CommandResult(true);
+  })
 };
 
 

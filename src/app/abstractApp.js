@@ -23,6 +23,7 @@ AbstractApp.prototype.init = function() {
   this._consoleOut = false;
   this._storeStdout = false;
   this._storeStderr = false;
+  this._ignoreError = false;
   this._arrayStdout = [];
   this._arrayStderr = [];
 
@@ -131,8 +132,10 @@ AbstractApp.prototype.run = function() {
       resolve([code, self.stdoutAsArray(), self.stderrAsArray()]);
     });
     p.on("error", function(err) {
-      console.error("Error: " + self.cmd + " " + args.join(" "));
-      console.error(err);
+      if (!self._ignoreError) {
+        console.error("Error: " + self.cmd + " " + args.join(" "));
+        console.error(err);
+      }
       reject(err);
     });
   });
@@ -194,6 +197,15 @@ AbstractApp.prototype.doStoreFunc = function(key, bStore) {
     this.emitter.removeListener(key, func);
   }
   return self;
+};
+
+AbstractApp.prototype.ignoreError = function(b) {
+  if (typeof(b) === "undefined") {
+    return this._ignoreError;
+  } else {
+    this._ignoreError = b;
+    return this;
+  }
 };
 
 AbstractApp.prototype.doStoreToArray = function(arrayKey, value) {
