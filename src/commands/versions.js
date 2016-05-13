@@ -47,7 +47,6 @@ VersionsCommand.prototype.shortHelp = function() {
 VersionsCommand.prototype.usage = function() {
   console.log("Show versions");
   console.log("  codecheck versions");
-  console.log("  codecheck -v");
   console.log("OPTIONS");
   console.log("  -a, --all: Show frameworks version");
 };
