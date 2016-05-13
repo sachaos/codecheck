@@ -1,18 +1,20 @@
 "use strict";
 
-var _             = require("lodash");
-var CloneCommand  = require("../commands/clone");
-var PullCommand   = require("../commands/pull");
-var RunCommand    = require("../commands/run");
-var ScoreCommand  = require("../commands/score");
-var HelpCommand   = require("../commands/help");
+var _               = require("lodash");
+var CloneCommand    = require("../commands/clone");
+var PullCommand     = require("../commands/pull");
+var RunCommand      = require("../commands/run");
+var ScoreCommand    = require("../commands/score");
+var HelpCommand     = require("../commands/help");
+var VersionsCommand = require("../commands/versions");
 
 var repo = {
   run: RunCommand,
   score: ScoreCommand,
   clone: CloneCommand,
   pull: PullCommand,
-  help: HelpCommand
+  help: HelpCommand,
+  versions: VersionsCommand
 };
 
 function CommandRepository() {
@@ -20,10 +22,16 @@ function CommandRepository() {
     return !!repo[name];
   }
   function getCommand(name) {
-    return repo[name];
+    var ret = repo[name];
+    if (typeof(ret) === "string") {
+      return getCommand(ret);
+    }
+    return ret;
   }
   function getCommandNames() {
-    return Object.keys(repo).sort();
+    return Object.keys(repo).filter(function(key) {
+      return typeof(repo[key]) === "function";
+    }).sort();
   }
   function isAPI(name) {
     return name === "clone" || name === "pull";
