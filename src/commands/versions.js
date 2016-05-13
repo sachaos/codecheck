@@ -25,7 +25,7 @@ var frameworks = {
   "sbt": "sbt sbtVersion",
   "gradle": "gradle --version",
   "composer": "composer --version",
-  "nosestests": "nosetests --verison",
+  "nosestests": "nosetests --version",
   "mocha": "mocha --version",
   "PHPUnit": "phpunit --version",
   "bundler": "bundle --version",
@@ -72,7 +72,7 @@ VersionsCommand.prototype.process = function(category, map) {
     return app.run().spread(function(code, stdout, stderr) {
       if (stdout) stdout.forEach(v => console.log(v));
       if (stderr) stderr.forEach(v => console.log(v));
-      return supported + 1;
+      return code === 0 ? supported + 1 : supported;
     }).catch(function() {
       console.log("Not supported");
       return supported;
