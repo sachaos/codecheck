@@ -14,8 +14,7 @@ var repo = {
   clone: CloneCommand,
   pull: PullCommand,
   help: HelpCommand,
-  versions: VersionsCommand,
-  "-v": "versions"
+  versions: VersionsCommand
 };
 
 function CommandRepository() {
