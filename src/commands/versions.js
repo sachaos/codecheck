@@ -18,7 +18,7 @@ var languages = {
   "Perl": "perl -v",
   "C/C++": "gcc -dumpversion",
   "C#": "mono --version"
-}
+};
 
 var frameworks = {
   "maven": "mvn -v",
@@ -32,7 +32,7 @@ var frameworks = {
   "cabal": "cabal --version",
   "prove": "prove --version",
   "rspec": "rspec --version"
-}
+};
 
 function VersionsCommand() {
 }
@@ -80,7 +80,7 @@ VersionsCommand.prototype.process = function(category, map) {
   }, 0).then(function(supported) {
     console.log(supported + " " + category + " are supported.");
     return new CommandResult(true);
-  })
-}
+  });
+};
 
 module.exports = VersionsCommand;
