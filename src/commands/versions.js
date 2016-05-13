@@ -4,7 +4,7 @@ var Promise           = require("bluebird");
 var CommandResult     = require("../cli/commandResult");
 var ConsoleApp        = require("../app/consoleApp");
 
-var commands = {
+var languages = {
   "NodeJS": "node -v",
   "Ruby": "ruby -v",
   "Python": "python --version",
@@ -18,6 +18,20 @@ var commands = {
   "Perl": "perl -v",
   "C/C++": "gcc -dumpversion",
   "C#": "mono --version"
+}
+
+var frameworks = {
+  "maven": "mvn -v",
+  "sbt": "sbt sbtVersion",
+  "gradle": "gradle --version",
+  "composer": "composer --version",
+  "nosestests": "nosetests --verison",
+  "mocha": "mocha --version",
+  "PHPUnit": "phpunit --version",
+  "bundler": "bundle --version",
+  "cabal": "cabal --version",
+  "prove": "prove --version",
+  "rspec": "rspec --version"
 }
 
 function VersionsCommand() {
@@ -34,11 +48,25 @@ VersionsCommand.prototype.usage = function() {
   console.log("Show versions");
   console.log("  codecheck versions");
   console.log("  codecheck -v");
+  console.log("OPTIONS");
+  console.log("  -a, --all: Show frameworks version");
 };
 
-VersionsCommand.prototype.run = function(args) {
-  return Promise.reduce(Object.keys(commands), function(supported, name) {
-    var command = commands[name];
+VersionsCommand.prototype.run = function(args, options) {
+  var self = this;
+  return self.process("languages", languages).then(function(result) {
+    if (options.all) {
+      console.log("\n******** FRAMEWORKS ********");
+      return self.process("frameworks", frameworks);
+    } else {
+      return result;
+    }
+  });
+};
+
+VersionsCommand.prototype.process = function(category, map) {
+  return Promise.reduce(Object.keys(map), function(supported, name) {
+    var command = map[name];
     var app = new ConsoleApp(command).storeStdout(true).storeStderr(true).ignoreError(true);
     console.log("[" + name + "]");
     return app.run().spread(function(code, stdout, stderr) {
@@ -50,10 +78,9 @@ VersionsCommand.prototype.run = function(args) {
       return supported;
     });
   }, 0).then(function(supported) {
-    console.log(supported + " languages are supported.");
+    console.log(supported + " " + category + " are supported.");
     return new CommandResult(true);
   })
-};
-
+}
 
 module.exports = VersionsCommand;
