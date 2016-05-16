@@ -147,8 +147,8 @@ AbstractApp.prototype.run = function() {
 };
 
 AbstractApp.prototype.kill = function(signal) {
-  if (this._childProcess) {
-    this._childProcess.kill(signal);
+  if (this.childProcess) {
+    this.childProcess.kill(signal);
   }
 };
 
