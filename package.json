@@ -1,6 +1,6 @@
 {
   "name": "codecheck",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "description": "codecheck CLI",
   "main": "src/codecheck.js",
   "scripts": {
@@ -31,6 +31,7 @@
     "lodash": "^3.10.0",
     "mkdirp": "^0.5.1",
     "moment": "^2.10.5",
+    "ps-tree": "^1.0.1",
     "readline-sync": "^1.2.19",
     "request": "^2.60.0",
     "strip-bom": "^2.0.0"

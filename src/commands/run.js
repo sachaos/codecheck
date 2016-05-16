@@ -180,9 +180,12 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
       runner.consoleOut(true);
       runner.onEnd(function(code) {
         if (webapp) {
-          webapp.kill();
+          webapp.kill(function() {
+            resolve(new CommandResult(true).withExitCode(code));
+          });
+        } else {
+          resolve(new CommandResult(true).withExitCode(code));
         }
-        resolve(new CommandResult(true).withExitCode(code));
       });
       runner.run();
     }
