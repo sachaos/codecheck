@@ -2,9 +2,11 @@
 
 var _                = require("lodash");
 var spawn            = require("child_process").spawn;
+var exec             = require("child_process").exec;
 var EventEmitter     = require('events').EventEmitter;
 var LineEventEmitter = require("../utils/lineEventEmitter");
 var Promise          = require("bluebird");
+var psTree           = require("ps-tree");
 
 function AbstractApp(cmd, cwd) {
   this.setCommand(cmd);
@@ -146,9 +148,15 @@ AbstractApp.prototype.run = function() {
   return ret;
 };
 
-AbstractApp.prototype.kill = function(signal) {
+AbstractApp.prototype.kill = function(callback) {
   if (this.childProcess) {
-    this.childProcess.kill(signal);
+    var pid = this.childProcess.pid;
+    psTree(pid, function(err, children) {
+      exec(
+        ['kill', '-9', pid].concat(children.map(function (p) { return p.PID })).join(" "),
+        callback
+      );
+    });
   }
 };
 
