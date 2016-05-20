@@ -7,6 +7,7 @@ var EventEmitter     = require('events').EventEmitter;
 var LineEventEmitter = require("../utils/lineEventEmitter");
 var Promise          = require("bluebird");
 var psTree           = require("ps-tree");
+var CBuffer          = require("CBuffer");
 
 function AbstractApp(cmd, cwd) {
   this.setCommand(cmd);
@@ -25,9 +26,10 @@ AbstractApp.prototype.init = function() {
   this._consoleOut = false;
   this._storeStdout = false;
   this._storeStderr = false;
+  this._storeStdMax = 1000;
   this._ignoreError = false;
-  this._arrayStdout = [];
-  this._arrayStderr = [];
+  this._arrayStdout = null;
+  this._arrayStderr = null;
 
   this._doStoreToStdout = this.doStoreToArray.bind(this, "_arrayStdout");
   this._doStoreToStderr = this.doStoreToArray.bind(this, "_arrayStderr");
@@ -98,8 +100,8 @@ AbstractApp.prototype.run = function() {
     options.cwd = this.cwd;
   }
 
-  this._arrayStdout = [];
-  this._arrayStderr = [];
+  this._arrayStdout = new CBuffer(this._storeStdMax);
+  this._arrayStderr = new CBuffer(this._storeStdMax);
 
   var emitter = this.emitter;
   var stdoutBuf = new LineEventEmitter(emitter, "stdout");
@@ -188,6 +190,15 @@ AbstractApp.prototype.storeStderr = function(bStore) {
   return this.doStoreFunc("stderr", bStore);
 };
 
+AbstractApp.prototype.storeStdMax = function(n) {
+  if (typeof(n) === "number") {
+    this._storeStdMax = n;
+    return this;
+  } else {
+    return this._storeStdMax;
+  }
+};
+
 AbstractApp.prototype.doStoreFunc = function(key, bStore) {
   var self = this;
   var storeKey = key === "stdout" ? "_storeStdout" : "_storeStderr";
@@ -218,17 +229,17 @@ AbstractApp.prototype.ignoreError = function(b) {
 
 AbstractApp.prototype.doStoreToArray = function(arrayKey, value) {
   if (!this[arrayKey]) {
-    this[arrayKey] = [];
+    this[arrayKey] = new CBuffer(this._storeStdMax);
   }
   this[arrayKey].push(value);
 };
 
 AbstractApp.prototype.stdoutAsArray = function() {
-  return [].concat(this._arrayStdout);
+  return this._arrayStdout ? this._arrayStdout.toArray() : [];
 };
 
 AbstractApp.prototype.stderrAsArray = function() {
-  return [].concat(this._arrayStderr);
+  return this._arrayStderr ? this._arrayStderr.toArray() : [];
 };
 
 module.exports = AbstractApp;
