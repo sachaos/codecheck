@@ -1,6 +1,6 @@
 {
   "name": "codecheck",
-  "version": "0.5.5",
+  "version": "0.5.6",
   "description": "codecheck CLI",
   "main": "src/codecheck.js",
   "scripts": {
@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/code-check/codecheck#readme",
   "dependencies": {
+    "CBuffer": "^1.1.1",
     "bluebird": "^2.9.34",
     "fs-extra": "^0.24.0",
     "js-yaml": "^3.3.1",
