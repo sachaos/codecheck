@@ -90,7 +90,40 @@ function commonTestCounter(runner, data) {
     }
     return false;
   }
-  rubyTestUnit();
+  function tap() {
+    function isOk() {
+      return array.length > 0 && array[0] === "ok";
+    }
+    function isNotOk() {
+      return array.length > 1 && array[0] === "not" && array[1] === "ok";
+    }
+    var ret = true;
+    var array = data.split(" ");
+    if (isOk()) {
+      runner.successCount++;
+    } else if (isNotOk()) {
+      runner.failureCount++;
+    } else {
+      ret = false;
+    }
+    return ret;
+  }
+  var funcMap = {
+    "ruby-test-unit": rubyTestUnit,
+    "tap": tap
+  };
+  if (runner.mode) {
+    funcMap[runner.mode]();
+    return;
+  }
+  var keys = Object.keys(funcMap);
+  for (var i=0; i<keys.length; i++) {
+    var key = keys[i];
+    if (funcMap[key]()) {
+      runner.mode = key;
+      return;
+    }
+  }
 }
 
 module.exports = {

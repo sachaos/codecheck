@@ -155,7 +155,7 @@ AbstractApp.prototype.kill = function(callback) {
     var pid = this.childProcess.pid;
     psTree(pid, function(err, children) {
       exec(
-        ['kill', '-9', pid].concat(children.map(function (p) { return p.PID })).join(" "),
+        ['kill', '-9', pid].concat(children.map(function (p) { return p.PID; })).join(" "),
         callback
       );
     });
