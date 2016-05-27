@@ -59,7 +59,7 @@ AbstractApp.prototype.normalizeArgs = function(args) {
   if (args) {
     for (var i=0; i<args.length; i++) {
       if (Array.isArray(args[i])) {
-        ret.concat(args[i]);
+        ret = ret.concat(args[i]);
       } else {
         ret.push(args[i]);
       }
