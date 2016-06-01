@@ -7,6 +7,7 @@ var fs            = require("fs");
 var TestUtils     = require("../tests/testUtils");
 var ConsoleApp    = require("../app/consoleApp");
 var CodecheckYaml = require("../codecheckYaml");
+var shellQuote    = require("shell-quote");
 
 function RunCommand() {
 }
@@ -81,7 +82,7 @@ RunCommand.prototype.prepare = function(args, resolve) {
   try {
     var settings = JSON.parse(stripBom(fs.readFileSync(filename, "utf-8")));
     if (settings && settings.test && !name) {
-      var testArgs = settings.test.split(" ");
+      var testArgs = shellQuote.parse(settings.test);
       name = testArgs.shift();
       if (testArgs.length) {
         args = testArgs.concat(args);
@@ -96,7 +97,7 @@ RunCommand.prototype.prepare = function(args, resolve) {
   if (!name) {
     name = config.getTestCommand();
     if (name) {
-      var configArgs = name.split(" ");
+      var configArgs = shellQuote.parse(name);
       name = configArgs.shift();
       args = configArgs.concat(args);
     }
