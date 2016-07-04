@@ -2,6 +2,7 @@
 
 var AbstractApp      = require("./abstractApp");
 var CommandResult    = require("../cli/commandResult");
+var CodecheckResult  = require("../utils/codecheckResult");
 
 function ConsoleApp(cmd, cwd) {
   this.init();
@@ -74,6 +75,12 @@ ConsoleApp.prototype.runAndVerify = function(additionalArgs, done) {
     }
   });
   this.run(additionalArgs);
+};
+
+ConsoleApp.prototype.codecheck = function() {
+  return this.run.apply(this, arguments).spread(function(code, stdout, stderr) {
+    return new CodecheckResult(code, stdout, stderr);
+  });
 };
 
 module.exports = ConsoleApp;
