@@ -1,7 +1,7 @@
 "use strict";
 
 var TestRunner = require("./testRunner");
-var shellQuote = require("shell-quote");
+var shellQuote = require("../utils/myQuote");
 
 /**
  * nunit-console outputs following line at end of test
