@@ -8,7 +8,7 @@ var LineEventEmitter = require("../utils/lineEventEmitter");
 var Promise          = require("bluebird");
 var psTree           = require("ps-tree");
 var CBuffer          = require("CBuffer");
-var shellQuote       = require("shell-quote");
+var shellQuote       = require("../utils/myQuote");
 
 function AbstractApp(cmd, cwd) {
   this.setCommand(cmd);

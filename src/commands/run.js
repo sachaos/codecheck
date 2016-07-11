@@ -7,7 +7,7 @@ var fs            = require("fs");
 var TestUtils     = require("../tests/testUtils");
 var ConsoleApp    = require("../app/consoleApp");
 var CodecheckYaml = require("../codecheckYaml");
-var shellQuote    = require("shell-quote");
+var shellQuote    = require("../utils/myQuote");
 
 function RunCommand() {
 }

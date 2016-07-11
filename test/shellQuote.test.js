@@ -1,8 +1,8 @@
 'use strict';
 
 var _ = require("lodash");
-var quote = require('shell-quote').quote;
-var parse = require('shell-quote').parse;
+var quote = require('../src/utils/myQuote').quote;
+var parse = require('../src/utils/myQuote').parse;
 var assert = require('chai').assert;
 
 var data = [
@@ -26,6 +26,11 @@ var data = [
     'split': ['hoge', 'fuga', "'aaa", "bbb'", 'ccc', "'ddd", 'eee', '', '', "fff'"],
     'quote': ['hoge', 'fuga', 'aaa bbb', 'ccc', 'ddd eee   fff'],
   },
+  {
+    'cmd': "mcs src/*.cs -reference:nunit.framework.dll -target:library -out:TimeDiff.dll",
+    'split': ['mcs', 'src/*.cs', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'],
+    'quote': ['mcs', 'src/*.cs', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'],
+  }
 ];
 
 describe('shell-quote', () => {
