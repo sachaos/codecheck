@@ -16,7 +16,7 @@ var languages = {
   "PHP": "php -v",
   "Haskell": "ghc --version",
   "Perl": "perl -v",
-  "C/C++": "gcc -dumpversion",
+  "C/C++": "clang --version",
   "C#": "mono --version"
 };
 
