@@ -133,6 +133,7 @@ RunCommand.prototype.doBuild = function(config, dir, callback) {
   function build() {
     var next = commands.shift();
     if (next) {
+      next = shellQuote.quote(shellQuote.parse(next));
       var start = new Date().getTime();
       console.log("Start build: " + next);
       var app = new ConsoleApp(next, dir);
