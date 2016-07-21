@@ -1,6 +1,7 @@
 'use strict';
 
 var _ = require("lodash");
+var MyQuote = require('../src/utils/myQuote');
 var quote = require('../src/utils/myQuote').quote;
 var parse = require('../src/utils/myQuote').parse;
 var assert = require('chai').assert;
@@ -58,5 +59,11 @@ describe('shell-quote', () => {
     var cmd = "mcs test/app/*.js -reference:nunit.framework.dll -target:library -out:TimeDiff.dll";
     var split = ['mcs', 'test/app/calcApp.js', 'test/app/fizzbuzzApp.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
     assert.deepEqual(parse(cmd), split);
+  });
+
+  it("exapnsion with directory", () => {
+    var cmd = "mcs app/*.js -reference:nunit.framework.dll -target:library -out:TimeDiff.dll";
+    var split = ['mcs', 'app/calcApp.js', 'app/fizzbuzzApp.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
+    assert.deepEqual(MyQuote.bind("test").parse(cmd), split);
   });
 });
