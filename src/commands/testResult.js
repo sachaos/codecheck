@@ -25,7 +25,17 @@ TestResultCommand.prototype.usage = function() {
   console.log("  -p, --password: password");
 };
 
+TestResultCommand.prototype.checkArgs = function(args) {
+  if (args.length === 0) {
+    throw "ChallengeId is required";
+  } else if (args.length > 1) {
+    throw "Too many args" + JSON.stringify(args);
+  }
+};
+
+
 TestResultCommand.prototype.run = function(args, options) {
+  this.checkArgs(args);
   return new Promise(function(resolve){
     resolve(new CommandResult(true, "ToDo implement test-result"));
   });
