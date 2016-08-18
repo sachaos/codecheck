@@ -36,7 +36,7 @@ function CommandRepository() {
     }).sort();
   }
   function isAPI(name) {
-    return name === "clone" || name === "pull";
+    return name === "clone" || name === "pull" || name === "test-result";
   }
 
   _.extend(this, {
