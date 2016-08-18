@@ -1,7 +1,10 @@
 "use strict";
 
 var Promise       = require("bluebird");
+var io            = require("socket.io-client");
 var CommandResult = require("../cli/commandResult");
+
+var WHALE_URL = process.env.WHALE_URL || "https://test.code-check.io";
 
 function TestResultCommand(api) {
   this.api = api;
@@ -33,6 +36,7 @@ TestResultCommand.prototype.checkArgs = function(args) {
 TestResultCommand.prototype.run = function(args, options) {
   this.checkArgs(args);
 
+  var self = this;
   var resultId = args[0];
   var d1= this.api.getResultToken(resultId);
   var d2 = this.api.resultFiles(resultId);
@@ -40,11 +44,8 @@ TestResultCommand.prototype.run = function(args, options) {
   return Promise.all([d1, d2]).then((results) => {
     var token = results[0].body.result;
     var files = results[1].body.result.files; 
-    console.log("test1", token);
-    console.log("test2", files);
-
     return new Promise((resolve) => {
-      resolve(new CommandResult(true, "ToDo implement test-result"));
+      self.runTest(resultId, token, token, files, resolve);
     });
   },
   () => {
@@ -52,7 +53,51 @@ TestResultCommand.prototype.run = function(args, options) {
       resolve(new CommandResult(false, "Result not found"));
     });
   });
+};
 
+TestResultCommand.prototype.runTest = function(resultId, token, varToken, files, resolve) {
+  function ignoreLine(line) {
+    if (!line) {
+      return false;
+    }
+    if (ignoreLines) {
+      ignoreLines--;
+      return true;
+    }
+    // Warning message on `bundle install`
+    if (line.indexOf("Don't run Bundler as root.") === 0) {
+      ignoreLines = 2;
+      return true;
+    }
+    return false;
+  }
+  var ignoreLines = 0;
+  var socket = io(WHALE_URL, {
+    forceNew: true,
+    transports: ["websocket"]
+  });
+  socket.on("line", (data) => {
+    if (ignoreLine(data)) {
+      return;
+    }
+    console.log(data);
+  });
+  socket.on("disconnect", () => {
+    resolve(new CommandResult(true));
+  });
+
+  var msg = {
+    version: 2.0,
+    name: "codecheck CLI - " + resultId,
+    resultId: resultId,
+    token: token,
+    files: files
+  };
+  if (varToken) {
+    msg.varToken = varToken;
+    msg.server = this.api.baseUrl;
+  }
+  socket.emit("runTest", msg);
 };
 
 module.exports = TestResultCommand;
