@@ -3,6 +3,7 @@
 var Promise       = require("bluebird");
 var io            = require("socket.io-client");
 var CommandResult = require("../cli/commandResult");
+var SigninCommand = require("./internal/signin");
 
 var WHALE_URL = process.env.WHALE_URL || "https://test.code-check.io";
 
@@ -34,27 +35,42 @@ TestResultCommand.prototype.checkArgs = function(args) {
 
 
 TestResultCommand.prototype.run = function(args, options) {
+  function doRun() {
+    var d1= self.api.getResultToken(resultId);
+    var d2 = self.api.resultFiles(resultId);
+
+    return Promise.all([d1, d2]).then((results) => {
+      var token = results[0].body.result;
+      var files = results[1].body.result.files; 
+      return new Promise((resolve) => {
+        console.log();
+        console.log("Connect to codecheck test server...");
+        self.runTest(resultId, token, options.ignoreVars ? null : token, files, resolve);
+      });
+    },
+    () => {
+      return withSignin();
+    });
+  }
+  function withSignin() {
+    return new SigninCommand(self.api).run(null, options).then(
+      () => {
+        return doRun();
+      }, 
+      () => {
+        return new CommandResult(false, "Fail signin");
+      }
+    );
+  }
   this.checkArgs(args);
 
   var self = this;
   var resultId = args[0];
-  var d1= this.api.getResultToken(resultId);
-  var d2 = this.api.resultFiles(resultId);
-
-  return Promise.all([d1, d2]).then((results) => {
-    var token = results[0].body.result;
-    var files = results[1].body.result.files; 
-    return new Promise((resolve) => {
-      console.log();
-      console.log("Connect to codecheck test server...")
-      self.runTest(resultId, token, options.ignoreVars ? null : token, files, resolve);
-    });
-  },
-  () => {
-    return new Promise((resolve) => {
-      resolve(new CommandResult(false, "Result not found"));
-    });
-  });
+  if (options.user) {
+    return withSignin();
+  } else {
+    return doRun();
+  }
 };
 
 TestResultCommand.prototype.runTest = function(resultId, token, varToken, files, resolve) {
