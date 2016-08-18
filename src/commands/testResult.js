@@ -45,7 +45,9 @@ TestResultCommand.prototype.run = function(args, options) {
     var token = results[0].body.result;
     var files = results[1].body.result.files; 
     return new Promise((resolve) => {
-      self.runTest(resultId, token, token, files, resolve);
+      console.log();
+      console.log("Connect to codecheck test server...")
+      self.runTest(resultId, token, options.ignoreVars ? null : token, files, resolve);
     });
   },
   () => {
