@@ -1,12 +1,13 @@
 "use strict";
 
-var _               = require("lodash");
-var CloneCommand    = require("../commands/clone");
-var PullCommand     = require("../commands/pull");
-var RunCommand      = require("../commands/run");
-var ScoreCommand    = require("../commands/score");
-var HelpCommand     = require("../commands/help");
-var VersionsCommand = require("../commands/versions");
+var _                  = require("lodash");
+var CloneCommand       = require("../commands/clone");
+var PullCommand        = require("../commands/pull");
+var RunCommand         = require("../commands/run");
+var ScoreCommand       = require("../commands/score");
+var HelpCommand        = require("../commands/help");
+var VersionsCommand    = require("../commands/versions");
+var TestResultCommand  = require("../commands/testResult");
 
 var repo = {
   run: RunCommand,
@@ -14,7 +15,8 @@ var repo = {
   clone: CloneCommand,
   pull: PullCommand,
   help: HelpCommand,
-  versions: VersionsCommand
+  versions: VersionsCommand,
+  "test-result": TestResultCommand
 };
 
 function CommandRepository() {
