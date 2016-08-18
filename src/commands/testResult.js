@@ -1,11 +1,7 @@
 "use strict";
 
-var SigninCommand = require("./internal/signin");
 var Promise       = require("bluebird");
 var CommandResult = require("../cli/commandResult");
-
-var CloneChallengeCommand = require("./internal/cloneChallenge");
-var CloneExamCommand      = require("./internal/cloneExam");
 
 function TestResultCommand(api) {
   this.api = api;
@@ -36,9 +32,27 @@ TestResultCommand.prototype.checkArgs = function(args) {
 
 TestResultCommand.prototype.run = function(args, options) {
   this.checkArgs(args);
-  return new Promise(function(resolve){
-    resolve(new CommandResult(true, "ToDo implement test-result"));
+
+  var resultId = args[0];
+  var d1= this.api.getResultToken(resultId);
+  var d2 = this.api.resultFiles(resultId);
+
+  return Promise.all([d1, d2]).then((results) => {
+    var token = results[0].body.result;
+    var files = results[1].body.result.files; 
+    console.log("test1", token);
+    console.log("test2", files);
+
+    return new Promise((resolve) => {
+      resolve(new CommandResult(true, "ToDo implement test-result"));
+    });
+  },
+  () => {
+    return new Promise((resolve) => {
+      resolve(new CommandResult(false, "Result not found"));
+    });
   });
+
 };
 
 module.exports = TestResultCommand;
