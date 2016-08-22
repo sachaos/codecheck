@@ -57,4 +57,13 @@ API.prototype.examResults = function(id, since) {
   return this.execute(options);
 };
 
+API.prototype.getResultToken = function(resultId) {
+  var options = {
+    url: this.baseUrl + "/api/results/" + resultId + "/token",
+    method: "GET",
+    json: true
+  };
+  return this.execute(options);
+};
+
 module.exports = API;
