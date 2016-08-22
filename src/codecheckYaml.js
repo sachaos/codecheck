@@ -139,4 +139,9 @@ CodecheckYaml.prototype.getEnvironment = function() {
   return this.data ? this.data.env || this.data.environment : null;
 };
 
+CodecheckYaml.prototype.getAppCommand = function() {
+  var env = this.getEnvironment();
+  return env ? env.APP_COMMAND : null;
+};
+
 module.exports = CodecheckYaml;

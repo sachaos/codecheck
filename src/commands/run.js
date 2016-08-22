@@ -211,6 +211,10 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
   var self = this;
   var webapp = null;
   var runner = TestUtils.createTestRunner(name, args, dir);
+  if (config.getAppCommand()) {
+    console.log("codecheck: appCommand: " + config.getAppCommand());
+  }
+  console.log("codecheck: testCommand: " + runner.getCommandLine());
   runner.configure(config);
   setTimeout(function() {
     resolve(new CommandResult(false, "Timeout").withExitCode(1));
