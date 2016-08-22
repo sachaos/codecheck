@@ -27,7 +27,7 @@ TestResultCommand.prototype.usage = function() {
 
 TestResultCommand.prototype.checkArgs = function(args) {
   if (args.length === 0) {
-    throw "ChallengeId is required";
+    throw "ResultId is required";
   } else if (args.length > 1) {
     throw "Too many args" + JSON.stringify(args);
   }
