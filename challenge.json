@@ -1,0 +1,6 @@
+{
+  "editable": ["codecheck.yml"],
+  "notest": "mocha --timeout 5000",
+  "cli": ["C#"],
+  "test": "mocha --timeout 5000"
+}

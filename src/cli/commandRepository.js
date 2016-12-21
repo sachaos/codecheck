@@ -5,6 +5,7 @@ const PullCommand        = require("../commands/pull");
 const RunCommand         = require("../commands/run");
 const ScoreCommand       = require("../commands/score");
 const HelpCommand        = require("../commands/help");
+const ValidateCommand    = require("../commands/validate");
 const VersionsCommand    = require("../commands/versions");
 const TestResultCommand  = require("../commands/testResult");
 
@@ -14,6 +15,7 @@ const repo = {
   clone: CloneCommand,
   pull: PullCommand,
   help: HelpCommand,
+  validate: ValidateCommand,
   versions: VersionsCommand,
   "test-result": TestResultCommand
 };
