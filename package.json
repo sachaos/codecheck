@@ -15,6 +15,9 @@
     "test",
     "git"
   ],
+  "engines": {
+    "node": "~6.9.1"
+  },
   "author": "Givery.inc",
   "license": "MIT",
   "bugs": {
