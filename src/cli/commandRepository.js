@@ -1,15 +1,14 @@
 "use strict";
 
-var _                  = require("lodash");
-var CloneCommand       = require("../commands/clone");
-var PullCommand        = require("../commands/pull");
-var RunCommand         = require("../commands/run");
-var ScoreCommand       = require("../commands/score");
-var HelpCommand        = require("../commands/help");
-var VersionsCommand    = require("../commands/versions");
-var TestResultCommand  = require("../commands/testResult");
+const CloneCommand       = require("../commands/clone");
+const PullCommand        = require("../commands/pull");
+const RunCommand         = require("../commands/run");
+const ScoreCommand       = require("../commands/score");
+const HelpCommand        = require("../commands/help");
+const VersionsCommand    = require("../commands/versions");
+const TestResultCommand  = require("../commands/testResult");
 
-var repo = {
+const repo = {
   run: RunCommand,
   score: ScoreCommand,
   clone: CloneCommand,
@@ -24,7 +23,7 @@ function CommandRepository() {
     return !!repo[name];
   }
   function getCommand(name) {
-    var ret = repo[name];
+    const ret = repo[name];
     if (typeof(ret) === "string") {
       return getCommand(ret);
     }
@@ -39,7 +38,7 @@ function CommandRepository() {
     return name === "clone" || name === "pull" || name === "test-result";
   }
 
-  _.extend(this, {
+  Object.assign(this, {
     isCommand: isCommand,
     getCommand: getCommand,
     getCommandNames: getCommandNames,
