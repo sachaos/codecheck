@@ -1,33 +1,34 @@
 "use strict";
 
-function CommandResult(succeed, message) {
-  this.succeed = succeed;
-  this.message = message;
-  this.exitCode = 0;
-  this.errors = null;
+class CommandResult {
+  constructor(succeed, message) {
+    this._succeed = succeed;
+    this._message = message;
+    this._exitCode = 0;
+    this._errors = [];
+  }
+
+  get succeed() {
+    return this._succeed;
+  }
+  get message() {
+    return this._message;
+  }
+  get exitCode() {
+    return this._exitCode;
+  }
+  get errors() {
+    return this._errors;
+  }
+
+  withExitCode(code) {
+    this._exitCode = code;
+    return this;
+  }
+  withErrors(errors) {
+    this._errors = this.errors.concat(errors);
+    return this;
+  }
 }
-
-CommandResult.prototype.withExitCode = function(code) {
-  this.exitCode = code;
-  return this;
-};
-
-CommandResult.prototype.withErrors = function(errors) {
-  if (!Array.isArray(errors)) {
-    errors = [errors];
-  }
-  this.errors = errors;
-  return this;
-};
-
-CommandResult.prototype.getMessage = function() {
-  if (this.message) {
-    return this.message;
-  }
-  if (this.errors) {
-    return this.errors.join("\n");
-  }
-  return null;
-};
 
 module.exports = CommandResult;
