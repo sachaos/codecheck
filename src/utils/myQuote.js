@@ -1,20 +1,28 @@
 "use strict";
 
-var _             = require("lodash");
-var glob          = require("glob");
-var shellQuote    = require("shell-quote");
+const _          = require("lodash");
+const glob       = require("glob");
+const shellQuote = require("shell-quote");
 
-function MyQuote(cwd) {
-  function quote(xs) {
-    var ret = shellQuote.quote(xs);
+class MyQuote {
+  constructor(cwd) {
+    this._cwd = cwd || '.';
+  }
+
+  bind(newCwd) {
+    return new MyQuote(newCwd);
+  }
+
+  quote(xs) {
+    const ret = shellQuote.quote(xs);
     return ret.replace(/\\\*/g, '*');
   }
 
-  function parse(str) {
-    return _.flatten(shellQuote.parse(str).map(function(v) {
+  parse(str) {
+    return _.flatten(shellQuote.parse(str).map(v => {
       if (v.op === "glob" && v.pattern) {
         var expanded = glob.sync(v.pattern, {
-          cwd: cwd
+          cwd: this._cwd
         });
         return expanded.length > 0 ? expanded : v.pattern;
       } else {
@@ -22,16 +30,6 @@ function MyQuote(cwd) {
       }
     }));
   }
-
-  function bind(newCwd) {
-    return new MyQuote(newCwd);
-  }
-
-  _.extend(this, {
-    quote: quote,
-    parse: parse,
-    bind: bind
-  });
 }
 
 module.exports = new MyQuote(process.cwd());
