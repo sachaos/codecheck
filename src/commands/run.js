@@ -211,6 +211,12 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
   var self = this;
   var webapp = null;
   var runner = TestUtils.createTestRunner(name, args, dir);
+  var cpuSetting = config.getCpuSetting();
+  if (cpuSetting) {
+    runner.cpuWatcher.limit(cpuSetting.limit);
+    runner.cpuWatcher.frequency(cpuSetting.frequency);
+    runner.cpuWatcher.interval(cpuSetting.interval);
+  }
   if (config.getAppCommand()) {
     console.log("codecheck: appCommand: " + config.getAppCommand());
   }

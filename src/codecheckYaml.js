@@ -144,4 +144,18 @@ CodecheckYaml.prototype.getAppCommand = function() {
   return env ? env.APP_COMMAND : null;
 };
 
+CodecheckYaml.prototype.getCpuSetting = function() {
+  if (!this.data || !this.data.cpu || !this.data.cpu.limit) {
+    return null;
+  }
+  var ret = this.data.cpu;
+  if (!ret.frequency) {
+    ret.frequency = 5;
+  }
+  if (!ret.interval) {
+    ret.interval = 1000;
+  }
+  return ret;
+};
+
 module.exports = CodecheckYaml;
