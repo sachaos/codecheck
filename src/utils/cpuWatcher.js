@@ -102,7 +102,8 @@ class CpuWatcher {
   kill(pid) {
     psTree(pid, (err, children) => {
       if (!err) {
-        exec(['kill', '-9', pid].concat(children.map(p => p.PID)).join(" "), () => {
+        const cmd = ['kill', '-9', pid].concat(children.map(p => p.PID)).join(" ");
+        exec(cmd, () => {
           console.log("codecheck: Process killed by CPU limit exceeded");
         });
       }
