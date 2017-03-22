@@ -256,13 +256,22 @@ AbstractApp.prototype.setMaxCpu = function(n) {
   if (n >= 0 && n <= 100) {
     this._maxCpu = n;
   }
-}
+};
 
 AbstractApp.prototype.monitor = function() {
   if (this.childProcess) {
+    console.log("monitor1: ", this.childProcess.pid);
     pusage.stat(this.childProcess.pid, function(err, stat) {
       console.log('Pcpu: %s', stat.cpu);
       console.log('Mem: %s', stat.memory); //those are bytes
+    });
+    psTree(this.childProcess.pid, function(err, children) {
+      children.forEach(function(child) {
+        pusage.stat(child.PID, function(err, stat) {
+          console.log('Pcpu: %s', stat.cpu);
+          console.log('Mem: %s', stat.memory); //those are bytes
+        });
+      });
     });
   }
 };
