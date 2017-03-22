@@ -9,7 +9,6 @@ var Promise          = require("bluebird");
 var psTree           = require("ps-tree");
 var CBuffer          = require("CBuffer");
 var shellQuote       = require("../utils/myQuote");
-var pusage           = require("pidusage");
 
 const MONITOR_INTERVAL = 2000;
 
