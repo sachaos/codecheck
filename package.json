@@ -34,7 +34,7 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.10.5",
     "pidusage": "^1.1.1",
-    "ps-tree": "^1.0.1",
+    "ps-tree": "^1.1.0",
     "readline-sync": "^1.2.19",
     "request": "^2.60.0",
     "shell-quote": "^1.6.0",
@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "chai": "^3.2.0",
-    "datauri": "^1.0.4",
+  "datauri": "^1.0.4",
     "grunt": "^0.4.5",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-eslint": "^18.0.0",
