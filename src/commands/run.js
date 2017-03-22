@@ -211,7 +211,6 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
   var self = this;
   var webapp = null;
   var runner = TestUtils.createTestRunner(name, args, dir);
-  runner.setMaxCpu(80);
   if (config.getAppCommand()) {
     console.log("codecheck: appCommand: " + config.getAppCommand());
   }
