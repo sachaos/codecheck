@@ -9,6 +9,9 @@ var Promise          = require("bluebird");
 var psTree           = require("ps-tree");
 var CBuffer          = require("CBuffer");
 var shellQuote       = require("../utils/myQuote");
+var pusage           = require("pidusage");
+
+const MONITOR_INTERVAL = 2000;
 
 function AbstractApp(cmd, cwd) {
   this.setCommand(cmd);
@@ -23,6 +26,8 @@ AbstractApp.prototype.init = function() {
   this.exitCode = null;
   this.executed = false;
   this.childProcess = null;
+  this._maxCpu = 0;
+  this._monitorHandle = 0;
 
   this._consoleOut = false;
   this._storeStdout = false;
@@ -109,6 +114,9 @@ AbstractApp.prototype.run = function() {
   var stderrBuf = new LineEventEmitter(emitter, "stderr");
 
   var p = spawn(this.cmd, args, options);
+  if (this._maxCpu > 0) {
+    this._monitorHandle = setInterval(this.monitor.bind(this), MONITOR_INTERVAL);
+  }
   p.stdout.on("data", function(data) {
     if (self._consoleOut) {
       process.stdout.write(data);
@@ -123,6 +131,7 @@ AbstractApp.prototype.run = function() {
   });
   var ret = new Promise(function(resolve, reject) {
     p.on('close', function(code) {
+      self.unmonitor(p.pid);
       stdoutBuf.close();
       stderrBuf.close();
 
@@ -241,6 +250,29 @@ AbstractApp.prototype.stdoutAsArray = function() {
 
 AbstractApp.prototype.stderrAsArray = function() {
   return this._arrayStderr ? this._arrayStderr.toArray() : [];
+};
+
+AbstractApp.prototype.setMaxCpu = function(n) {
+  if (n >= 0 && n <= 100) {
+    this._maxCpu = n;
+  }
+}
+
+AbstractApp.prototype.monitor = function() {
+  if (this.childProcess) {
+    pusage.stat(this.childProcess.pid, function(err, stat) {
+      console.log('Pcpu: %s', stat.cpu);
+      console.log('Mem: %s', stat.memory); //those are bytes
+    });
+  }
+};
+
+AbstractApp.prototype.unmonitor = function(pid) {
+  if (this._monitorHandle) {
+    clearInterval(this._monitorHandle);
+    this._monitorHandle = 0;
+  }
+  pusage.unmonitor(pid);
 };
 
 module.exports = AbstractApp;
