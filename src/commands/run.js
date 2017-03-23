@@ -216,6 +216,7 @@ RunCommand.prototype.doRun = function(name, args, dir, config, resolve) {
     runner.cpuWatcher.limit(cpuSetting.limit);
     runner.cpuWatcher.frequency(cpuSetting.frequency);
     runner.cpuWatcher.interval(cpuSetting.interval);
+    runner.cpuWatcher.debug(cpuSetting.debug);
   }
   if (config.getAppCommand()) {
     console.log("codecheck: appCommand: " + config.getAppCommand());

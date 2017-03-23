@@ -155,6 +155,7 @@ CodecheckYaml.prototype.getCpuSetting = function() {
   if (!ret.interval) {
     ret.interval = 1000;
   }
+  ret.debug = ret.debug || false;
   return ret;
 };
 
