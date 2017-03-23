@@ -6,9 +6,10 @@ var exec             = require("child_process").exec;
 
 class CpuWatcher {
   constructor(limit, frequency, interval) {
-    this._limit = typeof(limit) === "number" ? limit : 95;
+    this._limit = limit || 0;
     this._frequency = frequency || 5;
     this._interval = interval || 1000;
+    this._debug = false;
 
     this._pid = 0;
     this._children = [];
@@ -42,8 +43,20 @@ class CpuWatcher {
     }
   }
 
+  debug(b) {
+    if (typeof(b) === "boolean") {
+      this._debug = b;
+      return this;
+    } else {
+      return this._debug;
+    }
+  }
+
   watch(process) {
     function processStat(pid, err, stat) {
+      if (self._debug) {
+        console.log("CPU watch", pid, stat);
+      }
       if (stat.cpu > self._limit) {
         if (results[pid]) {
           results[pid] += 1;

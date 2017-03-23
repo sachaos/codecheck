@@ -33,7 +33,7 @@ AbstractApp.prototype.init = function() {
   this._arrayStdout = null;
   this._arrayStderr = null;
 
-  this.cpuWatcher = new CpuWatcher(0);
+  this.cpuWatcher = new CpuWatcher();
 
   this._doStoreToStdout = this.doStoreToArray.bind(this, "_arrayStdout");
   this._doStoreToStderr = this.doStoreToArray.bind(this, "_arrayStderr");
