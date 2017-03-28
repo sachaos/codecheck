@@ -9,6 +9,7 @@ var Promise          = require("bluebird");
 var psTree           = require("ps-tree");
 var CBuffer          = require("CBuffer");
 var shellQuote       = require("../utils/myQuote");
+var CpuWatcher   = require("../utils/cpuWatcher");
 
 function AbstractApp(cmd, cwd) {
   this.setCommand(cmd);
@@ -31,6 +32,8 @@ AbstractApp.prototype.init = function() {
   this._ignoreError = false;
   this._arrayStdout = null;
   this._arrayStderr = null;
+
+  this.cpuWatcher = new CpuWatcher();
 
   this._doStoreToStdout = this.doStoreToArray.bind(this, "_arrayStdout");
   this._doStoreToStderr = this.doStoreToArray.bind(this, "_arrayStderr");
@@ -109,6 +112,7 @@ AbstractApp.prototype.run = function() {
   var stderrBuf = new LineEventEmitter(emitter, "stderr");
 
   var p = spawn(this.cmd, args, options);
+  this.cpuWatcher.watch(p);
   p.stdout.on("data", function(data) {
     if (self._consoleOut) {
       process.stdout.write(data);
@@ -123,6 +127,7 @@ AbstractApp.prototype.run = function() {
   });
   var ret = new Promise(function(resolve, reject) {
     p.on('close', function(code) {
+      self.cpuWatcher.unwatch();
       stdoutBuf.close();
       stderrBuf.close();
 
