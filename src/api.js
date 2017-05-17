@@ -27,6 +27,9 @@ API.prototype.signin = function(username, password) {
   var options = {
     url: this.baseUrl + "/api/auth/signin",
     method: "POST",
+    headers: {
+      "X-Requested-With": "codecheck-cli",
+    }
     form: {
       nameOrEmail: username,
       password: password
