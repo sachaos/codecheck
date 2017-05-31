@@ -29,7 +29,7 @@ API.prototype.signin = function(username, password) {
     method: "POST",
     headers: {
       "X-Requested-With": "codecheck-cli",
-    }
+    },
     form: {
       nameOrEmail: username,
       password: password
