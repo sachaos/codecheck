@@ -73,7 +73,7 @@ AbstractApp.prototype.normalizeArgs = function(args) {
 };
 
 AbstractApp.prototype.getCommandLine = function() {
-  return this.cmd + " " + this.args.join(" ");
+  return shellQuote.quote([this.cmd].concat(this.args));
 };
 
 AbstractApp.prototype.consoleOut = function() {
