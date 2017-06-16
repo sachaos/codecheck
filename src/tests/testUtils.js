@@ -69,8 +69,8 @@ function createTestRunner(name, args, cwd) {
       return new NUnitTestRunner(args, cwd);
     default:
   }
-  var cmd = [name].concat(args).join(" ");
-  var runner = new TestRunner(cmd, cwd);
+  var runner = new TestRunner(name, cwd);
+  runner.args = args;
   runner.onStdout(function(data) {
     commonTestCounter(runner, data);
   });
