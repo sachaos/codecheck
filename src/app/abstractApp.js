@@ -163,7 +163,6 @@ AbstractApp.prototype.run = function() {
 };
 
 AbstractApp.prototype.kill = function(callback) {
-  console.log("kill called");
   const self = this;
   return new Promise((resolve, reject) => {
     if (self.childProcess) {
