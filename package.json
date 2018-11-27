@@ -12,16 +12,12 @@
   },
   "keywords": [
     "codecheck",
-    "test",
-    "git"
+    "test"
   ],
   "author": "Givery.inc",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/code-check/codecheck/issues"
-  },
-  "bin": {
-    "codecheck": "./bin/codecheck"
   },
   "homepage": "https://github.com/code-check/codecheck#readme",
   "dependencies": {
