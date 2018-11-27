@@ -3,10 +3,8 @@
 var assert       = require("chai").assert;
 var codecheck    = require("../src/codecheck");
 
-var CMD = process.env.APP_COMMAND;
-var DIR = process.env.APP_DIRECTORY;
-
-console.log(CMD, DIR);
+var CMD = "node fizzbuzzApp.js";
+var DIR = "test/app";
 
 describe("Env vars", function() {
   it("can read", function() {
