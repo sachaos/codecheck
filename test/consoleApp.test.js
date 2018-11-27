@@ -76,7 +76,7 @@ describe("PromiseTest", function() {
   it("should fail", function(done) {
     var app = codecheck.consoleApp("dummy");
     app.input("1", "2", "3", "4", "5");
-    app.codecheck().caught(function(err) {
+    app.codecheck().catch(function(err) {
       assert(err);
       done();
     });

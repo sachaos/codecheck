@@ -5,7 +5,6 @@ var spawn            = require("child_process").spawn;
 var exec             = require("child_process").exec;
 var EventEmitter     = require('events').EventEmitter;
 var LineEventEmitter = require("../utils/lineEventEmitter");
-var Promise          = require("bluebird");
 var psTree           = require("ps-tree");
 var CBuffer          = require("CBuffer");
 var shellQuote       = require("../utils/myQuote");
