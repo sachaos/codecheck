@@ -1,7 +1,5 @@
 "use strict";
 
-var _ = require("lodash");
-
 function LineEventEmitter(emitter, name) {
   function add(data) {
 //console.log("add: <<<", data.toString() + ">>>");
@@ -22,7 +20,7 @@ function LineEventEmitter(emitter, name) {
   }
   var buf = "";
 
-  _.extend(this, {
+  Object.assign(this, {
     add: add,
     close: close
   });

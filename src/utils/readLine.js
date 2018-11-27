@@ -1,6 +1,5 @@
 "use strict";
 
-var _                = require("lodash");
 var EventEmitter     = require('events').EventEmitter;
 var LineEventEmitter = require("../utils/lineEventEmitter");
 
@@ -20,7 +19,7 @@ function ReadLine() {
     line.close();
     emitter.emit("end");
   });
-  _.extend(this, {
+  Object.assign(this, {
     onData: onData,
     onEnd: onEnd
   });
