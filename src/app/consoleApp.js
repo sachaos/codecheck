@@ -1,7 +1,7 @@
 "use strict";
 
 var AbstractApp      = require("./abstractApp");
-var CommandResult    = require("../cli/commandResult");
+var CommandResult    = require("../utils/commandResult");
 var CodecheckResult  = require("../utils/codecheckResult");
 
 function ConsoleApp(cmd, cwd) {
