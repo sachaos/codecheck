@@ -25,8 +25,7 @@ const DEFAULT_TIMEOUT = 6000;
     "maxLines" : 20,
     "maxCharacters" : 300
   },
-  "timeout": 6000,
-  "baseDirectory" : "test"
+  "timeout": 6000
 }
 
 ## Conversion from old format
@@ -46,7 +45,6 @@ const DEFAULT_TIMEOUT = 6000;
 - limitations/maxLines -> 20
 - limitations/maxCharacters -> 300
 - timeout -> 6000
-- baseDirectory -> "test"
  */
 
 function normalizeJson(json) {
@@ -112,7 +110,6 @@ class Settings {
   maxCharacters() { return this.json.limitations.maxCharacters || DEFAULT_MAX_CHARACTERS; }
 
   timeout() { return this.json.timeout || DEFAULT_TIMEOUT; }
-  baseDirectory() { return this.json.baseDirectory || "test"; }
 }
 
-module.export = Settings;
+module.exports = Settings;

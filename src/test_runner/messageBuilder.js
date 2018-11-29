@@ -16,7 +16,7 @@ class MessageBuilder {
     const maxLen = this.settings.maxCharacters();
     const maxLines = this.settings.maxLines();
 
-    let array = StringData.splitStrByLines(str);
+    let array = StringData.splitStrByLine(str);
     let omitted = false;
     if (array.length > maxLines) {
       array = array.slice(0, maxLines);
@@ -39,7 +39,7 @@ class MessageBuilder {
       try {
         const result = [];
         let omitted = false;
-        const rl = readline.createInsterface(fs.createReadStream(filepath), {});
+        const rl = readline.createInterface(fs.createReadStream(filepath), {});
         rl.on('line', line => {
           result.push(line);
           if (result.length >= self.settings.maxLines()) {

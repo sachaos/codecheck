@@ -44,7 +44,7 @@ Participant's data: {2}
 
 class Messages {
   constructor(json) {
-    Object.asign(this, json);
+    Object.assign(this, json);
   }
 
   format() {
@@ -64,6 +64,6 @@ function getMessages(lang) {
   return new Messages(json);
 }
 
-module.export = {
+module.exports = {
   getMessages: getMessages
 };

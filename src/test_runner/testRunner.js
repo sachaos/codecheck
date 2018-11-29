@@ -30,7 +30,7 @@ class TestRunner {
     const MSG = self.messageBuilder;
     /* eslint no-undef: 0 */
     describe("", function() {
-      this.setTimout(self.settings.timeout());
+      this.timeout(self.settings.timeout());
 
       beforeEach(done => {
         self.beforeEach(done);
@@ -40,11 +40,11 @@ class TestRunner {
         self.afterEach(done);
       });
 
-      it(testcase.description, async () => {
+      it(testcase.description(), async () => {
         const app = self.app;
         app.clearInput();
         const inputData = StringData.fromRaw(testcase.readInputFromFile());
-        const inputParams = self.prepareInput(inputData);
+        const inputParams = self.prepareInput(testcase, inputData);
         if (inputParams.stdin.length > 0) {
           app.input(inputParams.stdin);
         }
@@ -97,7 +97,7 @@ class TestRunner {
 
   async verifyStdout(testcase, inputData, outputData) {
     const MSG = this.messageBuilder;
-    const expected = StringData.fromRaw(fs.readFileSync(testcase.output())).tokens();
+    const expected = StringData.fromRaw(fs.readFileSync(testcase.output(), "utf-8")).tokens();
     const users = outputData.tokens();
 
     if (expected.length !== users.length) {
@@ -107,7 +107,7 @@ class TestRunner {
       const expected_token = expected[i];
       const user_token = users[i];
       if (expected_token !== user_token) {
-        assert.fail(await MSG.unmatchToken(testcase, outputData, i + 1, expected_token, user_token));
+        assert.fail(null, null, await MSG.unmatchToken(testcase, outputData, i + 1, expected_token, user_token));
       }
     }
   }

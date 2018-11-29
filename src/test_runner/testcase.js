@@ -36,12 +36,13 @@ class Testcase {
  * @params filepath, language(ja/en)
  * @return Array<Testcase>
  */
-function loadTestcases(filepath, baseDirectory, lang) { 
-  const json = require(filepath);
+function loadTestcases(filepath, baseDirectory, lang) {
+
+  const json = require(process.cwd() + "/" + filepath);
   return json.map(v => {
     const input = baseDirectory ? `${baseDirectory}/${v.input}` : v.input;
     const output = baseDirectory && v.output ? `${baseDirectory}/${v.output}` : v.output;
-    const description = v["description_" + lang] || v.description;
+    const description = v["description_" + lang] || v.description || v.it;
     if (!input || !description) {
       throw new Error(`Invalid testcase definition: filepath=${filepath}, content=${JSON.stringify(filepath)}`);
     }

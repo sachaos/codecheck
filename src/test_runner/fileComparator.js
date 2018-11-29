@@ -52,15 +52,15 @@ class FileComparator {
               });
             } else {
               resolve({
-                index: index,
+                index: index + 1,
                 file1: tokens1.shift(),
                 file2: tokens2.shift()
               });
             }
           }
         }
-        const rl1 = readline.createInsterface(fs.createReadStream(filepath1), {});
-        const rl2 = readline.createInsterface(fs.createReadStream(filepath2), {});
+        const rl1 = readline.createInterface(fs.createReadStream(filepath1), {});
+        const rl2 = readline.createInterface(fs.createReadStream(filepath2), {});
         rl1.on('line', line => {
           handleLine(tokens1, line);
           fireCompare();
