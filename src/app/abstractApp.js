@@ -165,31 +165,31 @@ AbstractApp.prototype.run = function() {
 AbstractApp.prototype.kill = function(callback) {
   const self = this;
   return new Promise((resolve, reject) => {
-    if (self.childProcess) {
-      const pid = self.childProcess.pid;
-      psTree(pid, function(err, children) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        exec(
-          ['kill', '-9', pid].concat(children.map(function (p) { return p.PID; })).join(" "),
-          (err /*, stdout, stderr // not used */) => {
-            if (err) {
-              reject(err);
-              return;
-            }
-            if (callback) {
-              callback();
-            }
-            self.childProcess = null;
-            resolve(null);
-          }
-        );
-      });
-    } else {
+    if (!self.childProcess) {
       resolve(null);
+      return;
     }
+    const pid = self.childProcess.pid;
+    psTree(pid, function(err, children) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      exec(
+        ['kill', '-9', pid].concat(children.map(function (p) { return p.PID; })).join(" "),
+        (err /*, stdout, stderr // not used */) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          if (callback) {
+            callback();
+          }
+          self.childProcess = null;
+          resolve(null);
+        }
+      );
+    });
   });
 };
 

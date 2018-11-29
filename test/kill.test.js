@@ -6,7 +6,14 @@ var codecheck    = require("../src/codecheck");
 var CMD = "node killTest.js";
 var DIR = "test/app";
 
-describe("KillTest", function() {
+/**
+ * About checking time with 2000 and 7000
+ * This test runs a console app that sleeps for 5000ms, twice.
+ * Second execution, which will be executed after 1000ms, should kill previous running app.
+ * It should be happen within a second, which specified 2000 as threshold.
+ * Thus 7000 is specified on second assertion.
+ */
+ describe("KillTest", function() {
 
   it("success to kill", function(done) {
     var app = codecheck.consoleApp(CMD, DIR);
