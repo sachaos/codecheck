@@ -1,7 +1,7 @@
 {
   "extends": "eslint:recommended",
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 2017,
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": false
@@ -20,6 +20,7 @@
     "no-extra-label": 2,
     "no-floating-decimal": 2,
     "no-implied-eval": 2,
+    "no-inner-declarations": 0,
     "no-multi-str": 2,
     "no-new": 2,
     "no-new-func": 2,
