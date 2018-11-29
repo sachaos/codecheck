@@ -1,11 +1,9 @@
 "use strict";
 
-var _                = require("lodash");
 var spawn            = require("child_process").spawn;
 var exec             = require("child_process").exec;
 var EventEmitter     = require('events').EventEmitter;
 var LineEventEmitter = require("../utils/lineEventEmitter");
-var Promise          = require("bluebird");
 var psTree           = require("ps-tree");
 var CBuffer          = require("CBuffer");
 var shellQuote       = require("../utils/myQuote");
@@ -52,7 +50,7 @@ AbstractApp.prototype.setCommand = function(cmd) {
 
 AbstractApp.prototype.setEnvironment = function(env) {
   if (this.env) {
-    this.env = _.extend(this.env, env);
+    this.env = Object.assign(this.env, env);
   } else {
     this.env = env;
   }
@@ -102,7 +100,7 @@ AbstractApp.prototype.run = function() {
     });
   }
   var args = this.args.concat(this.normalizeArgs(arguments));
-  var env = _.extend({}, process.env, this.env);
+  var env = Object.assign({}, process.env, this.env);
   var options = {
     env: env
   };

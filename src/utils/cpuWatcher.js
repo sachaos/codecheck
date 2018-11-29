@@ -71,7 +71,7 @@ class CpuWatcher {
       }
     }
     function doWatch() {
-      pusage.stat(process.pid, (err, stat) => {
+      pusage(process.pid, (err, stat) => {
         if (err) {
           self.unwatch();
         }
@@ -82,7 +82,7 @@ class CpuWatcher {
           if (self._children.indexOf(child.PID) === -1) {
             self._children.push(child.PID);
           }
-          pusage.stat(child.PID, (err, stat) => {
+          pusage(child.PID, (err, stat) => {
             processStat(child.PID, err, stat);
           });
         });
@@ -103,9 +103,7 @@ class CpuWatcher {
   unwatch() {
     if (this._pid) {
       clearInterval(this._handle);
-      pusage.unmonitor(this._pid);
-      this._children.forEach(pid => pusage.unmonitor(pid));
-
+      pusage.clear();
       this._pid = 0;
       this._handle = 0;
       this._children = [];

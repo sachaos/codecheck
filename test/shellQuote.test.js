@@ -51,7 +51,7 @@ describe('shell-quote', () => {
       if (idx === 1) {
         assert.equal(a, 'python3 -m nose');
       } else {
-        assert.equal(a, v.cmd.replace(/"/g, "'"));
+        assert.equal(a, v.cmd.replace(/"/g, "'").replace(/:/g, "\\:"));
       }
     });
   });

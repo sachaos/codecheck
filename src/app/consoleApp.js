@@ -81,7 +81,10 @@ ConsoleApp.prototype.runAndVerify = function(additionalArgs, done) {
 };
 
 ConsoleApp.prototype.codecheck = function() {
-  return this.run.apply(this, arguments).spread(function(code, stdout, stderr) {
+  return this.run.apply(this, arguments).then(function(args) {
+    const code = args[0];
+    const stdout = args[1];
+    const stderr = args[2];
     console.log("" /* to avoid code printed as `xxok ~~~`; code will fail on detecting test cases */);
     return new CodecheckResult(code, stdout, stderr);
   });
