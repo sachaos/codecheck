@@ -32,6 +32,9 @@ ConsoleApp.prototype.expected = function() {
 };
 
 ConsoleApp.prototype.doRun = function(process) {
+  process.stdin.on("error", () => {
+      // ignore
+  });
   process.stdin.setEncoding("utf-8");
   var values = this.input();
   while (values.length) {
