@@ -33,23 +33,24 @@ class Testcase {
 }
 
 /**
- * @params filepath, language(ja/en)
- * @return Array<Testcase>
+ * Static functions
  */
-function loadTestcases(filepath, baseDirectory, lang) {
 
+Testcase.load = function(filepath, baseDirectory, lang) {
   const json = require(process.cwd() + "/" + filepath);
   return json.map(v => {
-    const input = baseDirectory ? `${baseDirectory}/${v.input}` : v.input;
-    const output = baseDirectory && v.output ? `${baseDirectory}/${v.output}` : v.output;
-    const description = v["description_" + lang] || v.description || v.it;
-    if (!input || !description) {
-      throw new Error(`Invalid testcase definition: filepath=${filepath}, content=${JSON.stringify(filepath)}`);
-    }
-    return new Testcase(input, output, description);
+    return Testcase.fromJson(v, baseDirectory, lang);
   });
 }
 
-module.exports = {
-  load: loadTestcases
-};
+Testcase.fromJson = function(json, baseDirectory, lang) {
+  const input = baseDirectory ? `${baseDirectory}/${json.input}` : json.input;
+  const output = baseDirectory && json.output ? `${baseDirectory}/${json.output}` : json.output;
+  const description = json["description_" + lang] || json.description || json.it;
+  if (!input || !description) {
+    throw new Error(`Invalid testcase definition: ${JSON.stringify(json)}`);
+  }
+  return new Testcase(input, output, description);
+}
+
+module.exports = Testcase;

@@ -6,10 +6,9 @@ const Messages = require("./messages");
 const StringData = require("./stringData");
 
 class MessageBuilder {
-  constructor(settings, lang) {
+  constructor(settings) {
     this.settings = settings;
-    this.lang = lang;
-    this.msg = Messages.getMessages(lang);
+    this.msg = Messages.getMessages(settings.language());
   }
 
   clip(str) {
@@ -124,7 +123,7 @@ class MessageBuilder {
       case 2: ordinals = "nd"; break;
       case 3: ordinals = "rd"; break;
     }
-    let ret = msg.format(msg.INVALID_DATA_ROW, this.lang === "en" ? index + ordinals : index, expected, users);
+    let ret = msg.format(msg.INVALID_DATA_ROW, this.settings.language() === "en" ? index + ordinals : index, expected, users);
     ret += await this.summary(testcase, outputData);
     return ret;
   }

@@ -1,8 +1,8 @@
 {
     "isSpecial" : false,
 
-    "isFileInput" : false,
-    "isFileOutput" : false,
+    "isFileInput" : true,
+    "isFileOutput" : true,
 
     "maxLines" : 20,
     "maxCharacters" : 300,

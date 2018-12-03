@@ -3,19 +3,29 @@
 const fs = require("fs");
 const assert = require("chai").assert;
 
-const codecheck = require("../codecheck");
+const ConsoleApp = require("../app/consoleApp");
 const MessageBuilder = require("./messageBuilder");
 const StringData = require("./stringData");
 const InputType = require("./inputType");
 const OutputType = require("./outputType");
+const Testcase = require("./Testcase");
 const FileComparator = require("./fileComparator");
 
 class TestRunner {
-  constructor(settings, appCommand, lang) {
+  constructor(settings, appCommand) {
     this.settings = settings;
-    this.lang = lang;
-    this.messageBuilder = new MessageBuilder(settings, lang);
-    this.app = codecheck.consoleApp(appCommand).consoleOut(false).storeStdMax(2000000);
+    this.messageBuilder = new MessageBuilder(settings);
+    this.appCommand = appCommand;
+  }
+
+  consoleApp(cmd, cwd) {
+    var app = new ConsoleApp(cmd, cwd);
+    app.consoleOut(true);
+    app.storeStdout(true);
+    app.storeStderr(true);
+    app.consoleOut(false);
+    app.storeStdMax(2000000);
+    return app;
   }
 
   runAll(testcases) {
@@ -24,9 +34,10 @@ class TestRunner {
     });
   }
 
-  run(testcase) {
+  run(testcaseJson) {
     const self = this;
     const settings = self.settings;
+    const testcase = Testcase.fromJson(testcaseJson, settings.baseDirectory(), settings.language());
     const MSG = self.messageBuilder;
     /* eslint no-undef: 0 */
     describe("", function() {
@@ -41,7 +52,9 @@ class TestRunner {
       });
 
       it(testcase.description(), async () => {
-        const app = self.app;
+        const app = self.consoleApp(self.appCommand);
+        self.app = app;
+
         app.clearInput();
         const inputData = StringData.fromRaw(testcase.readInputFromFile());
         const inputParams = self.prepareInput(testcase, inputData);
@@ -85,8 +98,11 @@ class TestRunner {
 
   async verifyByJudge(testcase, inputData, outputData) {
     const MSG = this.messageBuilder;
-    const judge = codecheck.consoleApp(this.settings.judgeCommand());
+    const judge = this.consoleApp(this.settings.judgeCommand());
     const result = await judge.codecheck([testcase.input(), testcase.output() || "null", this.settings.outputFilename()]);
+    if (result.code === 0) {
+      return;
+    }
     if (result.code === 1) {
       // Unexpected error
       assert.fail(await MSG.failToRunJudge(this.settings.judgeCommand(), result.stderr.join("\n")));
@@ -133,7 +149,16 @@ class TestRunner {
   }
 
   afterEach(done) {
-    this.app.kill().then(done).catch(done);
+    if (this.app) {
+      this.app.kill().then(() => {
+        done();
+      }).catch(() => {
+        done()
+      });
+      this.app = null;
+    } else {
+      done();
+    }
   }
 
   prepareInput(testcase, inputData) {

@@ -25,7 +25,9 @@ const DEFAULT_TIMEOUT = 6000;
     "maxLines" : 20,
     "maxCharacters" : 300
   },
-  "timeout": 6000
+  "timeout": 6000,
+  "baseDirectory":  "test",
+  "language": "ja"
 }
 
 ## Conversion from old format
@@ -45,6 +47,8 @@ const DEFAULT_TIMEOUT = 6000;
 - limitations/maxLines -> 20
 - limitations/maxCharacters -> 300
 - timeout -> 6000
+- baseDirectory -> "test",
+- language -> "ja"
  */
 
 function normalizeJson(json) {
@@ -97,7 +101,7 @@ class Settings {
 
   outputType() { return this.json.output.type; }
   outputFilename() { 
-    if (this.outputType === OutputType.File || this.hasJudge()) {
+    if (this.outputType() === OutputType.File || this.hasJudge()) {
       return this.json.output.filename || DEFAULT_OUTPUT_FILENAME;
     }
     return null;
@@ -110,6 +114,11 @@ class Settings {
   maxCharacters() { return this.json.limitations.maxCharacters || DEFAULT_MAX_CHARACTERS; }
 
   timeout() { return this.json.timeout || DEFAULT_TIMEOUT; }
+
+  baseDirectory() { return this.json.baseDirectory || "test"; }
+
+  language() { return this.json.language || "ja"; }
+
 }
 
 module.exports = Settings;
