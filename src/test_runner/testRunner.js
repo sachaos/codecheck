@@ -113,7 +113,7 @@ class TestRunner {
 
   async verifyStdout(testcase, inputData, outputData) {
     const MSG = this.messageBuilder;
-    const expected = StringData.fromRaw(fs.readFileSync(testcase.output(), "utf-8")).tokens();
+    const expected = this.calcExpected(testcase, inputData).tokens();
     const users = outputData.tokens();
 
     if (expected.length !== users.length) {
@@ -153,7 +153,7 @@ class TestRunner {
       this.app.kill().then(() => {
         done();
       }).catch(() => {
-        done()
+        done();
       });
       this.app = null;
     } else {
@@ -187,6 +187,10 @@ class TestRunner {
     };
   }
 
+  calcExpected(testcase, inputData) {
+    /* eslint no-unused-vars: 0 */
+    return StringData.fromRaw(fs.readFileSync(testcase.output(), "utf-8"));
+  }
 }
 
 module.exports = TestRunner;

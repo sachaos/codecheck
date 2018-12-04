@@ -13,15 +13,18 @@ const fs = require("fs");
 */
 
 class Testcase {
-  constructor(input, output, description) {
+  constructor(input, output, description, json) {
     this._input = input;
     this._output = output;
     this._description = description;
+    this._json = json;
   }
 
   input() { return this._input; }
   output() { return this._output; }
   description() { return this._description; }
+
+  option(key) { return this._json[key]; }
 
   readInputFromFile() {
     return fs.readFileSync(this.input(), "utf-8");
@@ -41,7 +44,7 @@ Testcase.load = function(filepath, baseDirectory, lang) {
   return json.map(v => {
     return Testcase.fromJson(v, baseDirectory, lang);
   });
-}
+};
 
 Testcase.fromJson = function(json, baseDirectory, lang) {
   const input = baseDirectory ? `${baseDirectory}/${json.input}` : json.input;
@@ -51,6 +54,6 @@ Testcase.fromJson = function(json, baseDirectory, lang) {
     throw new Error(`Invalid testcase definition: ${JSON.stringify(json)}`);
   }
   return new Testcase(input, output, description);
-}
+};
 
 module.exports = Testcase;
