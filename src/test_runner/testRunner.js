@@ -8,7 +8,7 @@ const MessageBuilder = require("./messageBuilder");
 const StringData = require("./stringData");
 const InputType = require("./inputType");
 const OutputType = require("./outputType");
-const Testcase = require("./Testcase");
+const Testcase = require("./testcase");
 const FileComparator = require("./fileComparator");
 
 class TestRunner {
