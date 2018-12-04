@@ -53,7 +53,7 @@ Testcase.fromJson = function(json, baseDirectory, lang) {
   if (!input || !description) {
     throw new Error(`Invalid testcase definition: ${JSON.stringify(json)}`);
   }
-  return new Testcase(input, output, description);
+  return new Testcase(input, output, description, json);
 };
 
 module.exports = Testcase;
