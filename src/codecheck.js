@@ -4,6 +4,7 @@ const ReadLine     = require("./utils/readLine");
 const ConsoleApp   = require("./app/consoleApp");
 const Settings     = require("./test_runner/settings");
 const TestRunner   = require("./test_runner/testRunner");
+const StringData   = require("./test_runner/stringData");
 
 function readline() {
   return new ReadLine();
@@ -21,8 +22,13 @@ function testRunner(settings, appCommand) {
   return new TestRunner(new Settings(settings), appCommand);
 }
 
+function stringData(str) {
+  return StringData.fromRaw(str);
+}
+
 module.exports = {
   readline: readline,
   consoleApp: consoleApp,
-  testRunner: testRunner
+  testRunner: testRunner,
+  stringData: stringData
 };
