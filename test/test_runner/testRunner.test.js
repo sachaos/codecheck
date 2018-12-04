@@ -61,7 +61,7 @@ describe("TestRunner", function() {
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
       }, require("./menial-attack/test/settings.json"));
-      const testcases = require("./menial-attack/test/basic_testcases.json");
+      const testcases = require("./menial-attack/test/basic_testcases.json").slice(0, 5);
       const runner = codecheck.testRunner(settings, "node test/infinite/infinite.js");
 
       runner.runAll(testcases);

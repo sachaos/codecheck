@@ -56,7 +56,7 @@ class TestRunner {
         self.app = app;
 
         app.clearInput();
-        const inputData = StringData.fromRaw(testcase.readInputFromFile());
+        const inputData = self.createInput(testcase);
         const inputParams = self.prepareInput(testcase, inputData);
         if (inputParams.stdin.length > 0) {
           app.input(inputParams.stdin);
@@ -159,6 +159,10 @@ class TestRunner {
     } else {
       done();
     }
+  }
+
+  createInput(testcase) {
+    return StringData.fromRaw(testcase.readInputFromFile());
   }
 
   prepareInput(testcase, inputData) {
