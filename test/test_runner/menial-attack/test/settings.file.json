@@ -1,0 +1,11 @@
+{
+    "isSpecial" : false,
+
+    "isFileInput" : true,
+    "isFileOutput" : true,
+
+    "maxLines" : 20,
+    "maxCharacters" : 300,
+    "timeout": 2000
+}
+

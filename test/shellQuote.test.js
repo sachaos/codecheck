@@ -58,13 +58,13 @@ describe('shell-quote', () => {
 
   it("exapnsion", () => {
     var cmd = "mcs test/app/*.js -reference:nunit.framework.dll -target:library -out:TimeDiff.dll";
-    var split = ['mcs', 'test/app/calcApp.js', 'test/app/fizzbuzzApp.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
+    var split = ['mcs', 'test/app/calcApp.js', 'test/app/fizzbuzzApp.js', 'test/app/killTest.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
     assert.deepEqual(MyQuote.parse(cmd), split);
   });
 
   it("exapnsion with directory", () => {
     var cmd = "mcs app/*.js -reference:nunit.framework.dll -target:library -out:TimeDiff.dll";
-    var split = ['mcs', 'app/calcApp.js', 'app/fizzbuzzApp.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
+    var split = ['mcs', 'app/calcApp.js', 'app/fizzbuzzApp.js', 'app/killTest.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
     assert.deepEqual(MyQuote.bind("test").parse(cmd), split);
   });
 });

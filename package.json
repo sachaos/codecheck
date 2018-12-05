@@ -1,6 +1,6 @@
 {
   "name": "codecheck",
-  "version": "0.6.5",
+  "version": "1.0.0",
   "description": "codecheck CLI",
   "main": "src/codecheck.js",
   "scripts": {
@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/code-check/codecheck#readme",
   "dependencies": {
+    "chai": "^4.2.0",
     "CBuffer": "^2.0.0",
     "glob": "^7.1.3",
     "pidusage": "^2.0.17",
@@ -29,7 +30,6 @@
   },
   "devDependencies": {
     "lodash": "^4.17.11",
-    "chai": "^4.2.0",
     "grunt": "^1.0.3",
     "grunt-contrib-watch": "^1.1.0",
     "grunt-eslint": "^21.0.0",

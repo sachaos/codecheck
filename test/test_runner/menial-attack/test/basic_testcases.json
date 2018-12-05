@@ -1,0 +1,127 @@
+[
+    {
+        "input": "in/basic/00_sample1.in",
+        "output": "out/basic/00_sample1.out",
+        "it": "HPが低く、魔王を数ターンで倒せる場合で正答できる"
+    },
+    {
+        "input": "in/basic/00_sample2.in",
+        "output": "out/basic/00_sample2.out",
+        "it": "回復力が高く魔王を倒すことができない場合に正答できる"
+    },
+    {
+        "input": "in/basic/10_small1.in",
+        "output": "out/basic/10_small1.out",
+        "it": "魔王のHPが10以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/10_small2.in",
+        "output": "out/basic/10_small2.out",
+        "it": "魔王のHPが10以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/10_small3.in",
+        "output": "out/basic/10_small3.out",
+        "it": "魔王のHPが10以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/10_small4.in",
+        "output": "out/basic/10_small4.out",
+        "it": "魔王のHPが10以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/20_medium1.in",
+        "output": "out/basic/20_medium1.out",
+        "it": "魔王のHPが100000以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/20_medium2.in",
+        "output": "out/basic/20_medium2.out",
+        "it": "魔王のHPが100000以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/20_medium3.in",
+        "output": "out/basic/20_medium3.out",
+        "it": "魔王のHPが100000以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/20_medium4.in",
+        "output": "out/basic/20_medium4.out",
+        "it": "魔王のHPが100000以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/30_large1.in",
+        "output": "out/basic/30_large1.out",
+        "it": "魔王のHPが10億以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/30_large2.in",
+        "output": "out/basic/30_large2.out",
+        "it": "魔王のHPが10億以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/30_large3.in",
+        "output": "out/basic/30_large3.out",
+        "it": "魔王のHPが10億以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/30_large4.in",
+        "output": "out/basic/30_large4.out",
+        "it": "魔王のHPが10億以下の場合で正答できる"
+    },
+    {
+        "input": "in/basic/40_unbalanced1.in",
+        "output": "out/basic/40_unbalanced1.out",
+        "it": "魔王のHPが10億以下で、攻撃力が低い場合で正答できる"
+    },
+    {
+        "input": "in/basic/40_unbalanced2.in",
+        "output": "out/basic/40_unbalanced2.out",
+        "it": "魔王のHPが10億以下で、攻撃力が低い場合で正答できる"
+    },
+    {
+        "input": "in/basic/40_unbalanced3.in",
+        "output": "out/basic/40_unbalanced3.out",
+        "it": "魔王のHPが10億以下で、攻撃力が低い場合で正答できる"
+    },
+    {
+        "input": "in/basic/40_unbalanced4.in",
+        "output": "out/basic/40_unbalanced4.out",
+        "it": "魔王のHPが10億以下で、攻撃力が低い場合で正答できる"
+    },
+    {
+        "input": "in/basic/40_unbalanced5.in",
+        "output": "out/basic/40_unbalanced5.out",
+        "it": "魔王のHPが10億以下で、攻撃力が低い場合で正答できる"
+    },
+    {
+        "input": "in/basic/40_unbalanced6.in",
+        "output": "out/basic/40_unbalanced6.out",
+        "it": "魔王のHPが10億以下で、攻撃力が低い場合で正答できる"
+    },
+    {
+        "input": "in/basic/99_handmade1.in",
+        "output": "out/basic/99_handmade1.out",
+        "it": "ほぼ最大ケースで正答できる"
+    },
+    {
+        "input": "in/basic/99_handmade2.in",
+        "output": "out/basic/99_handmade2.out",
+        "it": "魔王のHPが攻撃力・回復力の倍数であるときに正答できる"
+    },
+    {
+        "input": "in/basic/99_handmade3.in",
+        "output": "out/basic/99_handmade3.out",
+        "it": "魔王のHPがほぼ攻撃力・回復力の倍数であるときに正答できる"
+    },
+    {
+        "input": "in/basic/99_handmade4.in",
+        "output": "out/basic/99_handmade4.out",
+        "it": "魔王のHPがほぼ攻撃力・回復力の倍数であるときに正答できる"
+    },
+    {
+        "input": "in/basic/99_handmade5.in",
+        "output": "out/basic/99_handmade5.out",
+        "it": "最大ケースで正答できる"
+    }
+]

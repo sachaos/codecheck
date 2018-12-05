@@ -23,6 +23,11 @@ ConsoleApp.prototype.input = function() {
   return this;
 };
 
+ConsoleApp.prototype.clearInput = function() {
+  this._input = [];
+  return this;
+};
+
 ConsoleApp.prototype.expected = function() {
   if (arguments.length === 0) {
     return [].concat(this._expected);
