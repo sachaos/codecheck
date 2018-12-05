@@ -1,15 +1,15 @@
 "use strict";
 
-var ReadLine     = require("./utils/readLine");
-var MarkdownTest = require("./utils/markdownTest");
-var ConsoleApp   = require("./app/consoleApp");
+const ReadLine     = require("./utils/readLine");
+const ConsoleApp   = require("./app/consoleApp");
+const Settings     = require("./test_runner/settings");
+const TestRunner   = require("./test_runner/testRunner");
+const StringData   = require("./test_runner/stringData");
 
 function readline() {
   return new ReadLine();
 }
-function markdownTest(answers) {
-  return new MarkdownTest(answers);
-}
+
 function consoleApp(cmd, cwd) {
   var app = new ConsoleApp(cmd, cwd);
   app.consoleOut(true);
@@ -18,8 +18,17 @@ function consoleApp(cmd, cwd) {
   return app;
 }
 
+function testRunner(settings, appCommand) {
+  return new TestRunner(new Settings(settings), appCommand);
+}
+
+function stringData(str) {
+  return StringData.fromRaw(str);
+}
+
 module.exports = {
   readline: readline,
-  markdownTest: markdownTest,
-  consoleApp: consoleApp
+  consoleApp: consoleApp,
+  testRunner: testRunner,
+  stringData: stringData
 };

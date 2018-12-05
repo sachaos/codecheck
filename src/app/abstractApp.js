@@ -1,11 +1,9 @@
 "use strict";
 
-var _                = require("lodash");
 var spawn            = require("child_process").spawn;
 var exec             = require("child_process").exec;
 var EventEmitter     = require('events').EventEmitter;
 var LineEventEmitter = require("../utils/lineEventEmitter");
-var Promise          = require("bluebird");
 var psTree           = require("ps-tree");
 var CBuffer          = require("CBuffer");
 var shellQuote       = require("../utils/myQuote");
@@ -52,7 +50,7 @@ AbstractApp.prototype.setCommand = function(cmd) {
 
 AbstractApp.prototype.setEnvironment = function(env) {
   if (this.env) {
-    this.env = _.extend(this.env, env);
+    this.env = Object.assign(this.env, env);
   } else {
     this.env = env;
   }
@@ -95,8 +93,14 @@ AbstractApp.prototype.getExitCode = function() {
 
 AbstractApp.prototype.run = function() {
   var self = this;
+  if (this.childProcess) {
+    const currentArguments = Array.prototype.slice.call(arguments); // Convert arguments to array
+    return this.kill().then(() => {
+      return this.run(currentArguments);
+    });
+  }
   var args = this.args.concat(this.normalizeArgs(arguments));
-  var env = _.extend({}, process.env, this.env);
+  var env = Object.assign({}, process.env, this.env);
   var options = {
     env: env
   };
@@ -157,15 +161,34 @@ AbstractApp.prototype.run = function() {
 };
 
 AbstractApp.prototype.kill = function(callback) {
-  if (this.childProcess) {
-    var pid = this.childProcess.pid;
+  const self = this;
+  return new Promise((resolve, reject) => {
+    if (!self.childProcess) {
+      resolve(null);
+      return;
+    }
+    const pid = self.childProcess.pid;
     psTree(pid, function(err, children) {
+      if (err) {
+        reject(err);
+        return;
+      }
       exec(
         ['kill', '-9', pid].concat(children.map(function (p) { return p.PID; })).join(" "),
-        callback
+        (err /*, stdout, stderr // not used */) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          if (callback) {
+            callback();
+          }
+          self.childProcess = null;
+          resolve(null);
+        }
       );
     });
-  }
+  });
 };
 
 //Events

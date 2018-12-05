@@ -2,10 +2,11 @@
 
 var _ = require("lodash");
 var MyQuote = require('../src/utils/myQuote');
-var quote = require('../src/utils/myQuote').quote;
-var parse = require('../src/utils/myQuote').parse;
+// var quote = require('../src/utils/myQuote').quote;
+// var parse = require('../src/utils/myQuote').parse;
 var assert = require('chai').assert;
 
+console.log("test", process.cwd());
 var data = [
   {
     'cmd': 'python3 -m nose',
@@ -38,7 +39,7 @@ describe('shell-quote', () => {
   it('parse', () => {
     data.forEach(v => {
       var a1 = v.cmd.split(" ");
-      var a2 = parse(v.cmd);
+      var a2 = MyQuote.parse(v.cmd);
       assert.ok(_.isEqual(a1, v.split));
       assert.ok(_.isEqual(a2, v.quote));
     });
@@ -46,24 +47,24 @@ describe('shell-quote', () => {
 
   it('qoute', () => {
     data.forEach((v, idx) => {
-      var a = quote(v.quote);
+      var a = MyQuote.quote(v.quote);
       if (idx === 1) {
         assert.equal(a, 'python3 -m nose');
       } else {
-        assert.equal(a, v.cmd.replace(/"/g, "'"));
+        assert.equal(a, v.cmd.replace(/"/g, "'").replace(/:/g, "\\:"));
       }
     });
   });
 
   it("exapnsion", () => {
     var cmd = "mcs test/app/*.js -reference:nunit.framework.dll -target:library -out:TimeDiff.dll";
-    var split = ['mcs', 'test/app/calcApp.js', 'test/app/fizzbuzzApp.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
-    assert.deepEqual(parse(cmd), split);
+    var split = ['mcs', 'test/app/calcApp.js', 'test/app/fizzbuzzApp.js', 'test/app/killTest.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
+    assert.deepEqual(MyQuote.parse(cmd), split);
   });
 
   it("exapnsion with directory", () => {
     var cmd = "mcs app/*.js -reference:nunit.framework.dll -target:library -out:TimeDiff.dll";
-    var split = ['mcs', 'app/calcApp.js', 'app/fizzbuzzApp.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
+    var split = ['mcs', 'app/calcApp.js', 'app/fizzbuzzApp.js', 'app/killTest.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
     assert.deepEqual(MyQuote.bind("test").parse(cmd), split);
   });
 });

@@ -1,0 +1,8 @@
+filename=../secret/`echo $1 | sed 's/basic/secret/g'`
+echo $filename
+if [ -e $filename ]; then
+    echo "There is the same name"
+else
+    mv $1 $filename
+fi
+

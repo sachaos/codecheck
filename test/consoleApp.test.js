@@ -3,10 +3,8 @@
 var assert       = require("chai").assert;
 var codecheck    = require("../src/codecheck");
 
-var CMD = process.env.APP_COMMAND;
-var DIR = process.env.APP_DIRECTORY;
-
-console.log(CMD, DIR);
+var CMD = "node fizzbuzzApp.js";
+var DIR = "test/app";
 
 describe("Env vars", function() {
   it("can read", function() {
@@ -78,7 +76,7 @@ describe("PromiseTest", function() {
   it("should fail", function(done) {
     var app = codecheck.consoleApp("dummy");
     app.input("1", "2", "3", "4", "5");
-    app.codecheck().caught(function(err) {
+    app.codecheck().catch(function(err) {
       assert(err);
       done();
     });

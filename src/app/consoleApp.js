@@ -1,7 +1,7 @@
 "use strict";
 
 var AbstractApp      = require("./abstractApp");
-var CommandResult    = require("../cli/commandResult");
+var CommandResult    = require("../utils/commandResult");
 var CodecheckResult  = require("../utils/codecheckResult");
 
 function ConsoleApp(cmd, cwd) {
@@ -23,6 +23,11 @@ ConsoleApp.prototype.input = function() {
   return this;
 };
 
+ConsoleApp.prototype.clearInput = function() {
+  this._input = [];
+  return this;
+};
+
 ConsoleApp.prototype.expected = function() {
   if (arguments.length === 0) {
     return [].concat(this._expected);
@@ -32,6 +37,9 @@ ConsoleApp.prototype.expected = function() {
 };
 
 ConsoleApp.prototype.doRun = function(process) {
+  process.stdin.on("error", () => {
+      // ignore
+  });
   process.stdin.setEncoding("utf-8");
   var values = this.input();
   while (values.length) {
@@ -78,7 +86,10 @@ ConsoleApp.prototype.runAndVerify = function(additionalArgs, done) {
 };
 
 ConsoleApp.prototype.codecheck = function() {
-  return this.run.apply(this, arguments).spread(function(code, stdout, stderr) {
+  return this.run.apply(this, arguments).then(function(args) {
+    const code = args[0];
+    const stdout = args[1];
+    const stderr = args[2];
     console.log("" /* to avoid code printed as `xxok ~~~`; code will fail on detecting test cases */);
     return new CodecheckResult(code, stdout, stderr);
   });

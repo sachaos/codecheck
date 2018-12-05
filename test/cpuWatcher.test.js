@@ -2,7 +2,6 @@
 
 var assert = require("chai").assert;
 var codecheck = require("../src/codecheck");
-var RunCommand = require("../src/commands/run");
 
 describe("CpuWatcher", function() {
 
@@ -31,13 +30,5 @@ describe("CpuWatcher", function() {
     });
   });
 
-  it("run command should be killed around 5sec.", function(done) {
-    var command = new RunCommand();
-    command.run(["test/infinite"]).then(() => {
-      //Should execute before timeout
-      assert(true);
-      done();
-    });
-  });
 });
 
