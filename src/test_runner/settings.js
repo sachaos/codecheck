@@ -2,6 +2,7 @@
 
 const InputType  = require("./inputType");
 const OutputType = require("./outputType");
+const DataSource = require("./dataSource");
 
 const DEFAULT_OUTPUT_FILENAME = "answer.txt";
 const DEFAULT_MAX_LINES = 20;
@@ -12,10 +13,12 @@ const DEFAULT_TIMEOUT = 6000;
 ## Basic Format
 {
   "input": {
-    "type": "arguments"
+    "type": "arguments",
+    "source": "file"
   },
   "output": {
     "type": "file",
+    "source": "file",
     "filename": "answer.txt"
   },
   "judge": {
@@ -31,7 +34,7 @@ const DEFAULT_TIMEOUT = 6000;
 }
 
 ## Conversion from old format
-- `isFileInput: true` -> `input/type: "file"`
+- `isFileInput: true` -> `input/type: "file"` 
 - `isFileInput: false` -> `input/type: "arguments"`
 - `isFileOutput: true` -> `output/type: "file", filename: "answer.txt"`
 - `isFileOutput: false` -> `output/type: "stdout"`
@@ -41,7 +44,9 @@ const DEFAULT_TIMEOUT = 6000;
 
 ## Default values
 - input/type -> "arguments"
+- input/source -> "file"
 - output/type -> "stdout"
+- output/source -> "file"
 - output/filename -> "answer.txt"
 - judge -> None
 - limitations/maxLines -> 20
@@ -98,8 +103,10 @@ class Settings {
   }
 
   inputType() { return this.json.input.type; }
+  inputSource() { return this.json.input.source || DataSource.File; }
 
   outputType() { return this.json.output.type; }
+  outputSource() { return this.json.output.source || DataSource.File; }
   outputFilename() { 
     if (this.outputType() === OutputType.File || this.hasJudge()) {
       return this.json.output.filename || DEFAULT_OUTPUT_FILENAME;

@@ -4,6 +4,7 @@ const fs = require("fs");
 const readline = require("readline");
 const Messages = require("./messages");
 const StringData = require("./stringData");
+const DataSource = require("./dataSource");
 
 class MessageBuilder {
   constructor(settings) {
@@ -86,10 +87,14 @@ class MessageBuilder {
     return ret;
   }
 
-  async summary(testcase, outputData) {
+  async summary(testcase, inputData, outputData) {
     const msg = this.msg;
     let ret = msg.SUMMARY_INPUT + "\n";
-    ret += (await this.getClippedStringFromFile(testcase.input())) + "\n";
+    if (this.settings.inputSource() === DataSource.File) {
+      ret += (await this.getClippedStringFromFile(testcase.input())) + "\n";
+    } else {
+      ret += this.clip(inputData.raw()) + "\n";
+    }
     try {
       let yourOutput = msg.SUMMARY_YOUR_OUTPUT + "\n";
       if (this.settings.outputFilename()) {
@@ -103,15 +108,19 @@ class MessageBuilder {
     }
     if (!this.settings.hasJudge()) {
       ret += msg.SUMMARY_EXPECTED_OUTPUT + "\n";
-      ret += (await this.getClippedStringFromFile(testcase.output())) + "\n";
+      if (this.settings.outputSource() === DataSource.File) {
+        ret += (await this.getClippedStringFromFile(testcase.output())) + "\n";
+      } else {
+      ret += this.clip(testcase.output()) + "\n";
+      }
     }
     return ret;
   }
 
-  async invalidDataLength(testcase, outputData, expectedLength, usersLength) {
+  async invalidDataLength(testcase, inputData, outputData, expectedLength, usersLength) {
     const msg = this.msg;
     let ret = msg.format(msg.INVALID_DATA_LENGTH, expectedLength, usersLength);
-    ret += await this.summary(testcase, outputData);
+    ret += await this.summary(testcase, inputData, outputData);
     return ret;
   }
 

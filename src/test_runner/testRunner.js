@@ -8,6 +8,7 @@ const MessageBuilder = require("./messageBuilder");
 const StringData = require("./stringData");
 const InputType = require("./inputType");
 const OutputType = require("./outputType");
+const DataSource = require("./dataSource");
 const Testcase = require("./testcase");
 const FileComparator = require("./fileComparator");
 
@@ -37,7 +38,7 @@ class TestRunner {
   run(testcaseJson) {
     const self = this;
     const settings = self.settings;
-    const testcase = Testcase.fromJson(testcaseJson, settings.baseDirectory(), settings.language());
+    const testcase = Testcase.fromJson(testcaseJson, settings);
     const MSG = self.messageBuilder;
     /* eslint no-undef: 0 */
     describe("", function() {
@@ -107,7 +108,7 @@ class TestRunner {
       // Unexpected error
       assert.fail(await MSG.failToRunJudge(this.settings.judgeCommand(), result.stderr.join("\n")));
     } else {
-      assert.fail(result.stderr.join("\n") + "\n" + (await MSG.summary(testcase, outputData)));
+      assert.fail(result.stderr.join("\n") + "\n" + (await MSG.summary(testcase, inputData, outputData)));
     }
   }
 
@@ -117,7 +118,7 @@ class TestRunner {
     const users = outputData.tokens();
 
     if (expected.length !== users.length) {
-      assert.fail(await MSG.invalidDataLength(testcase, outputData, expected.length, users.length));
+      assert.fail(await MSG.invalidDataLength(testcase, inputData, outputData, expected.length, users.length));
     }
     for (let i=0; i<expected.length; i++) {
       const expected_token = expected[i];
@@ -162,7 +163,14 @@ class TestRunner {
   }
 
   createInput(testcase) {
-    return StringData.fromRaw(testcase.readInputFromFile());
+    switch (this.settings.inputSource()) {
+      case DataSource.File:
+        return StringData.fromRaw(testcase.readInputFromFile());
+      case DataSource.Raw:
+        return StringData.fromRaw(testcase.input());
+      default:
+        throw new Error("Unknown input source: " + this.settings.inputSource());
+    }
   }
 
   prepareInput(testcase, inputData) {
@@ -189,7 +197,14 @@ class TestRunner {
 
   calcExpected(testcase, inputData) {
     /* eslint no-unused-vars: 0 */
-    return StringData.fromRaw(fs.readFileSync(testcase.output(), "utf-8"));
+    switch (this.settings.outputSource()) {
+      case DataSource.File:
+        return StringData.fromRaw(testcase.readOutputFromFile());
+      case DataSource.Raw:
+        return StringData.fromRaw(testcase.output());
+      default:
+        throw new Error("Unknown output source: " + this.settings.outputSource());
+    }
   }
 }
 

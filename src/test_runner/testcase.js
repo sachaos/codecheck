@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("fs");
+const DataSource = require("./dataSource");
 
 /*
  {
@@ -39,16 +40,23 @@ class Testcase {
  * Static functions
  */
 
-Testcase.load = function(filepath, baseDirectory, lang) {
+Testcase.load = function(filepath, settings) {
   const json = require(process.cwd() + "/" + filepath);
   return json.map(v => {
-    return Testcase.fromJson(v, baseDirectory, lang);
+    return Testcase.fromJson(v, settings);
   });
 };
 
-Testcase.fromJson = function(json, baseDirectory, lang) {
-  const input = baseDirectory ? `${baseDirectory}/${json.input}` : json.input;
-  const output = baseDirectory && json.output ? `${baseDirectory}/${json.output}` : json.output;
+Testcase.fromJson = function(json, settings) {
+  const lang = settings.lang;
+  let input = json.input;
+  if (settings.inputSource() === DataSource.File && settings.baseDirectory()) {
+    input = settings.baseDirectory() + "/" + input;
+  }
+  let output = json.output;
+  if (output && settings.outputSource() === DataSource.File && settings.baseDirectory()) {
+    output = settings.baseDirectory() + "/" + output;
+  }
   const description = json["description_" + lang] || json.description || json.it;
   if (!input || !description) {
     throw new Error(`Invalid testcase definition: ${JSON.stringify(json)}`);
