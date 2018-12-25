@@ -42,8 +42,8 @@ ConsoleApp.prototype.doRun = function(process) {
   });
   process.stdin.setEncoding("utf-8");
   var values = this.input();
-  while (values.length) {
-    var value = values.shift();
+  for (var i=0; i<values.length; i++) {
+    var value = values[i];
     process.stdin.write(value + "\n");
   }
   process.stdin.end();
