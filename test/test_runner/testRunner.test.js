@@ -78,9 +78,14 @@ describe("TestRunner", function() {
       const settings = Object.assign({
         language: "ja"
       }, require("./menial-attack/test/settings.stdin.json"));
-      settings.input.type = "arguments";
-      settings.input.source = "raw";
-      settings.output.source = "raw";
+      settings.input = {
+        type: "arguments",
+        source: "raw"
+      };
+      settings.output = {
+        type: "stdout",
+        source: "raw"
+      };
       const testcases = require("./menial-attack/test/basic_testcases.json").map(v => {
         const input = fs.readFileSync("./test/test_runner/menial-attack/test/" + v.input, "utf-8");
         const output = fs.readFileSync("./test/test_runner/menial-attack/test/" + v.output, "utf-8");
