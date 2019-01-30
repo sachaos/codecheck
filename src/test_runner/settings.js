@@ -21,6 +21,7 @@ const DEFAULT_TIMEOUT = 6000;
     "source": "file",
     "filename": "answer.txt"
   },
+  "eps": 0.00001,
   "judge": {
     "command": "test/judge"
   },
@@ -48,6 +49,7 @@ const DEFAULT_TIMEOUT = 6000;
 - output/type -> "stdout"
 - output/source -> "file"
 - output/filename -> "answer.txt"
+- eps -> None
 - judge -> None
 - limitations/maxLines -> 20
 - limitations/maxCharacters -> 300
@@ -126,6 +128,8 @@ class Settings {
 
   language() { return this.json.language || "ja"; }
 
+  eps() { return this.json.eps; }
+  hasEps() { return typeof(this.json.eps) === "number"; }
 }
 
 module.exports = Settings;
