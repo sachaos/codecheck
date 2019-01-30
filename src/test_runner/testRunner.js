@@ -8,6 +8,7 @@ const MessageBuilder = require("./messageBuilder");
 const StringData = require("./stringData");
 const InputType = require("./inputType");
 const OutputType = require("./outputType");
+const JudgeType = require("./judgeType");
 const DataSource = require("./dataSource");
 const Testcase = require("./testcase");
 const FileComparator = require("./fileComparator");
@@ -98,6 +99,17 @@ class TestRunner {
   }
 
   async verifyByJudge(testcase, inputData, outputData) {
+    switch (this.settings.judgeType()) {
+      case JudgeType.AOJ:
+        await this.verifyByAOJJudge(testcase, inputData, outputData);
+        break;
+      default:
+        await this.verifyByDefaultJudge(testcase, inputData, outputData);
+        break;
+    }
+  }
+
+  async verifyByDefaultJudge(testcase, inputData, outputData) {
     const MSG = this.messageBuilder;
     const judge = this.consoleApp(this.settings.judgeCommand());
     const result = await judge.codecheck([testcase.input(), testcase.output() || "null", this.settings.outputFilename()]);
@@ -110,6 +122,17 @@ class TestRunner {
     } else {
       assert.fail(result.stderr.join("\n") + "\n" + (await MSG.summary(testcase, inputData, outputData)));
     }
+  }
+
+  async verifyByAOJJudge(testcase, inputData, outputData) {
+    const MSG = this.messageBuilder;
+    const judge = this.consoleApp(this.settings.judgeCommand());
+    judge.input(outputData.lines());
+    const result = await judge.codecheck([testcase.input(), this.settings.outputFilename(), testcase.output() || "null"]);
+    if (result.code === 0 && result.stdout.length === 0) {
+      return;
+    } 
+    assert.fail(result.stdout.join("\n") + "\n" + (await MSG.summary(testcase, inputData, outputData)));
   }
 
   async verifyStdout(testcase, inputData, outputData) {
