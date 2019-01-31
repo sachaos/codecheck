@@ -123,7 +123,7 @@ class TestRunner {
     for (let i=0; i<expected.length; i++) {
       const expected_token = expected[i];
       const user_token = users[i];
-      if (expected_token !== user_token) {
+      if (!this.compareToken(expected_token, user_token)) {
         assert.fail(null, null, await MSG.unmatchToken(testcase, outputData, i + 1, expected_token, user_token));
       }
     }
@@ -136,6 +136,15 @@ class TestRunner {
     if (result.index !== -1) {
       assert.fail(await MSG.unmatchToken(testcase, outputData, result.index, result.file1, result.file2));
     }
+  }
+
+  compareToken(token1, token2) {
+    if (this.settings.hasEps()) {
+      const n1 = Number(token1);
+      const n2 = Number(token2);
+      return Math.abs(n1 - n2) <= this.settings.eps();
+    }
+    return token1 === token2;
   }
 
   beforeEach(done) {
