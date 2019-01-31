@@ -132,7 +132,12 @@ class MessageBuilder {
       case 2: ordinals = "nd"; break;
       case 3: ordinals = "rd"; break;
     }
-    let ret = msg.format(msg.INVALID_DATA_ROW, this.settings.language() === "en" ? index + ordinals : index, expected, users);
+    let ret = msg.format(
+      msg.INVALID_DATA_ROW, 
+      this.settings.language() === "en" ? index + ordinals : index, 
+      this.clip(expected), 
+      this.clip(users)
+    );
     ret += await this.summary(testcase, outputData);
     return ret;
   }
