@@ -109,10 +109,24 @@ class TestRunner {
     }
   }
 
+  /**
+   * Judge with default judge spec.
+   * Input parameters
+   * - arg1: Filename of input data.
+   * - arg2: Filename of expect output. (It may not exist)
+   * - arg3: Filename of user outoput.
+   * - stdin: Not used
+   * Result handling
+   * - Success -> exit code is 0
+   * - Failure -> exit code is not 0. In this case, error message is shown in stderrr.
+   */
   async verifyByDefaultJudge(testcase, inputData, outputData) {
     const MSG = this.messageBuilder;
     const judge = this.consoleApp(this.settings.judgeCommand());
-    const result = await judge.codecheck([testcase.input(), testcase.output() || "null", this.settings.outputFilename()]);
+    const arg1 = testcase.input();               // Filename of input data.
+    const arg2 = testcase.output() || "null";    // Filename of expect output. (It may not exist)
+    const arg3 = this.settings.outputFilename(); // Filename of user outoput.
+    const result = await judge.codecheck([arg1, arg2, arg3]);
     if (result.code === 0) {
       return;
     }
@@ -124,11 +138,27 @@ class TestRunner {
     }
   }
 
+  /**
+   * Judge with AOJ judge spec.
+   * Input parameters
+   * - arg1: Filename of input data.
+   * - arg2: Filename of user outoput.
+   * - arg3: Filename of expect output. (It may not exist)
+   * - stdin: user output
+   *     User output is provided by both stdin and arguments
+   *     The judge can choose which to use
+   * Result handling
+   * - Success -> exit code is 0 and no stdout output.
+   * - Failure -> There are some messages in stdout.
+   */
   async verifyByAOJJudge(testcase, inputData, outputData) {
     const MSG = this.messageBuilder;
     const judge = this.consoleApp(this.settings.judgeCommand());
-    judge.input(outputData.lines());
-    const result = await judge.codecheck([testcase.input(), this.settings.outputFilename(), testcase.output() || "null"]);
+    const arg1 = testcase.input();               // Filename of input data.
+    const arg2 = this.settings.outputFilename(); // Filename of user outoput.
+    const arg3 = testcase.output() || "null";    // Filename of expect output. (It may not exist)
+    judge.input(outputData.lines()); // Pass user output to stdin. 
+    const result = await judge.codecheck([arg1, arg2, arg3]);
     if (result.code === 0 && result.stdout.length === 0) {
       return;
     } 
