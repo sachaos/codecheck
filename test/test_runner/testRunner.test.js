@@ -56,23 +56,6 @@ describe("TestRunner", function() {
 
   });
 
-  describe("with judge", function() {
-    describe("menial-attack - with judge", function() {
-      const settings = Object.assign({
-        baseDirectory: "test/test_runner/menial-attack/test",
-        language: "ja",
-        judge: {
-          command: "node test/test_runner/menial-attack/judge.js"
-        }
-      }, require("./menial-attack/test/settings.json"));
-      const testcases = require("./menial-attack/test/basic_testcases.json");
-      const runner = codecheck.testRunner(settings, "node test/test_runner/menial-attack/solution.partial.js");
-
-      runner.runAll(testcases);
-    });
-
-  });
-
   describe("with raw", function() {
     describe("menial-attack - with raw", function() {
       const settings = Object.assign({

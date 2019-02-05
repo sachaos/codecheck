@@ -2,6 +2,7 @@
 
 const InputType  = require("./inputType");
 const OutputType = require("./outputType");
+const JudgeType  = require("./judgeType");
 const DataSource = require("./dataSource");
 
 const DEFAULT_OUTPUT_FILENAME = "answer.txt";
@@ -23,7 +24,8 @@ const DEFAULT_TIMEOUT = 6000;
   },
   "eps": 0.00001,
   "judge": {
-    "command": "test/judge"
+    "command": "test/judge",
+    "type": "default"
   },
   "limitations": {
     "maxLines" : 20,
@@ -51,6 +53,7 @@ const DEFAULT_TIMEOUT = 6000;
 - output/filename -> "answer.txt"
 - eps -> None
 - judge -> None
+- judge/type -> "default"
 - limitations/maxLines -> 20
 - limitations/maxCharacters -> 300
 - timeout -> 6000
@@ -118,6 +121,7 @@ class Settings {
 
   hasJudge() { return !!(this.json.judge && this.json.judge.command); }
   judgeCommand() { return this.hasJudge() ? this.json.judge.command : null; }
+  judgeType() { return (this.hasJudge() ? this.json.judge.type : null) || JudgeType.Default; }
 
   maxLines() { return this.json.limitations.maxLines || DEFAULT_MAX_LINES; }
   maxCharacters() { return this.json.limitations.maxCharacters || DEFAULT_MAX_CHARACTERS; }
