@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-function main(users) {// lines: Array<string>
+function main(users) {
   const answer = fs.readFileSync(process.argv[4], "utf-8").trim();
 
   if (answer !== users) {
