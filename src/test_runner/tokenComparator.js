@@ -9,7 +9,7 @@ class TokenComparator {
     this.eps = eps || -1;
   }
 
-  compareToken(token1, token2) {
+  compareTokens(token1, token2) {
     if (this.eps > 0) {
       const n1 = Number(token1);
       const n2 = Number(token2);
@@ -31,7 +31,7 @@ class TokenComparator {
     }
     let index = 0;
     while (index < len) {
-      if (!this.compareToken(tokens1[index], tokens2[index])) {
+      if (!this.compareTokens(tokens1[index], tokens2[index])) {
         return {
           index: index + 1,
           token1: tokens1[index],
@@ -63,7 +63,7 @@ class TokenComparator {
             index++;
             const a = tokens1.shift();
             const b = tokens2.shift();
-            if (!self.compareToken(a, b)) {
+            if (!self.compareTokens(a, b)) {
               forceClose(index, a, b);
               return false;
             }
