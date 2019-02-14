@@ -1,8 +1,10 @@
 "use strict";
 
-var AbstractApp      = require("./abstractApp");
-var CommandResult    = require("../utils/commandResult");
-var CodecheckResult  = require("../utils/codecheckResult");
+const fs               = require("fs");
+const readline         = require("readline");
+const AbstractApp      = require("./abstractApp");
+const CommandResult    = require("../utils/commandResult");
+const CodecheckResult  = require("../utils/codecheckResult");
 
 function ConsoleApp(cmd, cwd) {
   this.init();
@@ -11,6 +13,11 @@ function ConsoleApp(cmd, cwd) {
 
   this._input = [];
   this._expected = [];
+  this._inputFile = null;
+  this._stdoutFile = null;
+  this._stdoutStream = null;
+  this._stderrFile = null;
+  this._stderrStream = null;
 }
 
 ConsoleApp.prototype = new AbstractApp();
@@ -23,8 +30,33 @@ ConsoleApp.prototype.input = function() {
   return this;
 };
 
+ConsoleApp.prototype.inputFile = function() {
+  if (arguments.length === 0) {
+    return this._inputFile;
+  }
+  this._inputFile = arguments[0];
+  return this;
+};
+
+ConsoleApp.prototype.stdoutFile = function() {
+  if (arguments.length === 0) {
+    return this._stdoutFile;
+  }
+  this._stdoutFile = arguments[0];
+  return this;
+};
+
+ConsoleApp.prototype.stderrFile = function() {
+  if (arguments.length === 0) {
+    return this._stderrFile;
+  }
+  this._stderrFile = arguments[0];
+  return this;
+};
+
 ConsoleApp.prototype.clearInput = function() {
   this._input = [];
+  this._inputFile = null;
   return this;
 };
 
@@ -37,6 +69,34 @@ ConsoleApp.prototype.expected = function() {
 };
 
 ConsoleApp.prototype.doRun = function(process) {
+  if (this._stdoutFile) {
+    this._stdoutStream = fs.createWriteStream(this._stdoutFile, { flags: "a"});
+    this.onStdout(line => {
+      if (this._stdoutStream) {
+        this._stdoutStream.write(line + "\n")
+      }
+    });
+    this.onEnd(() => {
+      if (this._stdoutStream) {
+        this._stdoutStream.end();
+        this._stdoutStream = null;
+      }
+    })
+  }
+  if (this._stderrFile) {
+    this._stderrStream = fs.createWriteStream(this._stderrFile, { flags: "a"});
+    this.onStderr(line => {
+      if (this._stderrStream) {
+        this._stderrStream.write(line + "\n")
+      }
+    });
+    this.onEnd(() => {
+      if (this._stderrStream) {
+        this._stderrStream.end();
+        this._stderrStream = null;
+      }
+    })
+  }
   process.stdin.on("error", () => {
       // ignore
   });
@@ -46,7 +106,24 @@ ConsoleApp.prototype.doRun = function(process) {
     var value = values[i];
     process.stdin.write(value + "\n");
   }
-  process.stdin.end();
+  if (!this._inputFile) {
+    process.stdin.end();
+    return;
+  }
+  try {
+    const rl = readline.createInterface({
+      input: fs.createReadStream(this._inputFile, "utf8")
+    });
+    rl.on("line", data => {
+      process.stdin.write(data + "\n");
+    });
+    rl.on("close", () => {
+      process.stdin.end();
+    });
+  } catch (e) {
+    console.error(e);
+    process.stdin.end();
+  }
 };
 
 ConsoleApp.prototype.runAndVerify = function(additionalArgs, done) {

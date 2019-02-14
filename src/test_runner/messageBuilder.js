@@ -12,7 +12,15 @@ class MessageBuilder {
     this.msg = Messages.getMessages(settings.language());
   }
 
-  clip(str) {
+  clip(stringData) {
+    if (stringData.filename()) {
+      return this.clipFile(stringData.filename());
+    } else {
+      return Promise.resolve(this.clipString(stringData.raw()));
+    }
+  }
+
+  clipString(str) {
     const maxLen = this.settings.maxCharacters();
     const maxLines = this.settings.maxLines();
 
@@ -33,7 +41,7 @@ class MessageBuilder {
     return result;
   }
 
-  getClippedStringFromFile(filepath) {
+  clipFile(filepath) {
     const self = this;
     return new Promise((resolve,reject) => {
       try {
@@ -72,17 +80,17 @@ class MessageBuilder {
     return this.msg.NON_ZERO_STATUS_CODE;
   }
 
-  async abnormalEnd(inputData, result) {
+  async abnormalEnd(inputData, outputData, result) {
     const msg = this.msg;
     let ret = msg.SUMMARY_INPUT + "\n";
-    ret += this.clip(inputData.raw()) + "\n";
-    if (result.stdout.length > 0) {
+    ret += (await this.clip(inputData)) + "\n";
+    if (outputData.length() > 0) {
       ret += msg.SUMMARY_STDOUT + "\n";
-      ret += this.clip(result.stdout.join("\n")) + "\n";
+      ret += (await this.clip(outputData)) + "\n";
     }
     if (result.stderr.length > 0) {
       ret += msg.SUMMARY_STDERR + "\n";
-      ret += this.clip(result.stderr.join("\n")) + "\n";
+      ret += this.clipString(result.stderr.join("\n")) + "\n";
     }
     return ret;
   }
@@ -90,28 +98,15 @@ class MessageBuilder {
   async summary(testcase, inputData, outputData) {
     const msg = this.msg;
     let ret = msg.SUMMARY_INPUT + "\n";
-    if (this.settings.inputSource() === DataSource.File) {
-      ret += (await this.getClippedStringFromFile(testcase.input())) + "\n";
-    } else {
-      ret += this.clip(inputData.raw()) + "\n";
-    }
-    try {
-      let yourOutput = msg.SUMMARY_YOUR_OUTPUT + "\n";
-      if (this.settings.outputFilename()) {
-        yourOutput += (await this.getClippedStringFromFile(this.settings.outputFilename())) + "\n";
-      } else {
-        yourOutput += this.clip(outputData.raw()) + "\n";
-      }
-      ret += yourOutput;
-    } catch (e) {
-      // Ignore your output part
-    }
+    ret += (await this.clip(inputData)) + "\n";
+    ret += msg.SUMMARY_YOUR_OUTPUT + "\n";
+    ret += (await this.clip(outputData)) + "\n";
     if (!this.settings.hasJudge()) {
       ret += msg.SUMMARY_EXPECTED_OUTPUT + "\n";
       if (this.settings.outputSource() === DataSource.File) {
-        ret += (await this.getClippedStringFromFile(testcase.output())) + "\n";
+        ret += (await this.clipFile(testcase.output())) + "\n";
       } else {
-      ret += this.clip(testcase.output()) + "\n";
+        ret += this.clipString(testcase.output()) + "\n";
       }
     }
     return ret;
@@ -124,7 +119,7 @@ class MessageBuilder {
     return ret;
   }
 
-  async unmatchToken(testcase, outputData, index, expected, users) {
+  async unmatchToken(testcase, inputData, outputData, index, expected, users) {
     const msg = this.msg;
     let ordinals = "th";
     switch (index % 10) {
@@ -135,10 +130,10 @@ class MessageBuilder {
     let ret = msg.format(
       msg.INVALID_DATA_ROW, 
       this.settings.language() === "en" ? index + ordinals : index, 
-      this.clip(expected), 
-      this.clip(users)
+      this.clipString(expected), 
+      this.clipString(users)
     );
-    ret += await this.summary(testcase, outputData);
+    ret += await this.summary(testcase, inputData, outputData);
     return ret;
   }
 
