@@ -38,41 +38,6 @@ class StringData {
   tokens() { return splitStrBySpace(this.raw()); }
   filename() { return this._filename; }
 
-  // clip(maxLen, maxLines) {
-  //   let result = "";
-  //   let omitted = false;
-  //   if (this._raw) {
-  //     const str = this._raw;
-  //     let array = splitStrByLine(str);
-  //     if (array.length > maxLines) {
-  //       array = array.slice(0, maxLines);
-  //       omitted = true;
-  //     }
-  //     result = array.join("\n");
-  //   }
-  //   if (this._filename) {
-  //     let line = null;
-  //     let count = 0;
-  //     const reader = new LineByLine(this._filename);
-  //     while (line = reader.next()) {
-  //       result += line.toString("utf8") + "\n";
-  //       count++;
-  //       if (count >= maxLines || result.length > maxLen) {
-  //         omitted = true;
-  //         break;
-  //       } 
-  //     }
-  //     reader.close();
-  //   }
-  //   if (result.length > maxLen) {
-  //     result = result.substring(0, maxLen);
-  //     omitted = true;
-  //   }
-  //   if (omitted) {
-  //     result += "...";
-  //   }
-  //   return result;
-  // }
 }
 
 function fromFile(filename) {
