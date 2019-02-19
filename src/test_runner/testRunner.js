@@ -71,7 +71,7 @@ class TestRunner {
         }
         const result = await app.codecheck(inputParams.arguments);
         const outputData = StringData.fromFile(settings.outputFilename());
-        await self.verifyStatusCode(testcase, inputData, outputData, result, );
+        await self.verifyStatusCode(testcase, inputData, outputData, result);
 
         if (settings.outputType() === OutputType.File) {
           // Verify outputFile exists 
