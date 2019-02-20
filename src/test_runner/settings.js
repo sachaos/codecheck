@@ -113,10 +113,7 @@ class Settings {
   outputType() { return this.json.output.type; }
   outputSource() { return this.json.output.source || DataSource.File; }
   outputFilename() { 
-    if (this.outputType() === OutputType.File || this.hasJudge()) {
-      return this.json.output.filename || DEFAULT_OUTPUT_FILENAME;
-    }
-    return null;
+    return this.json.output.filename || DEFAULT_OUTPUT_FILENAME;
   }
 
   hasJudge() { return !!(this.json.judge && this.json.judge.command); }

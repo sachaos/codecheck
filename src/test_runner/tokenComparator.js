@@ -2,9 +2,50 @@
 
 const fs = require("fs");
 const readline = require("readline");
+const StringData = require("./stringData");
 
-class FileComparator {
-  compare(filepath1, filepath2) {
+class TokenComparator {
+  constructor(eps) {
+    this.eps = eps || -1;
+  }
+
+  compareTokens(token1, token2) {
+    if (this.eps > 0) {
+      const n1 = Number(token1);
+      const n2 = Number(token2);
+      return Math.abs(n1 - n2) <= this.eps;
+    }
+    return token1 === token2;
+  }
+
+  compareStrings(str1, str2) {
+    const tokens1 = StringData.fromRaw(str1).tokens();
+    const tokens2 = StringData.fromRaw(str2).tokens();
+    const len = Math.min(tokens1.length, tokens2.length);
+    if (tokens1.length !== tokens2.length) {
+      return {
+        index: len,
+        token1: tokens1[len - 1],
+        token2: tokens2[len - 1]
+      };
+    }
+    let index = 0;
+    while (index < len) {
+      if (!this.compareTokens(tokens1[index], tokens2[index])) {
+        return {
+          index: index + 1,
+          token1: tokens1[index],
+          token2: tokens2[index]
+        }
+      }
+      index++;
+    }
+    return {
+      index: -1
+    };
+  }
+  compareFiles(filepath1, filepath2) {
+    const self = this;
     const tokens1 = [];
     const tokens2 = [];
     let index = 0;
@@ -22,7 +63,7 @@ class FileComparator {
             index++;
             const a = tokens1.shift();
             const b = tokens2.shift();
-            if (a !== b) {
+            if (!self.compareTokens(a, b)) {
               forceClose(index, a, b);
               return false;
             }
@@ -40,8 +81,8 @@ class FileComparator {
           }
           resolve({
             index, 
-            file1: a,
-            file2: b
+            token1: a,
+            token2: b
           });
         }
         function doClose() {
@@ -53,8 +94,8 @@ class FileComparator {
             } else {
               resolve({
                 index: index + 1,
-                file1: tokens1.shift(),
-                file2: tokens2.shift()
+                token1: tokens1.shift(),
+                token2: tokens2.shift()
               });
             }
           }
@@ -90,4 +131,4 @@ class FileComparator {
   }
 }
 
-module.exports = FileComparator;
+module.exports = TokenComparator;

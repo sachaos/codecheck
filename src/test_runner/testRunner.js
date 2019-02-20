@@ -11,7 +11,7 @@ const OutputType = require("./outputType");
 const JudgeType = require("./judgeType");
 const DataSource = require("./dataSource");
 const Testcase = require("./testcase");
-const FileComparator = require("./fileComparator");
+const TokenComparator = require("./tokenComparator");
 
 class TestRunner {
   constructor(settings, appCommand) {
@@ -22,8 +22,6 @@ class TestRunner {
 
   consoleApp(cmd, cwd) {
     var app = new ConsoleApp(cmd, cwd);
-    app.consoleOut(true);
-    app.storeStdout(true);
     app.storeStderr(true);
     app.consoleOut(false);
     app.storeStdMax(2000000);
@@ -63,9 +61,17 @@ class TestRunner {
         if (inputParams.stdin.length > 0) {
           app.input(inputParams.stdin);
         }
+        if (inputParams.filename) {
+          app.inputFile(inputParams.filename);
+        }
+        if (settings.outputType() === OutputType.StdOut) {
+          app.stdoutFile(settings.outputFilename());
+        } else {
+          app.storeStdout(true);
+        }
         const result = await app.codecheck(inputParams.arguments);
-        const outputData = StringData.fromLines(result.stdout);
-        await self.verifyStatusCode(testcase, inputData, result);
+        const outputData = StringData.fromFile(settings.outputFilename());
+        await self.verifyStatusCode(testcase, inputData, outputData, result);
 
         if (settings.outputType() === OutputType.File) {
           // Verify outputFile exists 
@@ -74,26 +80,21 @@ class TestRunner {
           } catch (e) {
             assert.fail(await MSG.noOutputFile());
           }
-        } else if (settings.hasJudge()) {
-          // If it uses judge and not File type, make outputFile.
-          fs.writeFileSync(settings.outputFilename(), outputData.raw(), "utf-8");
         }
 
         if (settings.hasJudge()) {
           await self.verifyByJudge(testcase, inputData, outputData);
-        } else if (settings.outputType() === OutputType.StdOut) {
-          await self.verifyStdout(testcase, inputData, outputData);
-        } else {// settings.outputType() === OutputType.File
+        } else {
           await self.verifyOutputFile(testcase, inputData, outputData);
         }
       });
     });
   }
 
-  async verifyStatusCode(testcase, inputData, result) {
+  async verifyStatusCode(testcase, inputData, outputData, result) {
     const MSG = this.messageBuilder;
     if (result.code !== 0) {
-      console.log(await MSG.abnormalEnd(inputData, result));
+      console.log(await MSG.abnormalEnd(inputData, outputData, result));
       assert.fail(await MSG.nonZeroStatusCode());
     }
   }
@@ -123,6 +124,7 @@ class TestRunner {
   async verifyByDefaultJudge(testcase, inputData, outputData) {
     const MSG = this.messageBuilder;
     const judge = this.consoleApp(this.settings.judgeCommand());
+    judge.storeStdout(true);
     const arg1 = testcase.input();               // Filename of input data.
     const arg2 = testcase.output() || "null";    // Filename of expect output. (It may not exist)
     const arg3 = this.settings.outputFilename(); // Filename of user outoput.
@@ -154,10 +156,11 @@ class TestRunner {
   async verifyByAOJJudge(testcase, inputData, outputData) {
     const MSG = this.messageBuilder;
     const judge = this.consoleApp(this.settings.judgeCommand());
+    judge.storeStdout(true);
     const arg1 = testcase.input();               // Filename of input data.
     const arg2 = this.settings.outputFilename(); // Filename of user outoput.
     const arg3 = testcase.output() || "null";    // Filename of expect output. (It may not exist)
-    judge.input(outputData.lines()); // Pass user output to stdin. 
+    judge.inputFile(outputData.filename()); // Pass user output to stdin. 
     const result = await judge.codecheck([arg1, arg2, arg3]);
     if (result.code === 0 && result.stdout.length === 0) {
       return;
@@ -165,39 +168,15 @@ class TestRunner {
     assert.fail(result.stdout.join("\n") + "\n" + (await MSG.summary(testcase, inputData, outputData)));
   }
 
-  async verifyStdout(testcase, inputData, outputData) {
-    const MSG = this.messageBuilder;
-    const expected = this.calcExpected(testcase, inputData).tokens();
-    const users = outputData.tokens();
-
-    if (expected.length !== users.length) {
-      assert.fail(await MSG.invalidDataLength(testcase, inputData, outputData, expected.length, users.length));
-    }
-    for (let i=0; i<expected.length; i++) {
-      const expected_token = expected[i];
-      const user_token = users[i];
-      if (!this.compareToken(expected_token, user_token)) {
-        assert.fail(null, null, await MSG.unmatchToken(testcase, outputData, i + 1, expected_token, user_token));
-      }
-    }
-  }
-
   async verifyOutputFile(testcase, inputData, outputData) {
     const MSG = this.messageBuilder;
-    const comparator = new FileComparator();
-    const result = await(comparator.compare(testcase.output(), this.settings.outputFilename()));
+    const comparator = new TokenComparator(this.settings.eps());
+    const result = this.settings.outputSource() === DataSource.Raw ?
+      comparator.compareStrings(testcase.output(), outputData.raw()) :      
+      await(comparator.compareFiles(testcase.output(), outputData.filename()));
     if (result.index !== -1) {
-      assert.fail(await MSG.unmatchToken(testcase, outputData, result.index, result.file1, result.file2));
+      assert.fail(await MSG.unmatchToken(testcase, inputData, outputData, result.index, result.token1, result.token2));
     }
-  }
-
-  compareToken(token1, token2) {
-    if (this.settings.hasEps()) {
-      const n1 = Number(token1);
-      const n2 = Number(token2);
-      return Math.abs(n1 - n2) <= this.settings.eps();
-    }
-    return token1 === token2;
   }
 
   beforeEach(done) {
@@ -227,7 +206,7 @@ class TestRunner {
   createInput(testcase) {
     switch (this.settings.inputSource()) {
       case DataSource.File:
-        return StringData.fromRaw(testcase.readInputFromFile());
+        return StringData.fromFile(testcase.input());
       case DataSource.Raw:
         return StringData.fromRaw(testcase.input());
       default:
@@ -236,14 +215,19 @@ class TestRunner {
   }
 
   prepareInput(testcase, inputData) {
+    let filename = null;
     let stdin = [];
     let args = [];
     switch (this.settings.inputType()) {
       case InputType.File:
-        args = testcase.input();
+        args = inputData.filename();
         break;
       case InputType.StdIn:
-        stdin = inputData.lines();
+        if (this.settings.inputSource() === DataSource.Raw) {
+          stdin = inputData.lines();
+        } else {
+          filename = inputData.filename();
+        }
         break;
       case InputType.Arguments:
         args = inputData.tokens();
@@ -252,6 +236,7 @@ class TestRunner {
         throw new Error("Unknown input type: " + this.settings.inputType());
     }
     return {
+      filename: filename,
       stdin: stdin,
       arguments: args
     };
@@ -261,7 +246,7 @@ class TestRunner {
     /* eslint no-unused-vars: 0 */
     switch (this.settings.outputSource()) {
       case DataSource.File:
-        return StringData.fromRaw(testcase.readOutputFromFile());
+        return StringData.fromFile(testcase.output());
       case DataSource.Raw:
         return StringData.fromRaw(testcase.output());
       default:

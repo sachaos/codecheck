@@ -5,7 +5,7 @@ const codecheck = require("../../src/codecheck");
 
 describe("TestRunner", function() {
   describe("input = arguments, output = stdout", function() {
-    describe("menial-attack - all pass", function() {
+    describe("menial-attack - all pass(25/25", function() {
       const settings = Object.assign({
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
@@ -16,7 +16,7 @@ describe("TestRunner", function() {
       runner.runAll(testcases);
     });
 
-    describe("menial-attack - partial pass", function() {
+    describe("menial-attack - partial pass(19/25)", function() {
       const settings = Object.assign({
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
@@ -29,7 +29,7 @@ describe("TestRunner", function() {
   });
 
   describe("input = stdin, output = stdout", function() {
-    describe("menial-attack - all pass", function() {
+    describe("menial-attack - all pass(25/25)", function() {
       const settings = Object.assign({
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
@@ -39,11 +39,10 @@ describe("TestRunner", function() {
 
       runner.runAll(testcases);
     });
-
   });
 
   describe("input = file, output = file", function() {
-    describe("menial-attack - all pass", function() {
+    describe("menial-attack - all pass(25/25)", function() {
       const settings = Object.assign({
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
@@ -57,7 +56,7 @@ describe("TestRunner", function() {
   });
 
   describe("with raw", function() {
-    describe("menial-attack - with raw", function() {
+    describe("menial-attack - with raw - partial pass(19/25)", function() {
       const settings = Object.assign({
         language: "ja"
       }, require("./menial-attack/test/settings.stdin.json"));
@@ -85,7 +84,7 @@ describe("TestRunner", function() {
   });
 
   describe("with infinite loop", function() {
-    describe("menial-attack - infinite loop", function() {
+    describe("menial-attack - infinite loop - all fail(5/5)", function() {
       const settings = Object.assign({
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
