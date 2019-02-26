@@ -2,11 +2,6 @@
 
 const codecheck = require("../../src/codecheck");
 
-/**
- * Test for https://github.com/code-check/codecheck/issues/97
- * This test will fail always
- * It should be completed in less thant 1sec.
- */
 describe("Timeout", function() {
   const settings = {
     input: {

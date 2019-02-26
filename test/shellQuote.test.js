@@ -6,7 +6,6 @@ var MyQuote = require('../src/utils/myQuote');
 // var parse = require('../src/utils/myQuote').parse;
 var assert = require('chai').assert;
 
-console.log("test", process.cwd());
 var data = [
   {
     'cmd': 'python3 -m nose',
@@ -58,13 +57,13 @@ describe('shell-quote', () => {
 
   it("exapnsion", () => {
     var cmd = "mcs test/app/*.js -reference:nunit.framework.dll -target:library -out:TimeDiff.dll";
-    var split = ['mcs', 'test/app/calcApp.js', 'test/app/fizzbuzzApp.js', 'test/app/killTest.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
+    var split = ['mcs', 'test/app/calcApp.js', 'test/app/fizzbuzzApp.js', 'test/app/killTest.js', 'test/app/timeoutTest.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
     assert.deepEqual(MyQuote.parse(cmd), split);
   });
 
   it("exapnsion with directory", () => {
     var cmd = "mcs app/*.js -reference:nunit.framework.dll -target:library -out:TimeDiff.dll";
-    var split = ['mcs', 'app/calcApp.js', 'app/fizzbuzzApp.js', 'app/killTest.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
+    var split = ['mcs', 'app/calcApp.js', 'app/fizzbuzzApp.js', 'app/killTest.js', 'app/timeoutTest.js', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'];
     assert.deepEqual(MyQuote.bind("test").parse(cmd), split);
   });
 });

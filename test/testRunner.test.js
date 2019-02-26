@@ -42,6 +42,17 @@ describe('TestRunner', function() {
     assert.ok(result.stdout.some(v => v.indexOf("# pass 10") !== -1));
   });
 
+  it('largeToken.test.js', async () => {
+    const app = codecheck.consoleApp("mocha").consoleOut(false);
+    const result = await app.codecheck("-R", "tap", "test/test_runner/largeToken.test.js");
+    assert.ok(result.stdout.some(v => v.indexOf("# tests 3") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("# pass 1") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("Expected data: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuv") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("Participant's data: abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("Expected data: wxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqr") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("Participant's data: wxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqr") !== -1));
+  });
+
   it('testRunner.test.js', async () => {
     const app = codecheck.consoleApp("mocha").consoleOut(false);
     const result = await app.codecheck("-R", "tap", "test/test_runner/testRunner.test.js");
