@@ -1,0 +1,52 @@
+[
+  {
+    "input": "in/testcase_00.in",
+    "output": "out/testcase_00.out",
+    "description": "testcase_00"
+  },
+  {
+    "input": "in/testcase_01.in",
+    "output": "out/testcase_01.out",
+    "description": "testcase_01"
+  },
+  {
+    "input": "in/testcase_02.in",
+    "output": "out/testcase_02.out",
+    "description": "testcase_02"
+  },
+  {
+    "input": "in/testcase_03.in",
+    "output": "out/testcase_03.out",
+    "description": "testcase_03"
+  },
+  {
+    "input": "in/testcase_04.in",
+    "output": "out/testcase_04.out",
+    "description": "testcase_04"
+  },
+  {
+    "input": "in/testcase_05.in",
+    "output": "out/testcase_05.out",
+    "description": "testcase_05"
+  },
+  {
+    "input": "in/testcase_06.in",
+    "output": "out/testcase_06.out",
+    "description": "testcase_06"
+  },
+  {
+    "input": "in/testcase_07.in",
+    "output": "out/testcase_07.out",
+    "description": "testcase_07"
+  },
+  {
+    "input": "in/testcase_08.in",
+    "output": "out/testcase_08.out",
+    "description": "testcase_08"
+  },
+  {
+    "input": "in/testcase_09.in",
+    "output": "out/testcase_09.out",
+    "description": "testcase_09"
+  }
+]

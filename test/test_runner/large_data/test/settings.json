@@ -1,0 +1,16 @@
+{
+  "input": {
+    "type": "stdin",
+    "source": "file"
+  },
+  "output": {
+    "type": "stdout",
+    "source": "file"
+  },
+  "limitations": {
+    "maxLines" : 20,
+    "maxCharacters" : 300
+  },
+  "timeout": 6000,
+  "baseDirectory":  "test"
+}
