@@ -13,6 +13,9 @@ const DataSource = require("./dataSource");
 const Testcase = require("./testcase");
 const TokenComparator = require("./tokenComparator");
 
+const MAX_RETRY_COUNT = 3;
+const TIME_LAG = 5000;
+
 class TestRunner {
   constructor(settings, appCommand) {
     this.settings = settings;
@@ -41,7 +44,7 @@ class TestRunner {
     const MSG = self.messageBuilder;
     /* eslint no-undef: 0 */
     describe("", function() {
-      this.timeout(self.settings.timeout());
+      this.timeout(self.settings.timeout() + TIME_LAG);
 
       beforeEach(done => {
         self.beforeEach(done);
@@ -69,7 +72,9 @@ class TestRunner {
         } else {
           app.storeStdout(true);
         }
+        const start = new Date().getTime();
         const result = await app.codecheck(inputParams.arguments);
+        const time = new Date().getTime() - start;
         const outputData = StringData.fromFile(settings.outputFilename());
         await self.verifyStatusCode(testcase, inputData, outputData, result);
 
@@ -85,7 +90,10 @@ class TestRunner {
         if (settings.hasJudge()) {
           await self.verifyByJudge(testcase, inputData, outputData);
         } else {
-          await self.verifyOutputFile(testcase, inputData, outputData);
+          await self.verifyOutputFile(testcase, inputData, outputData, 0);
+        }
+        if (time > settings.timeout()) {
+          assert.fail(await MSG.timeout(time, testcase, inputData, outputData));
         }
       });
     });
@@ -168,14 +176,18 @@ class TestRunner {
     assert.fail(result.stdout.join("\n") + "\n" + (await MSG.summary(testcase, inputData, outputData)));
   }
 
-  async verifyOutputFile(testcase, inputData, outputData) {
+  async verifyOutputFile(testcase, inputData, outputData, retryCount) {
     const MSG = this.messageBuilder;
     const comparator = new TokenComparator(this.settings.eps());
     const result = this.settings.outputSource() === DataSource.Raw ?
       comparator.compareStrings(testcase.output(), outputData.raw()) :      
       await(comparator.compareFiles(testcase.output(), outputData.filename()));
+    if (result.index !== -1 && result.file2Unread && fs.statSync(outputData.filename()).size > 0 && retryCount < MAX_RETRY_COUNT) {
+      await this.verifyOutputFile(testcase, inputData, outputData, retryCount + 1);
+      return;
+    }
     if (result.index !== -1) {
-      assert.fail(await MSG.unmatchToken(testcase, inputData, outputData, result.index, result.token1, result.token2));
+      assert.fail(await MSG.unmatchToken(testcase, inputData, outputData, result.index, result.token1 || "", result.token2 || ""));
     }
   }
 

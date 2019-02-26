@@ -142,6 +142,11 @@ class MessageBuilder {
     return msg.format(msg.FAIL_TO_RUN_JUDGE, command, err);
   }
 
+  async timeout(time, testcase, inputData, outputData) {
+    const msg = this.msg;
+    return msg.format(msg.APP_TIMEOUT, this.settings.timeout(), time) + "\n" + 
+      (await this.summary(testcase, inputData, outputData));
+  }
 }
 
 module.exports = MessageBuilder;

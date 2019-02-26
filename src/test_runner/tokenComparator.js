@@ -1,7 +1,7 @@
 "use strict";
 
 const fs = require("fs");
-const readline = require("readline");
+const ReadToken = require("readtoken");
 const StringData = require("./stringData");
 
 class TokenComparator {
@@ -36,7 +36,7 @@ class TokenComparator {
           index: index + 1,
           token1: tokens1[index],
           token2: tokens2[index]
-        }
+        };
       }
       index++;
     }
@@ -51,22 +51,24 @@ class TokenComparator {
     let index = 0;
     let file1Closed = false;
     let file2Closed = false;
+    let file1Read = false;
+    let file2Read = false;
     return new Promise((resolve, reject) => {
       try {
-        function handleLine(tokens, line) {
-          line.split(/\s/).filter(v => v.length > 0).forEach(v => {
-            tokens.push(v);
-          });
-        }
         function fireCompare() {
-          while (tokens1.length > 0 && tokens2.length > 0) {
-            index++;
-            const a = tokens1.shift();
-            const b = tokens2.shift();
-            if (!self.compareTokens(a, b)) {
-              forceClose(index, a, b);
-              return false;
+          if (tokens1.length > 0 && tokens2.length > 0) {
+            const len = Math.min(tokens1.length, tokens2.length);
+            for (let i=0; i<len; i++) {
+              index++;
+              const a = tokens1[i];
+              const b = tokens2[i];
+              if (!self.compareTokens(a, b)) {
+                forceClose(index, a, b);
+                return false;
+              }
             }
+            tokens1.splice(0, len);
+            tokens2.splice(0, len);
           }
           return true;
         }
@@ -94,20 +96,24 @@ class TokenComparator {
             } else {
               resolve({
                 index: index + 1,
-                token1: tokens1.shift(),
-                token2: tokens2.shift()
+                token1: tokens1[0],
+                token2: tokens2[0],
+                file1Unread: !file1Read,
+                file2Unread: !file2Read
               });
             }
           }
         }
-        const rl1 = readline.createInterface(fs.createReadStream(filepath1), {});
-        const rl2 = readline.createInterface(fs.createReadStream(filepath2), {});
-        rl1.on('line', line => {
-          handleLine(tokens1, line);
+        const rl1 = new ReadToken(fs.createReadStream(filepath1, { encoding: "utf-8" }), { maxLength: 100, readSize: 8192 });
+        const rl2 = new ReadToken(fs.createReadStream(filepath2, { encoding: "utf-8" }), { maxLength: 100, readSize: 8192 });
+        rl1.on('token', token => {
+          file1Read = true;
+          tokens1.push(token);
           fireCompare();
         });
-        rl2.on('line', line => {
-          handleLine(tokens2, line);
+        rl2.on('token', token => {
+          file2Read = true;
+          tokens2.push(token);
           fireCompare();
         });
         rl1.on("close", () => {

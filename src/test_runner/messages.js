@@ -19,6 +19,7 @@ const MESSAGES_JA = {
   SUMMARY_EXPECTED_OUTPUT: "#### 期待された答え:",
   SUMMARY_STDOUT: "#### 標準出力:",
   SUMMARY_STDERR: "#### 標準エラー出力:",
+  APP_TIMEOUT: "アプリケーションの実行が規定時間内に終了しませんでした。: 規定時間={0}ms, 実行時間={1}ms",
 };
 
 const MESSAGES_EN = {
@@ -40,6 +41,7 @@ Participant's data: {2}
   SUMMARY_EXPECTED_OUTPUT: "#### Expected Output:",
   SUMMARY_STDOUT: "#### Standard Output:",
   SUMMARY_STDERR: "#### Standard Error Output:",
+  APP_TIMEOUT: "Your application didn't finish in expected time.: Expected={0}ms, Execution={1}ms",
 };
 
 class Messages {
