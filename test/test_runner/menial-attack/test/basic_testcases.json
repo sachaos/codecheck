@@ -2,7 +2,8 @@
     {
         "input": "in/basic/00_sample1.in",
         "output": "out/basic/00_sample1.out",
-        "it": "HPが低く、魔王を数ターンで倒せる場合で正答できる"
+        "it": "HPが低く、魔王を数ターンで倒せる場合で正答できる",
+        "description_en": "It is English description"
     },
     {
         "input": "in/basic/00_sample2.in",

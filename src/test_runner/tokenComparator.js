@@ -1,7 +1,7 @@
 "use strict";
 
 const fs = require("fs");
-const readline = require("readline");
+const ReadToken = require("readtoken");
 const StringData = require("./stringData");
 
 class TokenComparator {
@@ -55,11 +55,6 @@ class TokenComparator {
     let file2Read = false;
     return new Promise((resolve, reject) => {
       try {
-        function handleLine(tokens, line) {
-          line.split(/\s/).filter(v => v.length > 0).forEach(v => {
-            tokens.push(v);
-          });
-        }
         function fireCompare() {
           if (tokens1.length > 0 && tokens2.length > 0) {
             const len = Math.min(tokens1.length, tokens2.length);
@@ -109,16 +104,16 @@ class TokenComparator {
             }
           }
         }
-        const rl1 = readline.createInterface(fs.createReadStream(filepath1), {});
-        const rl2 = readline.createInterface(fs.createReadStream(filepath2), {});
-        rl1.on('line', line => {
+        const rl1 = new ReadToken(fs.createReadStream(filepath1, { encoding: "utf-8" }), { maxLength: 100, readSize: 8192 });
+        const rl2 = new ReadToken(fs.createReadStream(filepath2, { encoding: "utf-8" }), { maxLength: 100, readSize: 8192 });
+        rl1.on('token', token => {
           file1Read = true;
-          handleLine(tokens1, line);
+          tokens1.push(token);
           fireCompare();
         });
-        rl2.on('line', line => {
+        rl2.on('token', token => {
           file2Read = true;
-          handleLine(tokens2, line);
+          tokens2.push(token);
           fireCompare();
         });
         rl1.on("close", () => {

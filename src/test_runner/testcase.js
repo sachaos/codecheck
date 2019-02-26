@@ -48,7 +48,7 @@ Testcase.load = function(filepath, settings) {
 };
 
 Testcase.fromJson = function(json, settings) {
-  const lang = settings.lang;
+  const lang = settings.language();
   let input = json.input;
   if (settings.inputSource() === DataSource.File && settings.baseDirectory()) {
     input = settings.baseDirectory() + "/" + input;
