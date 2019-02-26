@@ -48,4 +48,13 @@ describe('TestRunner', function() {
     assert.ok(result.stdout.some(v => v.indexOf("# tests 130") !== -1));
     assert.ok(result.stdout.some(v => v.indexOf("# pass 113") !== -1));
   });
+
+  it('timeout.test.js', async () => {
+    const app = codecheck.consoleApp("mocha").consoleOut(false);
+    const result = await app.codecheck("-R", "tap", "test/test_runner/timeout.test.js");
+    assert.ok(result.stdout.some(v => v.indexOf("# tests 4") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("# pass 2") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("Your application didn't finish in expected time") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("Error: Timeout of 6000ms exceeded. ") !== -1));
+  });
 });

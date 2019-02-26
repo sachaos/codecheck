@@ -14,6 +14,7 @@ const Testcase = require("./testcase");
 const TokenComparator = require("./tokenComparator");
 
 const MAX_RETRY_COUNT = 3;
+const TIME_LAG = 5000;
 
 class TestRunner {
   constructor(settings, appCommand) {
@@ -43,7 +44,7 @@ class TestRunner {
     const MSG = self.messageBuilder;
     /* eslint no-undef: 0 */
     describe("", function() {
-      this.timeout(self.settings.timeout());
+      this.timeout(self.settings.timeout() + TIME_LAG);
 
       beforeEach(done => {
         self.beforeEach(done);
@@ -71,7 +72,9 @@ class TestRunner {
         } else {
           app.storeStdout(true);
         }
+        const start = new Date().getTime();
         const result = await app.codecheck(inputParams.arguments);
+        const time = new Date().getTime() - start;
         const outputData = StringData.fromFile(settings.outputFilename());
         await self.verifyStatusCode(testcase, inputData, outputData, result);
 
@@ -88,6 +91,9 @@ class TestRunner {
           await self.verifyByJudge(testcase, inputData, outputData);
         } else {
           await self.verifyOutputFile(testcase, inputData, outputData, 0);
+        }
+        if (time > settings.timeout()) {
+          assert.fail(await MSG.timeout(time, testcase, inputData, outputData));
         }
       });
     });
