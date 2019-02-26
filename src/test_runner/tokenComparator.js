@@ -36,7 +36,7 @@ class TokenComparator {
           index: index + 1,
           token1: tokens1[index],
           token2: tokens2[index]
-        }
+        };
       }
       index++;
     }
@@ -59,14 +59,19 @@ class TokenComparator {
           });
         }
         function fireCompare() {
-          while (tokens1.length > 0 && tokens2.length > 0) {
-            index++;
-            const a = tokens1.shift();
-            const b = tokens2.shift();
-            if (!self.compareTokens(a, b)) {
-              forceClose(index, a, b);
-              return false;
+          if (tokens1.length > 0 && tokens2.length > 0) {
+            const len = Math.min(tokens1.length, tokens2.length);
+            for (let i=0; i<len; i++) {
+              index++;
+              const a = tokens1[i];
+              const b = tokens2[i];
+              if (!self.compareTokens(a, b)) {
+                forceClose(index, a, b);
+                return false;
+              }
             }
+            tokens1.splice(0, len);
+            tokens2.splice(0, len);
           }
           return true;
         }
@@ -94,8 +99,8 @@ class TokenComparator {
             } else {
               resolve({
                 index: index + 1,
-                token1: tokens1.shift(),
-                token2: tokens2.shift()
+                token1: tokens1[0],
+                token2: tokens2[0]
               });
             }
           }

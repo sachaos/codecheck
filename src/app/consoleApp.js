@@ -73,7 +73,7 @@ ConsoleApp.prototype.doRun = function(process) {
     this._stdoutStream = fs.createWriteStream(this._stdoutFile, { flags: "a"});
     this.onStdout(line => {
       if (this._stdoutStream) {
-        this._stdoutStream.write(line + "\n")
+        this._stdoutStream.write(line + "\n");
       }
     });
     this.onEnd(() => {
@@ -81,13 +81,13 @@ ConsoleApp.prototype.doRun = function(process) {
         this._stdoutStream.end();
         this._stdoutStream = null;
       }
-    })
+    });
   }
   if (this._stderrFile) {
     this._stderrStream = fs.createWriteStream(this._stderrFile, { flags: "a"});
     this.onStderr(line => {
       if (this._stderrStream) {
-        this._stderrStream.write(line + "\n")
+        this._stderrStream.write(line + "\n");
       }
     });
     this.onEnd(() => {
@@ -95,7 +95,7 @@ ConsoleApp.prototype.doRun = function(process) {
         this._stderrStream.end();
         this._stderrStream = null;
       }
-    })
+    });
   }
   process.stdin.on("error", () => {
       // ignore
