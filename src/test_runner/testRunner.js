@@ -13,6 +13,8 @@ const DataSource = require("./dataSource");
 const Testcase = require("./testcase");
 const TokenComparator = require("./tokenComparator");
 
+const MAX_RETRY_COUNT = 3;
+
 class TestRunner {
   constructor(settings, appCommand) {
     this.settings = settings;
@@ -85,7 +87,7 @@ class TestRunner {
         if (settings.hasJudge()) {
           await self.verifyByJudge(testcase, inputData, outputData);
         } else {
-          await self.verifyOutputFile(testcase, inputData, outputData);
+          await self.verifyOutputFile(testcase, inputData, outputData, 0);
         }
       });
     });
@@ -168,14 +170,18 @@ class TestRunner {
     assert.fail(result.stdout.join("\n") + "\n" + (await MSG.summary(testcase, inputData, outputData)));
   }
 
-  async verifyOutputFile(testcase, inputData, outputData) {
+  async verifyOutputFile(testcase, inputData, outputData, retryCount) {
     const MSG = this.messageBuilder;
     const comparator = new TokenComparator(this.settings.eps());
     const result = this.settings.outputSource() === DataSource.Raw ?
       comparator.compareStrings(testcase.output(), outputData.raw()) :      
       await(comparator.compareFiles(testcase.output(), outputData.filename()));
+    if (result.index !== -1 && result.file2Unread && fs.statSync(outputData.filename()).size > 0 && retryCount < MAX_RETRY_COUNT) {
+      await this.verifyOutputFile(testcase, inputData, outputData, retryCount + 1);
+      return;
+    }
     if (result.index !== -1) {
-      assert.fail(await MSG.unmatchToken(testcase, inputData, outputData, result.index, result.token1, result.token2));
+      assert.fail(await MSG.unmatchToken(testcase, inputData, outputData, result.index, result.token1 || "", result.token2 || ""));
     }
   }
 

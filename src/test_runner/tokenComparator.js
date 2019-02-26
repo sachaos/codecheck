@@ -51,6 +51,8 @@ class TokenComparator {
     let index = 0;
     let file1Closed = false;
     let file2Closed = false;
+    let file1Read = false;
+    let file2Read = false;
     return new Promise((resolve, reject) => {
       try {
         function handleLine(tokens, line) {
@@ -100,7 +102,9 @@ class TokenComparator {
               resolve({
                 index: index + 1,
                 token1: tokens1[0],
-                token2: tokens2[0]
+                token2: tokens2[0],
+                file1Unread: !file1Read,
+                file2Unread: !file2Read
               });
             }
           }
@@ -108,10 +112,12 @@ class TokenComparator {
         const rl1 = readline.createInterface(fs.createReadStream(filepath1), {});
         const rl2 = readline.createInterface(fs.createReadStream(filepath2), {});
         rl1.on('line', line => {
+          file1Read = true;
           handleLine(tokens1, line);
           fireCompare();
         });
         rl2.on('line', line => {
+          file2Read = true;
           handleLine(tokens2, line);
           fireCompare();
         });
