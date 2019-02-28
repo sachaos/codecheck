@@ -4,7 +4,7 @@ const codecheck = require("../src/codecheck");
 const assert = require('chai').assert;
 
 describe('TestRunner', function() {
-  this.timeout(60 * 1000);
+  this.timeout(120 * 1000);
 
   it('aojJudge.test.js', async () => {
     const app = codecheck.consoleApp("mocha").consoleOut(false);
@@ -53,6 +53,13 @@ describe('TestRunner', function() {
     assert.ok(result.stdout.some(v => v.indexOf("Participant's data: wxyzABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqr") !== -1));
   });
 
+  it('shellMode.test.js', async () => {
+    const app = codecheck.consoleApp("mocha").consoleOut(false);
+    const result = await app.codecheck("-R", "tap", "test/test_runner/shellMode.test.js");
+    assert.ok(result.stdout.some(v => v.indexOf("# tests 130") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("# pass 113") !== -1));
+  });
+
   it('testRunner.test.js', async () => {
     const app = codecheck.consoleApp("mocha").consoleOut(false);
     const result = await app.codecheck("-R", "tap", "test/test_runner/testRunner.test.js");
@@ -66,6 +73,6 @@ describe('TestRunner', function() {
     assert.ok(result.stdout.some(v => v.indexOf("# tests 4") !== -1));
     assert.ok(result.stdout.some(v => v.indexOf("# pass 2") !== -1));
     assert.ok(result.stdout.some(v => v.indexOf("Your application didn't finish in expected time") !== -1));
-    assert.ok(result.stdout.some(v => v.indexOf("Error: Timeout of 6000ms exceeded. ") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("Error: Timeout of 11000ms exceeded. ") !== -1));
   });
 });

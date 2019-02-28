@@ -30,7 +30,7 @@ describe("Timeout", function() {
     output: "Hello"
   }, {
     description: "wait 8000ms",
-    input: "8000",
+    input: "12000",
     output: "Hello"
   }];
   const command = "node test/app/timeoutTest.js";

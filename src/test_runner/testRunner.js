@@ -14,7 +14,7 @@ const Testcase = require("./testcase");
 const TokenComparator = require("./tokenComparator");
 
 const MAX_RETRY_COUNT = 3;
-const TIME_LAG = 5000;
+const TIME_LAG = 10000;
 
 class TestRunner {
   constructor(settings, appCommand) {
@@ -38,10 +38,17 @@ class TestRunner {
   }
 
   run(testcaseJson) {
+    if (this.settings.shellMode()) {
+      this.runByShell(testcaseJson);
+    } else {
+      this.runNormal(testcaseJson);
+    }
+  }
+
+  runNormal(testcaseJson) {
     const self = this;
     const settings = self.settings;
     const testcase = Testcase.fromJson(testcaseJson, settings);
-    const MSG = self.messageBuilder;
     /* eslint no-undef: 0 */
     describe("", function() {
       this.timeout(self.settings.timeout() + TIME_LAG);
@@ -75,28 +82,85 @@ class TestRunner {
         const start = new Date().getTime();
         const result = await app.codecheck(inputParams.arguments);
         const time = new Date().getTime() - start;
-        const outputData = StringData.fromFile(settings.outputFilename());
-        await self.verifyStatusCode(testcase, inputData, outputData, result);
-
-        if (settings.outputType() === OutputType.File) {
-          // Verify outputFile exists 
-          try {
-            fs.statSync(settings.outputFilename());
-          } catch (e) {
-            assert.fail(await MSG.noOutputFile());
-          }
-        }
-
-        if (settings.hasJudge()) {
-          await self.verifyByJudge(testcase, inputData, outputData);
-        } else {
-          await self.verifyOutputFile(testcase, inputData, outputData, 0);
-        }
-        if (time > settings.timeout()) {
-          assert.fail(await MSG.timeout(time, testcase, inputData, outputData));
-        }
+        await self.postProcess(testcase, result, time, inputData);
       });
     });
+  }
+
+  runByShell(testcaseJson) {
+    const self = this;
+    const settings = self.settings;
+    const testcase = Testcase.fromJson(testcaseJson, settings);
+    /* eslint no-undef: 0 */
+    describe("", function() {
+      this.timeout(self.settings.timeout() + TIME_LAG);
+
+      beforeEach(done => {
+        self.beforeEach(done);
+      });
+
+      afterEach(done => {
+        self.afterEach(done);
+      });
+
+      it(testcase.description(), async () => {
+        const app = self.consoleApp("sh");
+        self.app = app;
+
+        const args = ["-c"];
+        let shellArg = "";
+
+        const inputData = self.createInput(testcase);
+        const inputParams = self.prepareInput(testcase, inputData);
+        if (inputParams.stdin.length > 0) {
+          throw new Error("Raw input is not supported in shellMode");
+        }
+        if (inputParams.filename) {
+          shellArg += `cat ${inputParams.filename} | `;
+        }
+        shellArg += self.appCommand;
+        if (inputParams.arguments.length > 0) {
+          shellArg += inputParams.arguments.map(v => ` "${v}"`).join("");
+        }
+        if (settings.outputType() === OutputType.StdOut) {
+          shellArg += ` > ${settings.outputFilename()}`;
+        } else {
+          app.storeStdout(true);
+        }
+        args.push(shellArg);
+
+        const start = new Date().getTime();
+        const result = await app.codecheck(args);
+        const time = new Date().getTime() - start;
+        await self.postProcess(testcase, result, time, inputData);
+      });
+    });
+  }
+
+  async postProcess(testcase, result, time, inputData) {
+    const settings = this.settings;
+    const MSG = this.messageBuilder;
+
+    const outputData = StringData.fromFile(settings.outputFilename());
+    await this.verifyStatusCode(testcase, inputData, outputData, result);
+
+    if (settings.outputType() === OutputType.File) {
+      // Verify outputFile exists 
+      try {
+        fs.statSync(settings.outputFilename());
+      } catch (e) {
+        assert.fail(await MSG.noOutputFile());
+      }
+    }
+
+    if (settings.hasJudge()) {
+      await this.verifyByJudge(testcase, inputData, outputData);
+    } else {
+      await this.verifyOutputFile(testcase, inputData, outputData, 0);
+    }
+    if (time > settings.timeout()) {
+      assert.fail(await MSG.timeout(time, testcase, inputData, outputData));
+    }
   }
 
   async verifyStatusCode(testcase, inputData, outputData, result) {
@@ -232,7 +296,7 @@ class TestRunner {
     let args = [];
     switch (this.settings.inputType()) {
       case InputType.File:
-        args = inputData.filename();
+        args.push(inputData.filename());
         break;
       case InputType.StdIn:
         if (this.settings.inputSource() === DataSource.Raw) {
