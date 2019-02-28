@@ -31,6 +31,7 @@ const DEFAULT_TIMEOUT = 6000;
     "maxLines" : 20,
     "maxCharacters" : 300
   },
+  "shellMode": false,
   "timeout": 6000,
   "baseDirectory":  "test",
   "language": "ja"
@@ -59,6 +60,7 @@ const DEFAULT_TIMEOUT = 6000;
 - timeout -> 6000
 - baseDirectory -> "test",
 - language -> "ja"
+- shellMode -> false
  */
 
 function normalizeJson(json) {
@@ -131,6 +133,8 @@ class Settings {
 
   eps() { return this.json.eps; }
   hasEps() { return typeof(this.json.eps) === "number"; }
+
+  shellMode() { return Boolean(this.json.shellMode); }
 }
 
 module.exports = Settings;
