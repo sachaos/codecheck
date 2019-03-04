@@ -227,13 +227,15 @@ class TestRunner {
    */
   async verifyByAOJJudge(testcase, inputData, outputData) {
     const MSG = this.messageBuilder;
-    const judge = this.consoleApp(this.settings.judgeCommand());
+    const judge = this.consoleApp("sh");
     judge.storeStdout(true);
     const arg1 = testcase.input();               // Filename of input data.
     const arg2 = this.settings.outputFilename(); // Filename of user outoput.
     const arg3 = testcase.output() || "null";    // Filename of expect output. (It may not exist)
-    judge.inputFile(outputData.filename()); // Pass user output to stdin. 
-    const result = await judge.codecheck([arg1, arg2, arg3]);
+    const result = await judge.codecheck([
+      "-c",
+      `cat ${outputData.filename()} | ${this.settings.judgeCommand()} "${arg1}" "${arg2}" "${arg3}"`
+    ]);
     if (result.code === 0 && result.stdout.length === 0) {
       return;
     } 
