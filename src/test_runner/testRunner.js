@@ -12,6 +12,7 @@ const JudgeType = require("./judgeType");
 const DataSource = require("./dataSource");
 const Testcase = require("./testcase");
 const TokenComparator = require("./tokenComparator");
+const ShellQuote = require("../utils/myQuote");
 
 const MAX_RETRY_COUNT = 3;
 const TIME_LAG = 10000;
@@ -120,7 +121,7 @@ class TestRunner {
         }
         shellArg += self.appCommand;
         if (inputParams.arguments.length > 0) {
-          shellArg += inputParams.arguments.map(v => ` "${v}"`).join("");
+          shellArg += " " + ShellQuote.quote(inputParams.arguments);
         }
         if (settings.outputType() === OutputType.StdOut) {
           shellArg += ` > ${settings.outputFilename()}`;
