@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const codecheck = require("../../src/codecheck");
+const assert = require("chai").assert;
 
 describe("TestRunner", function() {
   describe("input = arguments, output = stdout", function() {
@@ -88,9 +89,12 @@ describe("TestRunner", function() {
       const settings = Object.assign({
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
-      }, require("./menial-attack/test/settings.json"));
+      }, require("./menial-attack/test/settings.json"), {
+        timeout: 1000
+      });
       const testcases = require("./menial-attack/test/basic_testcases.json").slice(0, 5);
-      const runner = codecheck.testRunner(settings, "node test/infinite/infinite.js");
+      const runner = codecheck.testRunner(settings, "node test/infinite/infinite.js").timeLag(1000);
+      assert.equal(runner.timeLag(), 1000);
 
       runner.runAll(testcases);
     });

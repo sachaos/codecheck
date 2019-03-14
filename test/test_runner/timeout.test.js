@@ -29,12 +29,12 @@ describe("Timeout", function() {
     input: "2000",
     output: "Hello"
   }, {
-    description: "wait 8000ms",
-    input: "12000",
+    description: "wait 5000ms",
+    input: "5000",
     output: "Hello"
   }];
   const command = "node test/app/timeoutTest.js";
-  const runner = codecheck.testRunner(settings, command);
+  const runner = codecheck.testRunner(settings, command).timeLag(2000);
 
   runner.runAll(testcases);
 });

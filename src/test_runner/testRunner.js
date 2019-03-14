@@ -15,13 +15,14 @@ const TokenComparator = require("./tokenComparator");
 const ShellQuote = require("../utils/myQuote");
 
 const MAX_RETRY_COUNT = 3;
-const TIME_LAG = 10000;
+const DEFAULT_TIME_LAG = 5000;
 
 class TestRunner {
   constructor(settings, appCommand) {
     this.settings = settings;
     this.messageBuilder = new MessageBuilder(settings);
     this.appCommand = appCommand;
+    this._timeLag = DEFAULT_TIME_LAG;
   }
 
   consoleApp(cmd, cwd) {
@@ -52,7 +53,7 @@ class TestRunner {
     const testcase = Testcase.fromJson(testcaseJson, settings);
     /* eslint no-undef: 0 */
     describe("", function() {
-      this.timeout(self.settings.timeout() + TIME_LAG);
+      this.timeout(self.settings.timeout() + self._timeLag);
 
       beforeEach(done => {
         self.beforeEach(done);
@@ -94,7 +95,7 @@ class TestRunner {
     const testcase = Testcase.fromJson(testcaseJson, settings);
     /* eslint no-undef: 0 */
     describe("", function() {
-      this.timeout(self.settings.timeout() + TIME_LAG);
+      this.timeout(self.settings.timeout() + self._timeLag);
 
       beforeEach(done => {
         self.beforeEach(done);
@@ -330,6 +331,15 @@ class TestRunner {
         return StringData.fromRaw(testcase.output());
       default:
         throw new Error("Unknown output source: " + this.settings.outputSource());
+    }
+  }
+
+  timeLag(v) {
+    if (typeof(v) === "number") {
+      this._timeLag = v;
+      return this;
+    } else {
+      return this._timeLag;
     }
   }
 }
