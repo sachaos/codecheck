@@ -31,7 +31,7 @@ var data = [
     'cmd': "mcs src/*.cs -reference:nunit.framework.dll -target:library -out:TimeDiff.dll",
     'split': ['mcs', 'src/*.cs', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'],
     'quote': ['mcs', 'src/*.cs', '-reference:nunit.framework.dll', '-target:library', '-out:TimeDiff.dll'],
-  }
+  },
 ];
 
 describe('shell-quote', () => {

@@ -1,6 +1,6 @@
 {
   "name": "codecheck",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "codecheck CLI",
   "main": "src/codecheck.js",
   "scripts": {

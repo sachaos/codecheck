@@ -69,8 +69,15 @@ ConsoleApp.prototype.expected = function() {
 };
 
 ConsoleApp.prototype.doRun = function(process) {
+  const self = this;
+  const ret = [];
   if (this._stdoutFile) {
     this._stdoutStream = fs.createWriteStream(this._stdoutFile, { flags: "a"});
+    ret.push(new Promise(function(resolve) {
+      self._stdoutStream.on("close", () => {
+        resolve();
+      });
+    }));
     this.onStdout(line => {
       if (this._stdoutStream) {
         this._stdoutStream.write(line + "\n");
@@ -85,6 +92,11 @@ ConsoleApp.prototype.doRun = function(process) {
   }
   if (this._stderrFile) {
     this._stderrStream = fs.createWriteStream(this._stderrFile, { flags: "a"});
+    ret.push(new Promise(function(resolve) {
+      self._stderrStream.on("close", () => {
+        resolve();
+      });
+    }));
     this.onStderr(line => {
       if (this._stderrStream) {
         this._stderrStream.write(line + "\n");
@@ -108,7 +120,7 @@ ConsoleApp.prototype.doRun = function(process) {
   }
   if (!this._inputFile) {
     process.stdin.end();
-    return;
+    return ret;
   }
   try {
     const rl = readline.createInterface({
@@ -124,6 +136,7 @@ ConsoleApp.prototype.doRun = function(process) {
     console.error(e);
     process.stdin.end();
   }
+  return ret;
 };
 
 ConsoleApp.prototype.runAndVerify = function(additionalArgs, done) {

@@ -73,6 +73,6 @@ describe('TestRunner', function() {
     assert.ok(result.stdout.some(v => v.indexOf("# tests 4") !== -1));
     assert.ok(result.stdout.some(v => v.indexOf("# pass 2") !== -1));
     assert.ok(result.stdout.some(v => v.indexOf("Your application didn't finish in expected time") !== -1));
-    assert.ok(result.stdout.some(v => v.indexOf("Error: Timeout of 11000ms exceeded. ") !== -1));
+    assert.ok(result.stdout.some(v => v.indexOf("Error: Timeout of 3000ms exceeded. ") !== -1));
   });
 });

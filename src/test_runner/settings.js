@@ -134,7 +134,7 @@ class Settings {
   eps() { return this.json.eps; }
   hasEps() { return typeof(this.json.eps) === "number"; }
 
-  shellMode() { return Boolean(this.json.shellMode); }
+  shellMode() { return typeof(this.json.shellMode) === "boolean" ? this.json.shellMode : true; }
 }
 
 module.exports = Settings;
