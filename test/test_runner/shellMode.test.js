@@ -7,7 +7,7 @@ describe("TestRunner", function() {
   describe("input = arguments, output = stdout", function() {
     describe("menial-attack - all pass(25/25", function() {
       const settings = Object.assign({
-        shellMode: true,
+        shellMode: false,
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
       }, require("./menial-attack/test/settings.json"));
@@ -19,7 +19,7 @@ describe("TestRunner", function() {
 
     describe("menial-attack - partial pass(19/25)", function() {
       const settings = Object.assign({
-        shellMode: true,
+        shellMode: false,
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
       }, require("./menial-attack/test/settings.json"));
@@ -33,7 +33,7 @@ describe("TestRunner", function() {
   describe("input = stdin, output = stdout", function() {
     describe("menial-attack - all pass(25/25)", function() {
       const settings = Object.assign({
-        shellMode: true,
+        shellMode: false,
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
       }, require("./menial-attack/test/settings.stdin.json"));
@@ -47,7 +47,7 @@ describe("TestRunner", function() {
   describe("input = file, output = file", function() {
     describe("menial-attack - all pass(25/25)", function() {
       const settings = Object.assign({
-        shellMode: true,
+        shellMode: false,
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
       }, require("./menial-attack/test/settings.file.json"));
@@ -62,7 +62,7 @@ describe("TestRunner", function() {
   describe("with raw", function() {
     describe("menial-attack - with raw - partial pass(19/25)", function() {
       const settings = Object.assign({
-        shellMode: true,
+        shellMode: false,
         language: "ja"
       }, require("./menial-attack/test/settings.stdin.json"));
       settings.input = {
@@ -91,7 +91,7 @@ describe("TestRunner", function() {
   describe("with infinite loop", function() {
     describe("menial-attack - infinite loop - all fail(5/5)", function() {
       const settings = Object.assign({
-        shellMode: true,
+        shellMode: false,
         baseDirectory: "test/test_runner/menial-attack/test",
         language: "ja"
       }, require("./menial-attack/test/settings.json"));
