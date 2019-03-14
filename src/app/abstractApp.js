@@ -129,7 +129,8 @@ AbstractApp.prototype.run = function() {
     }
     stderrBuf.add(data);
   });
-  var ret = new Promise(function(resolve, reject) {
+  var ret = [];
+  ret.push(new Promise(function(resolve, reject) {
     p.on('close', function(code) {
       self.cpuWatcher.unwatch();
       stdoutBuf.close();
@@ -152,12 +153,14 @@ AbstractApp.prototype.run = function() {
       }
       reject(err);
     });
-  });
+  }));
   self.childProcess = p;
   if (self.doRun) {
-    self.doRun(p);
+    ret = ret.concat(self.doRun(p));
   }
-  return ret;
+  return Promise.all(ret).then(values => {
+    return values[0];
+  });
 };
 
 AbstractApp.prototype.kill = function(callback) {
