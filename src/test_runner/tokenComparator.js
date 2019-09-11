@@ -10,12 +10,16 @@ class TokenComparator {
   }
 
   compareTokens(token1, token2) {
+    if (token1 === token2)
+      return true;
+
     if (this.eps > 0) {
       const n1 = Number(token1);
       const n2 = Number(token2);
       return Math.abs(n1 - n2) <= this.eps;
     }
-    return token1 === token2;
+
+    return false;
   }
 
   compareStrings(str1, str2) {
